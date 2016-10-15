@@ -1,0 +1,6 @@
+framework module DeckTransition {
+  umbrella header "DeckTransition-umbrella.h"
+
+  export *
+  module * { export * }
+}

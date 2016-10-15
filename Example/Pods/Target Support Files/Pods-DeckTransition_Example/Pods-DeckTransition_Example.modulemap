@@ -1,0 +1,6 @@
+framework module Pods_DeckTransition_Example {
+  umbrella header "Pods-DeckTransition_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}
