@@ -41,22 +41,6 @@ class ModalViewController: UIViewController, UITextViewDelegate {
         return .lightContent
     }
 	
-	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-		guard scrollView.isEqual(textView) else {
-			return
-		}
-		
-		if let delegate = transitioningDelegate as? DeckTransitioningDelegate {
-			if scrollView.contentOffset.y <= 0 {
-				scrollView.bounces = false
-				delegate.isDismissEnabled = true
-			} else {
-				scrollView.bounces = true
-				delegate.isDismissEnabled = false
-			}
-		}
-	}
-	
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView.isEqual(textView) else {
             return
