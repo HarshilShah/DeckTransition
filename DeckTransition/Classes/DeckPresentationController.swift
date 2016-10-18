@@ -141,7 +141,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
      Function to update the modal view for a particular amount of
      translation by panning in the vertical direction.
      
-     The translation of the modal view is equal to the panning
+     The translation of the modal view is proportional to the panning
      distance until the `elasticThreshold`, after which it increases
      at a slower rate, given by `elasticFactor`, to indicate that the
      `dismissThreshold` is nearing.
@@ -154,20 +154,22 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     */
     private func updatePresentedViewForTranslation(inVerticalDirection translation: CGFloat) {
         
-        let elasticThreshold: CGFloat = 130
-        let elasticFactor: CGFloat = 1/2.5
-        let dismissThreshold: CGFloat = 160
-        
+        let elasticThreshold: CGFloat = 120
+		let dismissThreshold: CGFloat = 200
+		
+		let elasticFactor: CGFloat = 1/10
+		let translationFactor: CGFloat = 1/2.5
+		
         /**
          Nothing happens if the pan gesture is performed from bottom
          to top i.e. if the translation is negative
         */
         if translation >= 0 {
             let translationForModal: CGFloat = {
-                if translation >= 130 {
-                    return ((translation-130)/5) + (130/2.5)
+                if translation >= elasticThreshold {
+                    return ((translation-elasticThreshold) * elasticFactor) + (elasticThreshold * translationFactor)
                 } else {
-                    return translation/2.5
+                    return translation * translationFactor
                 }
             }()
             
