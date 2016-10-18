@@ -175,7 +175,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             
             presentedView?.transform = CGAffineTransform(translationX: 0, y: translationForModal)
             
-            if translation >= 160 {
+            if translation >= dismissThreshold {
                 presentedViewController.dismiss(animated: true, completion: nil)
             }
         }
