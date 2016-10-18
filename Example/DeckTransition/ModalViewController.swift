@@ -32,28 +32,50 @@ class ModalViewController: UIViewController, UITextViewDelegate {
         textView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
         textView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
         textView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20).isActive = true
-        
+		textView.bounces = false
+		
         textView.delegate = self
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    
+	
+	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+		guard scrollView.isEqual(textView) else {
+			return
+		}
+		
+		if let delegate = transitioningDelegate as? DeckTransitioningDelegate {
+			if scrollView.contentOffset.y <= 0 {
+				scrollView.bounces = false
+				delegate.isDismissEnabled = true
+			} else {
+				scrollView.bounces = true
+				delegate.isDismissEnabled = false
+			}
+		}
+	}
+	
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView.isEqual(textView) else {
             return
         }
         
         if let delegate = transitioningDelegate as? DeckTransitioningDelegate {
-            if scrollView.contentOffset.y <= 0 {
-                scrollView.bounces = false
-                delegate.isDismissEnabled = true
-            } else {
+            if scrollView.contentOffset.y > 0 {
                 scrollView.bounces = true
                 delegate.isDismissEnabled = false
-            }
+			} else {
+				if scrollView.isDecelerating {
+					view.transform = CGAffineTransform(translationX: 0, y: -scrollView.contentOffset.y)
+					scrollView.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+				} else {
+					scrollView.bounces = false
+					delegate.isDismissEnabled = true
+				}
+			}
         }
     }
-    
+	
 }

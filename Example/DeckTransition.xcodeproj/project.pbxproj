@@ -12,6 +12,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		E19F00E7A377EEDF7CCC682C /* Pods_DeckTransition_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DEBD63392BB6F5BA85E3057 /* Pods_DeckTransition_Example.framework */; };
+		E87466B91DB2685D006E14C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E87466B81DB2685D006E14C4 /* Main.storyboard */; };
 		E882148E1DB2599B00B04EBC /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E882148D1DB2599B00B04EBC /* ModalViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -31,7 +32,8 @@
 		C4A82FF6FAF565369C5BFE08 /* Pods_DeckTransition_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeckTransition_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4BE612509EE7822DF40D7B7 /* Pods-DeckTransition_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckTransition_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeckTransition_Example/Pods-DeckTransition_Example.release.xcconfig"; sourceTree = "<group>"; };
 		CF5CFE9FA4F56AD080C6D5DB /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		E882148D1DB2599B00B04EBC /* ModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
+		E87466B81DB2685D006E14C4 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		E882148D1DB2599B00B04EBC /* ModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; usesTabs = 1; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				8FF41C244ECA3677B85EF213 /* Frameworks */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		607FACD11AFB9204008FA782 /* Products */ = {
 			isa = PBXGroup;
@@ -91,6 +94,7 @@
 		607FACD31AFB9204008FA782 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E87466B81DB2685D006E14C4 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD41AFB9204008FA782 /* Info.plist */,
@@ -152,6 +156,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = BM5Y87HJ2F;
 						LastSwiftMigration = 0800;
 					};
 				};
@@ -179,6 +184,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E87466B91DB2685D006E14C4 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
@@ -352,6 +358,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = BM5Y87HJ2F;
 				INFOPLIST_FILE = DeckTransition/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -367,6 +374,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = BM5Y87HJ2F;
 				INFOPLIST_FILE = DeckTransition/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
