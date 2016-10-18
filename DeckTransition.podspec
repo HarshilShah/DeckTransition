@@ -1,4 +1,4 @@
-Pod::Spec.new do |s|
+Pod::Spec.new do |spec|
   spec.name				= 'DeckTransition'
   spec.version          = '0.1.0'
   spec.summary          = 'An attempt to recreate the iOS 10 now playing transition'
