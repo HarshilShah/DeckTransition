@@ -14,6 +14,7 @@
 		E19F00E7A377EEDF7CCC682C /* Pods_DeckTransition_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DEBD63392BB6F5BA85E3057 /* Pods_DeckTransition_Example.framework */; };
 		E87466B91DB2685D006E14C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E87466B81DB2685D006E14C4 /* Main.storyboard */; };
 		E882148E1DB2599B00B04EBC /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E882148D1DB2599B00B04EBC /* ModalViewController.swift */; };
+		E8A32FE61DF1DD4900CEC9B3 /* CHANGELOG.md in Sources */ = {isa = PBXBuildFile; fileRef = E8A32FE51DF1DD4900CEC9B3 /* CHANGELOG.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		CF5CFE9FA4F56AD080C6D5DB /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		E87466B81DB2685D006E14C4 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		E882148D1DB2599B00B04EBC /* ModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; usesTabs = 1; };
+		E8A32FE51DF1DD4900CEC9B3 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 			children = (
 				A2193EA18A19BF49C457E952 /* DeckTransition.podspec */,
 				07082805D99F304EAD6DD70F /* README.md */,
+				E8A32FE51DF1DD4900CEC9B3 /* CHANGELOG.md */,
 				CF5CFE9FA4F56AD080C6D5DB /* LICENSE */,
 			);
 			name = "Podspec Metadata";
@@ -248,6 +251,7 @@
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				E882148E1DB2599B00B04EBC /* ModalViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				E8A32FE61DF1DD4900CEC9B3 /* CHANGELOG.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
