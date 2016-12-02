@@ -29,8 +29,9 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
                 let scale: CGFloat = 1 - (40/presentingViewController.view.frame.height)
                 presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
                 presentingViewController.view.alpha = 0.8
-                presentingViewController.view.layer.cornerRadius = 8
-                
+				presentingViewController.view.layer.cornerRadius = 8
+				presentingViewController.view.layer.masksToBounds = true
+				
                 presentedViewController.view.frame = transitionContext.finalFrame(for: presentedViewController)
                 presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
             }, completion: { _ in

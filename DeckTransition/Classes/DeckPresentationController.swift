@@ -47,6 +47,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
             presentingViewController.view.alpha = 0.8
             presentingViewController.view.layer.cornerRadius = 8
+			presentingViewController.view.layer.masksToBounds = true
             
             presentedViewController.view.frame = frameOfPresentedViewInContainerView
             presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
