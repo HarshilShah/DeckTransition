@@ -55,7 +55,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
             pan!.delegate = self
             pan!.maximumNumberOfTouches = 1
-            pan!.delaysTouchesBegan = true
             presentedViewController.view.addGestureRecognizer(pan!)
         }
     }

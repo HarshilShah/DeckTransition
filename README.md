@@ -101,7 +101,9 @@ func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
 ## Author
 
-Harshil Shah, you can [find me on Twitter](https://twitter.com/harshilshah1910) if you have any suggestions, requests, or just want to talk!
+Written by Harshil Shah. You can [find me on Twitter](https://twitter.com/harshilshah1910) if you have any suggestions, requests, or just want to talk!
+
+If you use this library in your application, please let me know about it.
 
 ## License
 
