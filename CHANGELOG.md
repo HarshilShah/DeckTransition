@@ -1,5 +1,10 @@
 ## Changelog
 
+0.1.2 Release notes (27/2/2017)
+----
+
+- Fixed an issue where touches to the presented view were being delayed
+
 0.1.1 Release notes (2/12/2016)
 ----
 
