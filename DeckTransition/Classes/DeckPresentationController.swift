@@ -155,10 +155,10 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     private func updatePresentedViewForTranslation(inVerticalDirection translation: CGFloat) {
         
         let elasticThreshold: CGFloat = 120
-		let dismissThreshold: CGFloat = 200
+		let dismissThreshold: CGFloat = 240
 		
-		let elasticFactor: CGFloat = 1/10
-		let translationFactor: CGFloat = 1/2.5
+		let elasticFactor: CGFloat = 1/5
+		let translationFactor: CGFloat = 1/2
 		
         /**
          Nothing happens if the pan gesture is performed from bottom
@@ -167,12 +167,14 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         if translation >= 0 {
             let translationForModal: CGFloat = {
                 if translation >= elasticThreshold {
-                    return ((translation-elasticThreshold) * elasticFactor) + (elasticThreshold * translationFactor)
+					let frictionLength = translation - elasticThreshold
+					let frictionTranslation = 30 * atan(frictionLength/120) + frictionLength/10
+                    return frictionTranslation + (elasticThreshold * translationFactor)
                 } else {
                     return translation * translationFactor
                 }
             }()
-            
+			
             presentedView?.transform = CGAffineTransform(translationX: 0, y: translationForModal)
             
             if translation >= dismissThreshold {

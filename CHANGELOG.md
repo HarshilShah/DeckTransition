@@ -1,5 +1,10 @@
 ## Changelog
 
+0.2.0 Release notes (5/3/2017)
+----
+
+- Made the dismissal gesture friction more realistic
+
 0.1.2 Release notes (27/2/2017)
 ----
 
