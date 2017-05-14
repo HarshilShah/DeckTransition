@@ -9,6 +9,20 @@
 import UIKit
 
 final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimatedTransitioning {
+	
+	// MARK:- Private variables
+	
+	private let animation: (() -> ())?
+	private let completion: ((Bool) -> ())?
+	
+	// MARK:- Initializers
+	
+	init(withAnimation animation: (() -> ())?, completion: ((Bool) -> ())?) {
+		self.animation = animation
+		self.completion = completion
+	}
+	
+	// MARK:- UIViewControllerAnimatedTransitioning
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let presentingViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)!
@@ -25,7 +39,7 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
             options: .curveEaseOut,
-            animations: {
+            animations: { [weak self] in
                 let scale: CGFloat = 1 - (40/presentingViewController.view.frame.height)
                 presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
                 presentingViewController.view.alpha = 0.8
@@ -34,8 +48,10 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
 				
                 presentedViewController.view.frame = transitionContext.finalFrame(for: presentedViewController)
                 presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
-            }, completion: { _ in
-                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+				self?.animation?()
+            }, completion: { [weak self] finished in
+                transitionContext.completeTransition(finished)
+				self?.completion?(finished)
             }
         )
     }

@@ -9,27 +9,68 @@
 import UIKit
 
 public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate, DeckPresentationControllerDelegate {
-    
-    /**
-     A variable indicating whether or not the presenting view controller
-     can currently be dismissed using a pan gestures from top to bottom.
-     
-     When set to `true`, this allows the presented modal view to be
-     dismissed using a pan gesture. The default value of this property
-     is true.
-    */
-    public var isDismissEnabled = true
+	
+	// MARK:- Public variables
+	
+	/**
+	 A variable indicating whether or not the presenting view controller
+	 can currently be dismissed using a pan gestures from top to bottom.
+	
+	 When set to `true`, this allows the presented modal view to be
+	 dismissed using a pan gesture. The default value of this property
+	 is true.
+	*/
+	public var isDismissEnabled = true
+	
+	// MARK:- Private variables
+	
+	private let presentAnimation: (() -> ())?
+	private let presentCompletion: ((Bool) -> ())?
+	private let dismissAnimation: (() -> ())?
+	private let dismissCompletion: ((Bool) -> ())?
+	
+	// MARK:- Initializers
+	
+	/// Returns a transitioning delegate to perform a card transition
+	///
+	/// - Parameters:
+	///   - presentAnimation: An animation block that will be performed
+	///		alongside the card presentation animation
+	///   - presentCompletion: A block that will be run after the card has been
+	///		presented
+	///   - dismissAnimation: An animation block that will be performed
+	///		alongside the card dismissal animation
+	///   - dismissCompletion: A block that will be run after the card has been
+	///		dismissed
+	public init(presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
+		self.presentAnimation = presentAnimation
+		self.presentCompletion = presentCompletion
+		self.dismissAnimation = dismissAnimation
+		self.dismissCompletion = dismissCompletion
+	}
+	
+	// MARK:- UIViewControllerTransitioningDelegate
     
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return DeckPresentingAnimationController()
+        return DeckPresentingAnimationController(
+			animation: presentAnimation,
+			completion: presentCompletion)
     }
     
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return DeckDismissingAnimationController()
+        return DeckDismissingAnimationController(
+			animation: dismissAnimation,
+			completion: dismissCompletion)
     }
     
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        let presentationController = DeckPresentationController(presentedViewController: presented, presenting: presenting)
+        let presentationController = DeckPresentationController(
+			presentedViewController: presented,
+			presenting: presenting,
+			presentAnimation: presentAnimation,
+			presentCompletion: presentCompletion,
+			dismissAnimation: dismissAnimation,
+			dismissCompletion: dismissCompletion)
         presentationController.transitioningDelegate = self
         return presentationController
     }

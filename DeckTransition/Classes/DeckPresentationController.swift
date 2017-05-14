@@ -17,9 +17,29 @@ protocol DeckPresentationControllerDelegate {
 }
 
 final class DeckPresentationController: UIPresentationController, UIGestureRecognizerDelegate {
+	
+	// MARK:- Internal variables
+	
     var transitioningDelegate: DeckPresentationControllerDelegate?
     var pan: UIPanGestureRecognizer?
-    
+	
+	// MARK:- Private variables
+	
+	private var presentAnimation: (() -> ())? = nil
+	private var presentCompletion: ((Bool) -> ())? = nil
+	private var dismissAnimation: (() -> ())? = nil
+	private var dismissCompletion: ((Bool) -> ())? = nil
+	
+	// MARK:- Initializers
+	
+	convenience init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
+		self.init(presentedViewController: presentedViewController, presenting: presentingViewController)
+		self.presentAnimation = presentAnimation
+		self.presentCompletion = presentCompletion
+		self.dismissAnimation = dismissAnimation
+		self.dismissCompletion = dismissCompletion
+	}
+	
     /**
      As best as I can tell using my iPhone and a bunch of iOS UI templates I
      came across online, 28 points is the distance between the top edge of the
@@ -51,12 +71,15 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             
             presentedViewController.view.frame = frameOfPresentedViewInContainerView
             presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
+			presentAnimation?()
             
             pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
             pan!.delegate = self
             pan!.maximumNumberOfTouches = 1
             presentedViewController.view.addGestureRecognizer(pan!)
         }
+		
+		presentCompletion?(completed)
     }
     
     /**
@@ -68,12 +91,15 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             presentingViewController.view.alpha = 1
             presentingViewController.view.transform = .identity
             presentingViewController.view.layer.cornerRadius = 0
-            
+			dismissAnimation?()
+			
             if let view = containerView {
                 let offScreenFrame = CGRect(x: 0, y: view.bounds.height, width: view.bounds.width, height: view.bounds.height)
                 presentedViewController.view.frame = offScreenFrame
             }
         }
+		
+		dismissCompletion?(completed)
     }
     
     /**
@@ -157,7 +183,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         let elasticThreshold: CGFloat = 120
 		let dismissThreshold: CGFloat = 240
 		
-		let elasticFactor: CGFloat = 1/5
 		let translationFactor: CGFloat = 1/2
 		
         /**
