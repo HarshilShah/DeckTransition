@@ -24,8 +24,10 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
 	
 	// MARK:- Private variables
 	
+	private let presentDuration: TimeInterval?
 	private let presentAnimation: (() -> ())?
 	private let presentCompletion: ((Bool) -> ())?
+	private let dismissDuration: TimeInterval?
 	private let dismissAnimation: (() -> ())?
 	private let dismissCompletion: ((Bool) -> ())?
 	
@@ -34,17 +36,21 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
 	/// Returns a transitioning delegate to perform a card transition
 	///
 	/// - Parameters:
+	///	  - presentDuration: The duration for the presentation animation
 	///   - presentAnimation: An animation block that will be performed
 	///		alongside the card presentation animation
 	///   - presentCompletion: A block that will be run after the card has been
 	///		presented
+	///	  - dismissDuration: The duration for the dismissal animation
 	///   - dismissAnimation: An animation block that will be performed
 	///		alongside the card dismissal animation
 	///   - dismissCompletion: A block that will be run after the card has been
 	///		dismissed
-	public init(presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
+	public init(presentDuration: TimeInterval? = nil, presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissDuration: TimeInterval? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
+		self.presentDuration = presentDuration
 		self.presentAnimation = presentAnimation
 		self.presentCompletion = presentCompletion
+		self.dismissDuration = dismissDuration
 		self.dismissAnimation = dismissAnimation
 		self.dismissCompletion = dismissCompletion
 	}
@@ -53,12 +59,14 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return DeckPresentingAnimationController(
+			duration: presentDuration,
 			animation: presentAnimation,
 			completion: presentCompletion)
     }
     
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return DeckDismissingAnimationController(
+			duration: dismissDuration,
 			animation: dismissAnimation,
 			completion: dismissCompletion)
     }

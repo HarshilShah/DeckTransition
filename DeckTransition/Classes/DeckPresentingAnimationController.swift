@@ -12,12 +12,14 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
 	
 	// MARK:- Private variables
 	
+	private let duration: TimeInterval?
 	private let animation: (() -> ())?
 	private let completion: ((Bool) -> ())?
 	
 	// MARK:- Initializers
 	
-	init(withAnimation animation: (() -> ())?, completion: ((Bool) -> ())?) {
+	init(duration: TimeInterval?, animation: (() -> ())?, completion: ((Bool) -> ())?) {
+		self.duration = duration
 		self.animation = animation
 		self.completion = completion
 	}
@@ -57,7 +59,7 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
     }
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.3
+        return duration ?? 0.3
     }
     
 }
