@@ -1,6 +1,6 @@
 # DeckTransition
 
-[![CI Status](http://img.shields.io/travis/Harshil Shah/DeckTransition.svg?style=flat)](https://travis-ci.org/Harshil Shah/DeckTransition)
+[![CI Status](http://img.shields.io/travis/HarshilShah/DeckTransition.svg?style=flat)](https://travis-ci.org/HarshilShah/DeckTransition)
 [![Version](https://img.shields.io/cocoapods/v/DeckTransition.svg?style=flat)](http://cocoapods.org/pods/DeckTransition)
 [![License](https://img.shields.io/cocoapods/l/DeckTransition.svg?style=flat)](http://cocoapods.org/pods/DeckTransition)
 [![Platform](https://img.shields.io/cocoapods/p/DeckTransition.svg?style=flat)](http://cocoapods.org/pods/DeckTransition)

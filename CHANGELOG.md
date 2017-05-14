@@ -1,5 +1,10 @@
 ## Changelog
 
+0.3.0 Release notes (14/5/2017)
+----
+
+- The transition can now be customised by passing in custom animation durations, other animations to be performed alongside the stock animation, and completion handlers
+
 0.2.0 Release notes (5/3/2017)
 ----
 
