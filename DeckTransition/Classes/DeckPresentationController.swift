@@ -70,7 +70,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			presentingViewController.view.layer.masksToBounds = true
             
             presentedViewController.view.frame = frameOfPresentedViewInContainerView
-            presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
 			presentAnimation?()
             
             pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
@@ -97,6 +96,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                 let offScreenFrame = CGRect(x: 0, y: view.bounds.height, width: view.bounds.width, height: view.bounds.height)
                 presentedViewController.view.frame = offScreenFrame
             }
+
+            presentedViewController.view.subviews.first(where: { $0.isKind(of: RoundedView.self) })?.removeFromSuperview()
+
         }
 		
 		dismissCompletion?(completed)
@@ -121,7 +123,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                 self.presentedViewController.view.frame = frame
                 
                 self.presentedViewController.view.mask = nil
-                self.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
             }, completion: nil
         )
     }

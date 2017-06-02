@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		082819BE7FB6917CFD265810411724A3 /* Pods-DeckTransition_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 46C36A222C5FC4DC63CB7C775A3FC249 /* Pods-DeckTransition_Tests-dummy.m */; };
+		1508D9DA1EE15A9900070549 /* RoundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1508D9D91EE15A9900070549 /* RoundedView.swift */; };
 		1E875FC4B6B398FAFEF42A652675F63D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC22C73C1608DFA5D5D78BDCB218219 /* Foundation.framework */; };
 		2352AC62D087815F12FED13E78F0BEAD /* DeckTransition-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = DA37D45B1AE6BC9978DD95DA0B160962 /* DeckTransition-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3BFBFDF6EA677B5C738AF1A8432F97A1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC22C73C1608DFA5D5D78BDCB218219 /* Foundation.framework */; };
@@ -20,7 +21,6 @@
 		E88214BC1DB25B2D00B04EBC /* DeckPresentingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88214B61DB25B2D00B04EBC /* DeckPresentingAnimationController.swift */; };
 		E88214BD1DB25B2D00B04EBC /* DeckSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88214B71DB25B2D00B04EBC /* DeckSegue.swift */; };
 		E88214BE1DB25B2D00B04EBC /* DeckTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88214B81DB25B2D00B04EBC /* DeckTransitioningDelegate.swift */; };
-		E88214BF1DB25B2D00B04EBC /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88214B91DB25B2D00B04EBC /* Utilities.swift */; };
 		F27502DB59C5B92981D452CBB9234FA1 /* Pods-DeckTransition_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CB42326BB187883884FCEEC2C7BEA57 /* Pods-DeckTransition_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -38,6 +38,7 @@
 		05E2305705B58AA022D6ACAC43B368D4 /* Pods-DeckTransition_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DeckTransition_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		06FC8612A222648B476FEB159CE1F2F2 /* DeckTransition.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = DeckTransition.modulemap; sourceTree = "<group>"; };
 		0ED7D1FC29149713D327D684A351E434 /* Pods-DeckTransition_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-DeckTransition_Example.modulemap"; sourceTree = "<group>"; };
+		1508D9D91EE15A9900070549 /* RoundedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedView.swift; sourceTree = "<group>"; };
 		19CC4BC54B038800327A46AAFE982947 /* Pods-DeckTransition_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DeckTransition_Tests-resources.sh"; sourceTree = "<group>"; };
 		1F15FE36EE7C3A0DD10F14D19968E556 /* Pods-DeckTransition_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DeckTransition_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		2CB42326BB187883884FCEEC2C7BEA57 /* Pods-DeckTransition_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DeckTransition_Example-umbrella.h"; sourceTree = "<group>"; };
@@ -69,7 +70,6 @@
 		E88214B61DB25B2D00B04EBC /* DeckPresentingAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckPresentingAnimationController.swift; sourceTree = "<group>"; };
 		E88214B71DB25B2D00B04EBC /* DeckSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckSegue.swift; sourceTree = "<group>"; };
 		E88214B81DB25B2D00B04EBC /* DeckTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckTransitioningDelegate.swift; sourceTree = "<group>"; };
-		E88214B91DB25B2D00B04EBC /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		EB4AE9CAC675560AF2ADDCF742E883F2 /* Pods-DeckTransition_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DeckTransition_Example-frameworks.sh"; sourceTree = "<group>"; };
 		F989126F2DFD19C6B5C74C08FB41B841 /* Pods_DeckTransition_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeckTransition_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -206,7 +206,7 @@
 				E88214B51DB25B2D00B04EBC /* DeckPresentationController.swift */,
 				E88214B61DB25B2D00B04EBC /* DeckPresentingAnimationController.swift */,
 				E88214B41DB25B2D00B04EBC /* DeckDismissingAnimationController.swift */,
-				E88214B91DB25B2D00B04EBC /* Utilities.swift */,
+				1508D9D91EE15A9900070549 /* RoundedView.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -379,7 +379,7 @@
 			files = (
 				E88214BC1DB25B2D00B04EBC /* DeckPresentingAnimationController.swift in Sources */,
 				620D0D78B412DD11970E623997CB8B3F /* DeckTransition-dummy.m in Sources */,
-				E88214BF1DB25B2D00B04EBC /* Utilities.swift in Sources */,
+				1508D9DA1EE15A9900070549 /* RoundedView.swift in Sources */,
 				E88214BA1DB25B2D00B04EBC /* DeckDismissingAnimationController.swift in Sources */,
 				E88214BD1DB25B2D00B04EBC /* DeckSegue.swift in Sources */,
 				E88214BB1DB25B2D00B04EBC /* DeckPresentationController.swift in Sources */,
