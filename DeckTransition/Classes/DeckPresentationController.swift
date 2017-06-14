@@ -24,7 +24,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     var pan: UIPanGestureRecognizer?
 	
 	// MARK:- Private variables
-	
+    private var presentTopOffset: CGFloat = kDefaultPresentTopOffset
 	private var presentAnimation: (() -> ())? = nil
 	private var presentCompletion: ((Bool) -> ())? = nil
 	private var dismissAnimation: (() -> ())? = nil
@@ -32,12 +32,13 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Initializers
 	
-	convenience init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
+    convenience init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, presentTopOffset: CGFloat = kDefaultPresentTopOffset, presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
 		self.init(presentedViewController: presentedViewController, presenting: presentingViewController)
 		self.presentAnimation = presentAnimation
 		self.presentCompletion = presentCompletion
 		self.dismissAnimation = dismissAnimation
 		self.dismissCompletion = dismissCompletion
+        self.presentTopOffset = presentTopOffset
 	}
 	
     /**
@@ -47,7 +48,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     */
     override var frameOfPresentedViewInContainerView: CGRect {
         if let view = containerView {
-            let offset: CGFloat = 28
+            let offset: CGFloat = presentTopOffset
             return CGRect(x: 0, y: offset, width: view.bounds.width, height: view.bounds.height - offset)
         } else {
             return .zero
