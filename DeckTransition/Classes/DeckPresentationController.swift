@@ -30,6 +30,10 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	private var dismissAnimation: (() -> ())? = nil
 	private var dismissCompletion: ((Bool) -> ())? = nil
 	
+	override var shouldRemovePresentersView: Bool {
+		return false
+	}
+	
 	// MARK:- Initializers
 	
 	convenience init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
@@ -38,6 +42,27 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		self.presentCompletion = presentCompletion
 		self.dismissAnimation = dismissAnimation
 		self.dismissCompletion = dismissCompletion
+		
+		NotificationCenter.default.addObserver(self, selector: #selector(updateForStatusBar), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
+	}
+	
+	@objc func updateForStatusBar() {
+		guard let containerView = containerView else {
+			return
+		}
+		
+		let fullHeight = containerView.window!.frame.size.height
+		let statusBarHeight = UIApplication.shared.statusBarFrame.height - 20
+		
+		UIView.animate(withDuration: 0.2) {
+			containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: fullHeight - statusBarHeight)
+		}
+		
+		let scale: CGFloat = 1 - (40/containerView.frame.height)
+		self.presentingViewController.view.transform = .identity
+		self.presentingViewController.view.frame = containerView.bounds
+		self.presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
+		self.presentingViewController.view.center = containerView.center
 	}
 	
     /**
@@ -63,7 +88,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     */
     override func presentationTransitionDidEnd(_ completed: Bool) {
         if completed {
-            let scale: CGFloat = 1 - (40/presentingViewController.view.frame.height)
+            let scale: CGFloat = 1 - (40/containerView!.frame.height)
             presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
             presentingViewController.view.alpha = 0.8
             presentingViewController.view.layer.cornerRadius = 8
@@ -88,6 +113,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     */
     override func dismissalTransitionDidEnd(_ completed: Bool) {
         if completed {
+			presentingViewController.view.frame = containerView!.frame
             presentingViewController.view.alpha = 1
             presentingViewController.view.transform = .identity
             presentingViewController.view.layer.cornerRadius = 0
@@ -114,7 +140,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         
         coordinator.animate(
             alongsideTransition: { context in
-                let scale: CGFloat = 1 - (40/self.presentingViewController.view.frame.height)
+                let scale: CGFloat = 1 - (40/self.containerView!.frame.height)
                 self.presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
                 
                 let offset: CGFloat = 28
