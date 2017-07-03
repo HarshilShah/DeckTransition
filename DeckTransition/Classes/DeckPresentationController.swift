@@ -39,10 +39,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	private var dismissAnimation: (() -> ())? = nil
 	private var dismissCompletion: ((Bool) -> ())? = nil
 	
-	override var shouldRemovePresentersView: Bool {
-		return false
-	}
-	
 	// MARK:- Initializers
 	
 	convenience init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
@@ -63,9 +59,36 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		let fullHeight = containerView.window!.frame.size.height
 		let statusBarHeight = UIApplication.shared.statusBarFrame.height - 20
 		
-		UIView.animate(withDuration: 0.2) {
-			containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: fullHeight - statusBarHeight)
+		let currentHeight = containerView.frame.height
+		let newHeight = fullHeight - statusBarHeight
+		let isHeightIncreasing = newHeight > currentHeight
+		
+		/// If the height of the card view is increasing i.e. if the status bar
+		/// has been collapsed, the mask needs to be adjusted before the height
+		
+		if isHeightIncreasing {
+			presentedViewController.view.frame = CGRect(x: 0, y: offset, width: containerView.frame.width, height: newHeight - offset)
+			presentedViewController.view.mask = nil
+			presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
 		}
+		
+		UIView.animate(
+			withDuration: 0.2,
+			animations: {
+				containerView.frame.origin.y -= newHeight - currentHeight
+			}, completion: { [weak self] _ in
+				containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: newHeight)
+				self?.presentedViewController.view.mask = nil
+				self?.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
+			}
+		)
+		
+		/// FIXME: This is janky AF, but it's the only thing that kinda-sorta
+		/// works so keeping it around for now
+		///
+		/// The scale of the `presentingViewController` needs to be reset to
+		/// `.identity` before any changes are made, because otherwise UIKit
+		/// will resize the view for you, resulting in some weird zooms
 		
 		let scale: CGFloat = 1 - (40/containerView.frame.height)
 		self.presentingViewController.view.transform = .identity
