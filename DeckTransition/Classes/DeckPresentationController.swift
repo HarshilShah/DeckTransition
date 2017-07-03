@@ -18,6 +18,15 @@ protocol DeckPresentationControllerDelegate {
 
 final class DeckPresentationController: UIPresentationController, UIGestureRecognizerDelegate {
 	
+	// MARK:- Constants
+	
+	/**
+	 As best as I can tell using my iPhone and a bunch of iOS UI templates I
+	 came across online, 28 points is the distance between the top edge of the
+	 screen and the top edge of the modal view
+	*/
+	let offset: CGFloat = 28
+	
 	// MARK:- Internal variables
 	
     var transitioningDelegate: DeckPresentationControllerDelegate?
@@ -65,14 +74,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		self.presentingViewController.view.center = containerView.center
 	}
 	
-    /**
-     As best as I can tell using my iPhone and a bunch of iOS UI templates I
-     came across online, 28 points is the distance between the top edge of the
-     screen and the top edge of the modal view
-    */
     override var frameOfPresentedViewInContainerView: CGRect {
         if let view = containerView {
-            let offset: CGFloat = 28
             return CGRect(x: 0, y: offset, width: view.bounds.width, height: view.bounds.height - offset)
         } else {
             return .zero
@@ -142,9 +145,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             alongsideTransition: { context in
                 let scale: CGFloat = 1 - (40/self.containerView!.frame.height)
                 self.presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
-                
-                let offset: CGFloat = 28
-                let frame = CGRect(x: 0, y: offset, width: size.width, height: size.height - offset)
+				
+                let frame = CGRect(x: 0, y: self.offset, width: size.width, height: size.height - self.offset)
                 self.presentedViewController.view.frame = frame
                 
                 self.presentedViewController.view.mask = nil
