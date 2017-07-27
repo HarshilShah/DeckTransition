@@ -99,6 +99,9 @@ func scrollViewDidScroll(_ scrollView: UIScrollView) {
 }
 ```
 
+## Apps Using DeckTransition
+* [Petty](https://zachsim.one/projects/petty) by [Zach Simone](https://twitter.com/zachsimone)
+
 ## Author
 
 Written by Harshil Shah. You can [find me on Twitter](https://twitter.com/harshilshah1910) if you have any suggestions, requests, or just want to talk!
