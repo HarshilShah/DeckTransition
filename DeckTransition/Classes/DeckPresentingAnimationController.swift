@@ -36,7 +36,8 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
         
         containerView.addSubview(presentedViewController.view)
         presentedViewController.view.frame = offScreenFrame
-        
+        presentedViewController.view.addSubview(RoundedView())
+
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
@@ -49,7 +50,6 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
 				presentingViewController.view.layer.masksToBounds = true
 				
                 presentedViewController.view.frame = transitionContext.finalFrame(for: presentedViewController)
-                presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
 				self?.animation?()
             }, completion: { [weak self] finished in
                 transitionContext.completeTransition(finished)
