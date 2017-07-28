@@ -29,16 +29,21 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	private var presentCompletion: ((Bool) -> ())? = nil
 	private var dismissAnimation: (() -> ())? = nil
 	private var dismissCompletion: ((Bool) -> ())? = nil
+	private let backgroundView: UIView = {
+		let view = UIView()
+		view.backgroundColor = UIColor.clear
+		return view
+	}()
 	
 	// MARK:- Initializers
 	
 	convenience init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
 		self.init(presentedViewController: presentedViewController, presenting: presentingViewController)
-		self.presentAnimation = presentAnimation
+        self.presentAnimation = presentAnimation
 		self.presentCompletion = presentCompletion
 		self.dismissAnimation = dismissAnimation
 		self.dismissCompletion = dismissCompletion
-	}
+    }
 	
     /**
      As best as I can tell using my iPhone and a bunch of iOS UI templates I
@@ -53,7 +58,26 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return .zero
         }
     }
+	
+    /**
+     Add a background view that allows dismissal by tap. Useful when the top offset is big enough that the user can tap on the background. 
+    */
+	override func presentationTransitionWillBegin() {
+		guard let containerView = containerView else {return}
+		
+		backgroundView.frame = containerView.bounds
+		containerView.insertSubview(backgroundView, at: 0)
+        
+        let tapGR = UITapGestureRecognizer(target: self, action: #selector(self.dismissPresentedViewController(_:)))
+        backgroundView.addGestureRecognizer(tapGR)
+	}
 
+    func dismissPresentedViewController(_ tap: UITapGestureRecognizer) {
+        if tap.state == .recognized {
+            presentingViewController.dismiss(animated: true, completion: nil)
+        }
+    }
+    
     /**
      Method to ensure the layout is as required at the end of the presentation.
      This is required in case the modal is presented without animation.
