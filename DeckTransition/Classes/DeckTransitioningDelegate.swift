@@ -8,6 +8,8 @@
 
 import UIKit
 
+internal let kDefaultPresentTopOffset: CGFloat = 28
+
 public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate, DeckPresentationControllerDelegate {
 	
 	// MARK:- Public variables
@@ -25,6 +27,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
 	// MARK:- Private variables
 	
 	private let presentDuration: TimeInterval?
+    private var presentTopOffset: CGFloat = kDefaultPresentTopOffset
 	private let presentAnimation: (() -> ())?
 	private let presentCompletion: ((Bool) -> ())?
 	private let dismissDuration: TimeInterval?
@@ -46,8 +49,9 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
 	///		alongside the card dismissal animation
 	///   - dismissCompletion: A block that will be run after the card has been
 	///		dismissed
-	public init(presentDuration: TimeInterval? = nil, presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissDuration: TimeInterval? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
+    public init(presentDuration: TimeInterval? = nil, presentTopOffset: CGFloat = kDefaultPresentTopOffset, presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissDuration: TimeInterval? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
 		self.presentDuration = presentDuration
+        self.presentTopOffset = presentTopOffset
 		self.presentAnimation = presentAnimation
 		self.presentCompletion = presentCompletion
 		self.dismissDuration = dismissDuration
@@ -75,6 +79,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
         let presentationController = DeckPresentationController(
 			presentedViewController: presented,
 			presenting: presenting,
+			presentTopOffset: presentTopOffset,
 			presentAnimation: presentAnimation,
 			presentCompletion: presentCompletion,
 			dismissAnimation: dismissAnimation,
