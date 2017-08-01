@@ -10,12 +10,10 @@ import UIKit
 
 extension UIView {
 
-    /**
-     A function to round selected corners of a `UIView`
-    
-     - parameter corners: The corner(s) to be rounded
-     - parameter radius: The radius of the new rounded corners
-    */
+	/// A function to round selected corners of a `UIView`
+    ///
+    /// - parameter corners: The corner(s) to be rounded
+    /// - parameter radius: The radius of the new rounded corners
     func round(corners: UIRectCorner, withRadius radius: CGFloat) {
         let path = UIBezierPath(
             roundedRect: self.bounds,

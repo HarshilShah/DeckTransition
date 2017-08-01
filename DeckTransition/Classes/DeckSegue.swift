@@ -8,9 +8,7 @@
 
 import UIKit
 
-/**
- A segue to implement the deck transition via Storyboards
-*/
+/// A segue to implement the deck transition via Storyboards
 final class DeckSegue: UIStoryboardSegue {
 
     var transition: UIViewControllerTransitioningDelegate!

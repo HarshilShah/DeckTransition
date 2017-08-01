@@ -8,10 +8,8 @@
 
 import UIKit
 
-/**
- Delegate that communicates to the `DeckPresentationController`
- whether the dismiss by pan gesture is enabled
-*/
+/// Delegate that communicates to the `DeckPresentationController` whether the
+/// dismiss by pan gesture is enabled
 protocol DeckPresentationControllerDelegate {
     func isDismissGestureEnabled() -> Bool
 }
@@ -20,11 +18,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Constants
 	
-	/**
-	 As best as I can tell using my iPhone and a bunch of iOS UI templates I
-	 came across online, 28 points is the distance between the top edge of the
-	 screen and the top edge of the modal view
-	*/
+	/// As best as I can tell using my iPhone and a bunch of iOS UI templates I
+	/// came across online, 28 points is the distance between the top edge of
+	/// the screen and the top edge of the modal view
 	let offset: CGFloat = 28
 	
 	// MARK:- Internal variables
@@ -66,13 +62,12 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Presentation
 
-    /**
-     Method to ensure the layout is as required at the end of the presentation.
-     This is required in case the modal is presented without animation.
-    
-     It also sets up the gesture recognizer to handle dismissal of the modal view
-     controller by panning downwards
-    */
+    /// Method to ensure the layout is as required at the end of the
+	/// presentation. This is required in case the modal is presented without
+	/// animation.
+    ///
+    /// It also sets up the gesture recognizer to handle dismissal of the modal
+	/// view controller by panning downwards
     override func presentationTransitionDidEnd(_ completed: Bool) {
 		guard let containerView = containerView else {
 			return
@@ -120,10 +115,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Layout update methods
     
-    /**
-     Function to handle the modal setup's response to a change in constraints
-     Basically the same changes as with the presentation animation are performed here.
-    */
+    /// Function to handle the modal setup's response to a change in constraints
+	/// Basically the same changes as with the presentation animation are
+	/// performed here.
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 		
@@ -210,10 +204,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		backgroundView?.alpha = 0
 	}
 	
-	/**
-	Method to ensure the layout is as required at the end of the dismissal.
-	This is required in case the modal is dismissed without animation.
-	*/
+	/// Method to ensure the layout is as required at the end of the dismissal.
+	/// This is required in case the modal is dismissed without animation.
 	override func dismissalTransitionDidEnd(_ completed: Bool) {
 		if completed {
 			presentingViewController.view.frame = containerView!.frame
@@ -245,10 +237,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         
         case .changed:
             if let view = presentedView {
-                /**
-                 The dismiss gesture needs to be enabled for the pan gesture
-                 to do anything.
-                */
+                /// The dismiss gesture needs to be enabled for the pan gesture
+                /// to do anything.
                 if transitioningDelegate?.isDismissGestureEnabled() ?? false {
                     let translation = gestureRecognizer.translation(in: view)
                     updatePresentedViewForTranslation(inVerticalDirection: translation.y)
@@ -270,21 +260,19 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         }
     }
     
-    /**
-     Function to update the modal view for a particular amount of
-     translation by panning in the vertical direction.
-     
-     The translation of the modal view is proportional to the panning
-     distance until the `elasticThreshold`, after which it increases
-     at a slower rate, given by `elasticFactor`, to indicate that the
-     `dismissThreshold` is nearing.
-     
-     Once the `dismissThreshold` is reached, the modal view controller
-     is dismissed.
-     
-     - parameter translation: The translation of the user's pan
-     gesture in the container view in the vertical direction
-    */
+    /// Function to update the modal view for a particular amount of translation
+	/// by panning in the vertical direction.
+	///
+	/// The translation of the modal view is proportional to the panning
+	/// distance until the `elasticThreshold`, after which it increases at a
+	/// slower rate, given by `elasticFactor`, to indicate that the
+	/// `dismissThreshold` is nearing.
+    ///
+    /// Once the `dismissThreshold` is reached, the modal view controller is
+	/// dismissed.
+    ///
+    /// - parameter translation: The translation of the user's pan gesture in
+    ///   the container view in the vertical direction
     private func updatePresentedViewForTranslation(inVerticalDirection translation: CGFloat) {
         
         let elasticThreshold: CGFloat = 120
@@ -292,10 +280,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		
 		let translationFactor: CGFloat = 1/2
 		
-        /**
-         Nothing happens if the pan gesture is performed from bottom
-         to top i.e. if the translation is negative
-        */
+        /// Nothing happens if the pan gesture is performed from bottom
+        /// to top i.e. if the translation is negative
         if translation >= 0 {
             let translationForModal: CGFloat = {
                 if translation >= elasticThreshold {
