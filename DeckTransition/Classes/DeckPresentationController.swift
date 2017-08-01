@@ -56,34 +56,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		NotificationCenter.default.addObserver(self, selector: #selector(updateForStatusBar), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
 	}
 	
-	@objc func updateForStatusBar() {
-		guard let containerView = containerView else {
-			return
-		}
-		
-		presentingViewController.view.alpha = 0
-		
-		let fullHeight = containerView.window!.frame.size.height
-		let statusBarHeight = UIApplication.shared.statusBarFrame.height - 20
-		
-		let currentHeight = containerView.frame.height
-		let newHeight = fullHeight - statusBarHeight
-		
-		UIView.animate(
-			withDuration: 0.1,
-			animations: {
-				containerView.frame.origin.y -= newHeight - currentHeight
-			}, completion: { [weak self] _ in
-				self?.presentingViewController.view.alpha = 1
-				containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: newHeight)
-				self?.presentedViewController.view.mask = nil
-				self?.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
-			}
-		)
-		
-		updateSnapshotView()
-	}
-	
     override var frameOfPresentedViewInContainerView: CGRect {
         if let view = containerView {
             return CGRect(x: 0, y: offset, width: view.bounds.width, height: view.bounds.height - offset)
@@ -91,6 +63,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return .zero
         }
     }
+	
+	// MARK:- Presentation
 
     /**
      Method to ensure the layout is as required at the end of the presentation.
@@ -144,33 +118,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		presentCompletion?(completed)
     }
 	
-	override func dismissalTransitionWillBegin() {
-		let scale: CGFloat = 1 - (40/presentingViewController.view.frame.height)
-		presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
-		presentingViewSnapshotView?.alpha = 0
-		backgroundView?.alpha = 0
-	}
-    
-    /**
-     Method to ensure the layout is as required at the end of the dismissal.
-     This is required in case the modal is dismissed without animation.
-    */
-    override func dismissalTransitionDidEnd(_ completed: Bool) {
-        if completed {
-			presentingViewController.view.frame = containerView!.frame
-            presentingViewController.view.transform = .identity
-            presentingViewController.view.layer.cornerRadius = 0
-			dismissAnimation?()
-			
-            if let view = containerView {
-                let offScreenFrame = CGRect(x: 0, y: view.bounds.height, width: view.bounds.width, height: view.bounds.height)
-                presentedViewController.view.frame = offScreenFrame
-                presentedViewController.view.transform = .identity
-            }
-        }
-		
-		dismissCompletion?(completed)
-    }
+	// MARK:- Layout update methods
     
     /**
      Function to handle the modal setup's response to a change in constraints
@@ -194,6 +142,34 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			}
         )
     }
+	
+	@objc func updateForStatusBar() {
+		guard let containerView = containerView else {
+			return
+		}
+		
+		presentingViewController.view.alpha = 0
+		
+		let fullHeight = containerView.window!.frame.size.height
+		let statusBarHeight = UIApplication.shared.statusBarFrame.height - 20
+		
+		let currentHeight = containerView.frame.height
+		let newHeight = fullHeight - statusBarHeight
+		
+		UIView.animate(
+			withDuration: 0.1,
+			animations: {
+				containerView.frame.origin.y -= newHeight - currentHeight
+		}, completion: { [weak self] _ in
+			self?.presentingViewController.view.alpha = 1
+			containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: newHeight)
+			self?.presentedViewController.view.mask = nil
+			self?.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
+			}
+		)
+		
+		updateSnapshotView()
+	}
 	
 	private func updateSnapshotView() {
 		guard
@@ -225,7 +201,39 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		}
 	}
 	
-    func handlePan(gestureRecognizer: UIPanGestureRecognizer) {
+	// MARK:- Dismissal
+	
+	override func dismissalTransitionWillBegin() {
+		let scale: CGFloat = 1 - (40/presentingViewController.view.frame.height)
+		presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
+		presentingViewSnapshotView?.alpha = 0
+		backgroundView?.alpha = 0
+	}
+	
+	/**
+	Method to ensure the layout is as required at the end of the dismissal.
+	This is required in case the modal is dismissed without animation.
+	*/
+	override func dismissalTransitionDidEnd(_ completed: Bool) {
+		if completed {
+			presentingViewController.view.frame = containerView!.frame
+			presentingViewController.view.transform = .identity
+			presentingViewController.view.layer.cornerRadius = 0
+			dismissAnimation?()
+			
+			if let view = containerView {
+				let offScreenFrame = CGRect(x: 0, y: view.bounds.height, width: view.bounds.width, height: view.bounds.height)
+				presentedViewController.view.frame = offScreenFrame
+				presentedViewController.view.transform = .identity
+			}
+		}
+		
+		dismissCompletion?(completed)
+	}
+	
+	// MARK:- Gesture handling
+	
+    @objc private func handlePan(gestureRecognizer: UIPanGestureRecognizer) {
         guard gestureRecognizer.isEqual(pan) else {
             return
         }
@@ -313,7 +321,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         guard gestureRecognizer.isEqual(pan) else {
             return false
         }
-        
+		
         return true
     }
     
