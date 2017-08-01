@@ -18,12 +18,26 @@ protocol DeckPresentationControllerDelegate {
 
 final class DeckPresentationController: UIPresentationController, UIGestureRecognizerDelegate {
 	
+	// MARK:- Constants
+	
+	/**
+	 As best as I can tell using my iPhone and a bunch of iOS UI templates I
+	 came across online, 28 points is the distance between the top edge of the
+	 screen and the top edge of the modal view
+	*/
+	let offset: CGFloat = 28
+	
 	// MARK:- Internal variables
 	
     var transitioningDelegate: DeckPresentationControllerDelegate?
     var pan: UIPanGestureRecognizer?
 	
 	// MARK:- Private variables
+	
+	private var backgroundView: UIView?
+	private var presentingViewSnapshotView: UIView?
+	private var cachedContainerWidth: CGFloat = 0
+	private var aspectRatioConstraint: NSLayoutConstraint?
 	
 	private var presentAnimation: (() -> ())? = nil
 	private var presentCompletion: ((Bool) -> ())? = nil
@@ -38,16 +52,40 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		self.presentCompletion = presentCompletion
 		self.dismissAnimation = dismissAnimation
 		self.dismissCompletion = dismissCompletion
+		
+		NotificationCenter.default.addObserver(self, selector: #selector(updateForStatusBar), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
 	}
 	
-    /**
-     As best as I can tell using my iPhone and a bunch of iOS UI templates I
-     came across online, 28 points is the distance between the top edge of the
-     screen and the top edge of the modal view
-    */
+	@objc func updateForStatusBar() {
+		guard let containerView = containerView else {
+			return
+		}
+		
+		presentingViewController.view.alpha = 0
+		
+		let fullHeight = containerView.window!.frame.size.height
+		let statusBarHeight = UIApplication.shared.statusBarFrame.height - 20
+		
+		let currentHeight = containerView.frame.height
+		let newHeight = fullHeight - statusBarHeight
+		
+		UIView.animate(
+			withDuration: 0.1,
+			animations: {
+				containerView.frame.origin.y -= newHeight - currentHeight
+			}, completion: { [weak self] _ in
+				self?.presentingViewController.view.alpha = 1
+				containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: newHeight)
+				self?.presentedViewController.view.mask = nil
+				self?.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
+			}
+		)
+		
+		updateSnapshotView()
+	}
+	
     override var frameOfPresentedViewInContainerView: CGRect {
         if let view = containerView {
-            let offset: CGFloat = 28
             return CGRect(x: 0, y: offset, width: view.bounds.width, height: view.bounds.height - offset)
         } else {
             return .zero
@@ -62,17 +100,41 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
      controller by panning downwards
     */
     override func presentationTransitionDidEnd(_ completed: Bool) {
+		guard let containerView = containerView else {
+			return
+		}
+		
         if completed {
-            let scale: CGFloat = 1 - (40/presentingViewController.view.frame.height)
-            presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
-            presentingViewController.view.alpha = 0.8
-            presentingViewController.view.layer.cornerRadius = 8
-			presentingViewController.view.layer.masksToBounds = true
-            
             presentedViewController.view.frame = frameOfPresentedViewInContainerView
             presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
 			presentAnimation?()
-            
+			
+			presentingViewSnapshotView = UIView()
+			presentingViewSnapshotView!.translatesAutoresizingMaskIntoConstraints = false
+			containerView.insertSubview(presentingViewSnapshotView!, belowSubview: presentedViewController.view)
+			
+			NSLayoutConstraint.activate([
+				presentingViewSnapshotView!.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+				presentingViewSnapshotView!.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+				presentingViewSnapshotView!.heightAnchor.constraint(equalTo: containerView.heightAnchor, constant: -40),
+			])
+			
+			updateSnapshotView()
+			
+			backgroundView = UIView()
+			backgroundView!.backgroundColor = .black
+			backgroundView!.translatesAutoresizingMaskIntoConstraints = false
+			containerView.insertSubview(backgroundView!, belowSubview: presentingViewSnapshotView!)
+			
+			NSLayoutConstraint.activate([
+				backgroundView!.topAnchor.constraint(equalTo: containerView.window!.topAnchor),
+				backgroundView!.leftAnchor.constraint(equalTo: containerView.window!.leftAnchor),
+				backgroundView!.rightAnchor.constraint(equalTo: containerView.window!.rightAnchor),
+				backgroundView!.bottomAnchor.constraint(equalTo: containerView.window!.bottomAnchor)
+			])
+			
+			presentingViewController.view.transform = .identity
+			
             pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
             pan!.delegate = self
             pan!.maximumNumberOfTouches = 1
@@ -81,6 +143,13 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		
 		presentCompletion?(completed)
     }
+	
+	override func dismissalTransitionWillBegin() {
+		let scale: CGFloat = 1 - (40/presentingViewController.view.frame.height)
+		presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
+		presentingViewSnapshotView?.alpha = 0
+		backgroundView?.alpha = 0
+	}
     
     /**
      Method to ensure the layout is as required at the end of the dismissal.
@@ -88,7 +157,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     */
     override func dismissalTransitionDidEnd(_ completed: Bool) {
         if completed {
-            presentingViewController.view.alpha = 1
+			presentingViewController.view.frame = containerView!.frame
             presentingViewController.view.transform = .identity
             presentingViewController.view.layer.cornerRadius = 0
 			dismissAnimation?()
@@ -109,24 +178,53 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     */
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        
-        self.presentingViewController.view.transform = .identity
-        
+		
         coordinator.animate(
-            alongsideTransition: { context in
-                let scale: CGFloat = 1 - (40/self.presentingViewController.view.frame.height)
-                self.presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
-                
-                let offset: CGFloat = 28
-                let frame = CGRect(x: 0, y: offset, width: size.width, height: size.height - offset)
+            alongsideTransition: { [weak self] context in
+				guard let `self` = self else {
+					return
+				}
+				
+                let frame = CGRect(x: 0, y: self.offset, width: size.width, height: size.height - self.offset)
                 self.presentedViewController.view.frame = frame
-                
                 self.presentedViewController.view.mask = nil
                 self.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
-            }, completion: nil
+			}, completion: { _ in 
+				self.updateSnapshotView()
+			}
         )
     }
-    
+	
+	private func updateSnapshotView() {
+		guard
+			let containerView = containerView,
+			let presentingViewSnapshotView = presentingViewSnapshotView,
+			cachedContainerWidth != containerView.bounds.width
+		else {
+			return
+		}
+		
+		cachedContainerWidth = containerView.bounds.width
+		aspectRatioConstraint?.isActive = false
+		let aspectRatio = containerView.bounds.width / containerView.bounds.height
+		aspectRatioConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: presentingViewSnapshotView.heightAnchor, multiplier: aspectRatio)
+		aspectRatioConstraint?.isActive = true
+		
+		if let snapshotView = presentingViewController.view.snapshotView(afterScreenUpdates: true) {
+			presentingViewSnapshotView.subviews.forEach { $0.removeFromSuperview() }
+			
+			snapshotView.translatesAutoresizingMaskIntoConstraints = false
+			presentingViewSnapshotView.addSubview(snapshotView)
+			
+			NSLayoutConstraint.activate([
+				snapshotView.topAnchor.constraint(equalTo: presentingViewSnapshotView.topAnchor),
+				snapshotView.leftAnchor.constraint(equalTo: presentingViewSnapshotView.leftAnchor),
+				snapshotView.rightAnchor.constraint(equalTo: presentingViewSnapshotView.rightAnchor),
+				snapshotView.bottomAnchor.constraint(equalTo: presentingViewSnapshotView.bottomAnchor)
+			])
+		}
+	}
+	
     func handlePan(gestureRecognizer: UIPanGestureRecognizer) {
         guard gestureRecognizer.isEqual(pan) else {
             return
