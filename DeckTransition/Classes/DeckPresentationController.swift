@@ -66,6 +66,16 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	/// presentation. This is required in case the modal is presented without
 	/// animation.
     ///
+	/// The various layout related functions performed by this method are:
+	/// - Ensure that the view is in the same state as it would be after
+	///   animated presentation
+	/// - Create and add the `presentingViewSnapshotView` to the view hierarchy
+	/// - Add a black background view to present to complete cover the
+	///   `presentingViewController`'s view
+	/// - Reset the `presentingViewController`'s view's `transform` so that
+	///   further layout updates (such as status bar update) do not break the
+	///   transform
+	///
     /// It also sets up the gesture recognizer to handle dismissal of the modal
 	/// view controller by panning downwards
     override func presentationTransitionDidEnd(_ completed: Bool) {
@@ -115,9 +125,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Layout update methods
     
-    /// Function to handle the modal setup's response to a change in constraints
-	/// Basically the same changes as with the presentation animation are
-	/// performed here.
+    /// Method to handle the modal setup's response to a change in
+	/// orientation, size, etc.
+	///
+	/// The `presentedViewController`'s view's frame is reset and its mask is
+	/// adjusted, and then the snapshot view is updated as well
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 		
@@ -137,11 +149,24 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         )
     }
 	
+	/// Method to handle updating the view when the status bar's height changes
+	///
+	/// The `containerView`'s frame is always supposed to be the go 20 pixels
+	/// or 1 normal status bar height under the status bar itself, even when the
+	/// status bar is of double height, to retain consistency with the system's
+	/// default behaviour
+	///
+	/// The containerView is the only thing that received layout updates;
+	/// AutoLayout and the snapshotView method handle the rest. Additionally,
+	/// the mask for the `presentedViewController` is also reset
 	@objc func updateForStatusBar() {
 		guard let containerView = containerView else {
 			return
 		}
 		
+		/// The `presentingViewController.view` often animated "before" the mask
+		/// view that should fully cover it, so it's hidden before altering the
+		/// view hierarchy, and then revealed after the animations are finished
 		presentingViewController.view.alpha = 0
 		
 		let fullHeight = containerView.window!.frame.size.height
@@ -154,17 +179,26 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			withDuration: 0.1,
 			animations: {
 				containerView.frame.origin.y -= newHeight - currentHeight
-		}, completion: { [weak self] _ in
-			self?.presentingViewController.view.alpha = 1
-			containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: newHeight)
-			self?.presentedViewController.view.mask = nil
-			self?.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
+			}, completion: { [weak self] _ in
+				self?.presentingViewController.view.alpha = 1
+				containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: newHeight)
+				self?.presentedViewController.view.mask = nil
+				self?.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
 			}
 		)
 		
 		updateSnapshotView()
 	}
 	
+	/// Method to update the snapshot view showing a representation of the
+	/// `presentingViewController`'s view
+	///
+	/// The method can only be fired when the snapshot view has been set up, and
+	/// then only when the width of the container is updated
+	///
+	/// It resets the aspect ratio constraint for the snapshot view first, and
+	/// then generates a new snapshot of the `presentingViewController`'s view,
+	/// and then replaces the existing snapshot with it
 	private func updateSnapshotView() {
 		guard
 			let containerView = containerView,
@@ -197,6 +231,12 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Dismissal
 	
+	/// Method to prepare the view hirarchy for the dismissal animation
+	///
+	/// The stuff with snapshots and the black background should be invisible to
+	/// the dismissal animation, so this method effectively removes them and
+	/// restores the state of the `presentingViewController`'s view to the
+	/// expected state at the end of the presenting animation
 	override func dismissalTransitionWillBegin() {
 		let scale: CGFloat = 1 - (40/presentingViewController.view.frame.height)
 		presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
@@ -260,7 +300,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         }
     }
     
-    /// Function to update the modal view for a particular amount of translation
+    /// Method to update the modal view for a particular amount of translation
 	/// by panning in the vertical direction.
 	///
 	/// The translation of the modal view is proportional to the panning
