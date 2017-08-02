@@ -143,6 +143,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                 self.presentedViewController.view.frame = frame
                 self.presentedViewController.view.mask = nil
                 self.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
+				self.updateSnapshotViewAspectRatio()
 			}, completion: { _ in 
 				self.updateSnapshotView()
 			}
@@ -170,7 +171,14 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		presentingViewController.view.alpha = 0
 		
 		let fullHeight = containerView.window!.frame.size.height
-		let statusBarHeight = UIApplication.shared.statusBarFrame.height - 20
+		let statusBarHeight: CGFloat = {
+			let tempHeight = UIApplication.shared.statusBarFrame.height
+			if tempHeight >= 20 {
+				return tempHeight - 20
+			} else {
+				return tempHeight
+			}
+		}()
 		
 		let currentHeight = containerView.frame.height
 		let newHeight = fullHeight - statusBarHeight
@@ -180,14 +188,12 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			animations: {
 				containerView.frame.origin.y -= newHeight - currentHeight
 			}, completion: { [weak self] _ in
-				self?.presentingViewController.view.alpha = 1
+				self?.presentingViewController.view.alpha = 0.8
 				containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: newHeight)
 				self?.presentedViewController.view.mask = nil
 				self?.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
 			}
 		)
-		
-		updateSnapshotView()
 	}
 	
 	/// Method to update the snapshot view showing a representation of the
@@ -200,19 +206,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	/// then generates a new snapshot of the `presentingViewController`'s view,
 	/// and then replaces the existing snapshot with it
 	private func updateSnapshotView() {
-		guard
-			let containerView = containerView,
-			let presentingViewSnapshotView = presentingViewSnapshotView,
-			cachedContainerWidth != containerView.bounds.width
-		else {
+		guard let presentingViewSnapshotView = presentingViewSnapshotView else {
 			return
 		}
 		
-		cachedContainerWidth = containerView.bounds.width
-		aspectRatioConstraint?.isActive = false
-		let aspectRatio = containerView.bounds.width / containerView.bounds.height
-		aspectRatioConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: presentingViewSnapshotView.heightAnchor, multiplier: aspectRatio)
-		aspectRatioConstraint?.isActive = true
+		updateSnapshotViewAspectRatio()
 		
 		if let snapshotView = presentingViewController.view.snapshotView(afterScreenUpdates: true) {
 			presentingViewSnapshotView.subviews.forEach { $0.removeFromSuperview() }
@@ -227,6 +225,22 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 				snapshotView.bottomAnchor.constraint(equalTo: presentingViewSnapshotView.bottomAnchor)
 			])
 		}
+	}
+	
+	private func updateSnapshotViewAspectRatio() {
+		guard
+			let containerView = containerView,
+			let presentingViewSnapshotView = presentingViewSnapshotView,
+			cachedContainerWidth != containerView.bounds.width
+			else {
+				return
+		}
+		
+		cachedContainerWidth = containerView.bounds.width
+		aspectRatioConstraint?.isActive = false
+		let aspectRatio = containerView.bounds.width / containerView.bounds.height
+		aspectRatioConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: presentingViewSnapshotView.heightAnchor, multiplier: aspectRatio)
+		aspectRatioConstraint?.isActive = true
 	}
 	
 	// MARK:- Dismissal
