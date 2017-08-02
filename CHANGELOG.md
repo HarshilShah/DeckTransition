@@ -1,5 +1,17 @@
 ## Changelog
 
+0.4.0 Release notes (2/8/2017)
+----
+
+### API Breaking Changes
+- The `DeckTransitioningDelegate` initialiser now requires `NSNumber` arguments for animation duration
+- A snapshot of the presenting view controller is shown instead of the view itself
+
+### Other Changes
+- Fixed Objective-C compatibility issues
+- Fixed a host of bugs related to the double height status bar and rotation
+- You can now use `pod try` to try the library
+
 0.3.0 Release notes (14/5/2017)
 ----
 
