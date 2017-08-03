@@ -30,6 +30,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Private variables
 	
+	private var roundedView: UIView?
+	private var maskLayer: CAShapeLayer?
+	
 	private var backgroundView: UIView?
 	private var presentingViewSnapshotView: UIView?
 	private var cachedContainerWidth: CGFloat = 0
@@ -84,8 +87,20 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		}
 		
         if completed {
+			roundedView = UIView()
+			roundedView!.backgroundColor = .black
+			roundedView!.translatesAutoresizingMaskIntoConstraints = false
+			containerView.addSubview(roundedView!)
+			
+			maskLayer = CAShapeLayer()
+			maskLayer!.fillColor = UIColor.black.cgColor
+			maskLayer!.fillRule = kCAFillRuleEvenOdd
+			roundedView!.layer.mask = maskLayer
+			
+			presentedViewController.view.addObserver(self, forKeyPath: "frame", options: [.initial], context: nil)
+			presentedViewController.view.addObserver(self, forKeyPath: "transform", options: [.initial], context: nil)
+			presentedViewController.view.layer.mask = nil
             presentedViewController.view.frame = frameOfPresentedViewInContainerView
-            presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
 			presentAnimation?()
 			
 			presentingViewSnapshotView = UIView()
@@ -141,8 +156,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 				
                 let frame = CGRect(x: 0, y: self.offset, width: size.width, height: size.height - self.offset)
                 self.presentedViewController.view.frame = frame
-                self.presentedViewController.view.mask = nil
-                self.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
 				self.updateSnapshotViewAspectRatio()
 			}, completion: { _ in 
 				self.updateSnapshotView()
@@ -190,8 +203,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			}, completion: { [weak self] _ in
 				self?.presentingViewController.view.alpha = 0.8
 				containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: newHeight)
-				self?.presentedViewController.view.mask = nil
-				self?.presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
 			}
 		)
 	}
@@ -232,8 +243,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			let containerView = containerView,
 			let presentingViewSnapshotView = presentingViewSnapshotView,
 			cachedContainerWidth != containerView.bounds.width
-			else {
-				return
+		else {
+			return
 		}
 		
 		cachedContainerWidth = containerView.bounds.width
@@ -256,6 +267,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
 		presentingViewSnapshotView?.alpha = 0
 		backgroundView?.alpha = 0
+		roundedView?.alpha = 0
 	}
 	
 	/// Method to ensure the layout is as required at the end of the dismissal.
@@ -275,6 +287,32 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		}
 		
 		dismissCompletion?(completed)
+	}
+	
+	// MARK:- Presented view KVO
+	
+	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+		if keyPath == "transform" || keyPath == "frame", let view = object as? UIView {
+			let offset = view.frame.origin.y
+			updateRoundedMask(forOffset: offset)
+		}
+	}
+	
+	private func updateRoundedMask(forOffset offset: CGFloat) {
+		guard let roundedView = roundedView, let maskLayer = maskLayer else {
+			return
+		}
+		
+		roundedView.frame = CGRect(x: 0, y: offset, width: containerView!.bounds.width, height: 8)
+		maskLayer.frame = roundedView.bounds
+		
+		let radii = CGSize(width: roundedView.bounds.height, height: roundedView.bounds.height)
+		let boundsPath = UIBezierPath(rect: roundedView.bounds)
+		boundsPath.append(UIBezierPath(roundedRect: roundedView.bounds,
+		                               byRoundingCorners: [.topLeft, .topRight],
+		                               cornerRadii: radii))
+		
+		maskLayer.path = boundsPath.cgPath
 	}
 	
 	// MARK:- Gesture handling
