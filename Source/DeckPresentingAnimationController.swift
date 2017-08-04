@@ -42,14 +42,14 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
             delay: 0,
             options: .curveEaseOut,
             animations: { [weak self] in
-                let scale: CGFloat = 1 - (40/presentingViewController.view.frame.height)
+                let scale: CGFloat = 1 - (Constants.topInsetForPresentingView * 2 / presentingViewController.view.frame.height)
                 presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
-                presentingViewController.view.alpha = 0.8
-				presentingViewController.view.layer.cornerRadius = 8
+                presentingViewController.view.alpha = Constants.alphaForPresentingView
+				presentingViewController.view.layer.cornerRadius = Constants.cornerRadius
 				presentingViewController.view.layer.masksToBounds = true
 				
                 presentedViewController.view.frame = transitionContext.finalFrame(for: presentedViewController)
-                presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: 8)
+                presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: Constants.cornerRadius)
 				self?.animation?()
             }, completion: { [weak self] finished in
                 transitionContext.completeTransition(finished)
@@ -59,7 +59,7 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
     }
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return duration ?? 0.3
+        return duration ?? Constants.defaultAnimationDuration
     }
     
 }

@@ -10,6 +10,7 @@
 		D93F1CA21EAEDB6E009A7474 /* DeckTransition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93F1C981EAEDB6E009A7474 /* DeckTransition.framework */; };
 		D93F1CA71EAEDB6E009A7474 /* DeckTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93F1CA61EAEDB6E009A7474 /* DeckTransitionTests.swift */; };
 		D93F1CA91EAEDB6E009A7474 /* DeckTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = D93F1C9B1EAEDB6E009A7474 /* DeckTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E85798101F34D63200C6CABE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E857980F1F34D63200C6CABE /* Constants.swift */; };
 		E8683D2C1F3462E800EB9FCC /* DeckTransition.podspec in Resources */ = {isa = PBXBuildFile; fileRef = E8683D281F3462E800EB9FCC /* DeckTransition.podspec */; };
 		E8683D2D1F3462E800EB9FCC /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = E8683D291F3462E800EB9FCC /* LICENSE */; };
 		E8683D2E1F3462E800EB9FCC /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = E8683D2A1F3462E800EB9FCC /* CHANGELOG.md */; };
@@ -39,6 +40,7 @@
 		D93F1CA11EAEDB6E009A7474 /* DeckTransitionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeckTransitionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93F1CA61EAEDB6E009A7474 /* DeckTransitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckTransitionTests.swift; sourceTree = "<group>"; };
 		D93F1CA81EAEDB6E009A7474 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E857980F1F34D63200C6CABE /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E8683D281F3462E800EB9FCC /* DeckTransition.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DeckTransition.podspec; sourceTree = SOURCE_ROOT; };
 		E8683D291F3462E800EB9FCC /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 		E8683D2A1F3462E800EB9FCC /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = SOURCE_ROOT; };
@@ -92,6 +94,7 @@
 		D93F1C9A1EAEDB6E009A7474 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				E857980F1F34D63200C6CABE /* Constants.swift */,
 				E8683D871F344793005C7E9A /* DeckSegue.swift */,
 				E8683D851F34478A005C7E9A /* DeckTransitioningDelegate.swift */,
 				E8683D891F34479E005C7E9A /* DeckPresentationController.swift */,
@@ -251,6 +254,7 @@
 				E8683D821F34471B005C7E9A /* DeckPresentingAnimationController.swift in Sources */,
 				E8683D881F344793005C7E9A /* DeckSegue.swift in Sources */,
 				E8683D8A1F34479E005C7E9A /* DeckPresentationController.swift in Sources */,
+				E85798101F34D63200C6CABE /* Constants.swift in Sources */,
 				E8683D861F34478A005C7E9A /* DeckTransitioningDelegate.swift in Sources */,
 				E8683D8C1F3447A5005C7E9A /* DeckDismissingAnimationController.swift in Sources */,
 			);
