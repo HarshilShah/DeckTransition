@@ -11,10 +11,6 @@ Hereʼs a GIF showing it in action.
 
 ![Demo](demo.gif)
 
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
 ## Requirements
 
 - Swift 3
@@ -22,20 +18,29 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Installation
 
-DeckTransition is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+### CocoaPods
 
-```ruby
-pod "DeckTransition"
+To install DeckTransition using [CocoaPods](http://cocoapods.org), add the following line to your Podfile:
+
+```
+pod 'DeckTransition', '~> 1.0'
+```
+
+### Carthage
+
+To install DeckTransition using [Carthage](https://github.com/Carthage/Carthage), add the following line to your Cartfile:
+
+```
+github "HarshilShah/DeckTransition" ~> 1.0
 ```
 
 ## Usage
 
 ### Basics
 
-Set `modalPresentationCapturesStatusBarAppearance` to `true` in your modal viewcontroller, and override the `preferredStatusBarStyle` variable to return `.lightContent`.
+Set `modalPresentationCapturesStatusBarAppearance` to `true` in your modal view controller, and override the `preferredStatusBarStyle` variable to return `.lightContent`.
 
-The background colour for the presentation can be changed by changing the `backgroundColor` property of the `window`. This is `.black` by default.
+The background color for the presentation can be changed by changing the `backgroundColor` property of the `window`. This is `.black` by default.
 
 ### Presentation
 
@@ -43,7 +48,7 @@ The transition can be called from code or using a storyboard.
 
 To use via storyboards, just setup a custom segue (`kind` set to `custom`), and set the `class` to `DeckSegue`.
 
-Hereʼs a snippet showing usage via code. Just replace `ModalViewController()` with your viewcontroller's class and youʼre good to go.
+Hereʼs a snippet showing usage via code. Just replace `ModalViewController()` with your view controller's class and youʼre good to go.
 
 ```swift
 let modal = ModalViewController()
@@ -66,9 +71,9 @@ Iʼll update this project if/when I find a better solution.
 
 #### Dismissal code for scrolling modals
 
-First up, make your modal viewcontroller conform to `UIScrollViewDelegate` (or `UITableViewDelegate`/`UITextFieldDelegate`, as the case may be), and assign self as the scrollview's `delegate`.
+First up, make your modal view controller conform to `UIScrollViewDelegate` (or `UITableViewDelegate`/`UITextFieldDelegate`, as the case may be), and assign self as the scrollview's `delegate`.
 
-Next, add this method to your modal viewcontroller, swapping in your scrollviewʼs variable for `textView`.
+Next, add this method to your modal view controller, swapping in your scrollviewʼs variable for `textView`.
 
 ```swift
 func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -84,8 +89,8 @@ func scrollViewDidScroll(_ scrollView: UIScrollView) {
         } else {
             if scrollView.isDecelerating {
                 // If the `scrollView` is scrolled to the top but is decelerating
-                // that means a swipe has been performed. The view and scrollview are
-                // both translated in response to this.
+                // that means a swipe has been performed. The view and
+                // scrollviewʼs subviews are both translated in response to this.
                 view.transform = CGAffineTransform(translationX: 0, y: -scrollView.contentOffset.y)
                 scrollView.subviews.forEach {
                     $0.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
