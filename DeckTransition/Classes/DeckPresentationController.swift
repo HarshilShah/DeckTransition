@@ -285,9 +285,17 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			return
 		}
 		
+		/// The height is a bit higher than the rounded view to accomodate for
+		/// a black line that flickers sometimes because diffing floating points
+		/// is weird
+		let newRect = CGRect(x: roundedView.bounds.origin.x,
+		                     y: roundedView.bounds.origin.y,
+		                     width: roundedView.bounds.width,
+		                     height: roundedView.bounds.height + 2)
+		
 		let radii = CGSize(width: roundedView.bounds.height, height: roundedView.bounds.height)
-		let boundsPath = UIBezierPath(rect: roundedView.bounds)
-		boundsPath.append(UIBezierPath(roundedRect: roundedView.bounds,
+		let boundsPath = UIBezierPath(rect: newRect)
+		boundsPath.append(UIBezierPath(roundedRect: newRect,
 		                               byRoundingCorners: [.topLeft, .topRight],
 		                               cornerRadii: radii))
 		
