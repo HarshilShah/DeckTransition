@@ -1,5 +1,0 @@
-use_frameworks!
-
-target 'DeckTransition_Example' do
-  pod 'DeckTransition', :path => '../'
-end
