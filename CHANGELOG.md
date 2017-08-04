@@ -1,5 +1,31 @@
 ## Changelog
 
+1.0.0 Release notes (5/8/2017)
+----
+
+DeckTransition is finally at 1.0! 🎉 Here’s a summary of all the changes in this version
+
+- Vastly improved performance
+- Reorganised project structure
+- Support for Carthage
+- All “magic numbers” have been refactored out
+
+One small change needs to be implemented in pre-1.0 projects to maintain compatibility with this version of DeckTransition. The entirety of the change consists of replacing the following line of code in your modal view controller’s `UIScrollViewDelegate` implementation
+
+```swift
+scrollView.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+```
+
+with the block that follows below:
+
+```swift
+scrollView.subviews.forEach {
+    $0.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+}
+```
+
+The implementation example in the ReadMe has been updated to reflect this.
+
 0.4.0 Release notes (2/8/2017)
 ----
 
