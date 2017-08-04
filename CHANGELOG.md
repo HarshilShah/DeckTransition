@@ -6,7 +6,7 @@
 DeckTransition is finally at 1.0! 🎉 Here’s a summary of all the changes in this version
 
 - Vastly improved performance
-- Reorganised project structure
+- Reorganized project structure
 - Support for Carthage
 - All “magic numbers” have been refactored out
 
@@ -30,7 +30,7 @@ The implementation example in the ReadMe has been updated to reflect this.
 ----
 
 ### API Breaking Changes
-- The `DeckTransitioningDelegate` initialiser now requires `NSNumber` arguments for animation duration
+- The `DeckTransitioningDelegate` initializer now requires `NSNumber` arguments for animation duration
 - A snapshot of the presenting view controller is shown instead of the view itself
 
 ### Other Changes
@@ -41,7 +41,7 @@ The implementation example in the ReadMe has been updated to reflect this.
 0.3.0 Release notes (14/5/2017)
 ----
 
-- The transition can now be customised by passing in custom animation durations, other animations to be performed alongside the stock animation, and completion handlers
+- The transition can now be customized by passing in custom animation durations, other animations to be performed alongside the stock animation, and completion handlers
 
 0.2.0 Release notes (5/3/2017)
 ----
