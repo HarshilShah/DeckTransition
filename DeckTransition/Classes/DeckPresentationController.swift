@@ -139,26 +139,36 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     }
 	
 	// MARK:- Layout update methods
+	
+	/// This method updates the aspect ratio of the snapshot view and the path
+	/// of the rounded view mask.
+	///
+	/// The `snapshotView`'s aspect ratio needs to be updated here because even
+	/// though it is updated with the `snapshotView` in `viewWillTransition:`,
+	/// the transition is janky unless it's updated before, hence it's performed
+	/// here as well, It's also an inexpensive method since constraints are
+	/// modified only when a change is actually needed
+	override func containerViewWillLayoutSubviews() {
+		super.containerViewWillLayoutSubviews()
+		
+		updateSnapshotViewAspectRatio()
+		updateRoundedViewMaskPath()
+	}
     
     /// Method to handle the modal setup's response to a change in
 	/// orientation, size, etc.
 	///
-	/// The `presentedViewController`'s view's frame is reset and its mask is
-	/// adjusted, and then the snapshot view is updated as well
+	/// Everything else is handled by AutoLayout or `willLayoutSubviews`; the
+	/// express purpose of this method is to update the snapshot view since that
+	/// is a relatively expensive operation and only makes sense on orientation
+	/// change
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 		
-        coordinator.animate(
-            alongsideTransition: { [weak self] context in
-				guard let `self` = self else {
-					return
-				}
-				
-                let frame = CGRect(x: 0, y: self.offset, width: size.width, height: size.height - self.offset)
-                self.presentedViewController.view.frame = frame
-				self.updateSnapshotViewAspectRatio()
-			}, completion: { _ in 
-				self.updateSnapshotView()
+		coordinator.animate(
+			alongsideTransition: nil,
+			completion: { [weak self] _ in
+				self?.updateSnapshotView()
 			}
         )
     }
@@ -207,6 +217,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		)
 	}
 	
+	// MARK:- Snapshot view update methods
+	
 	/// Method to update the snapshot view showing a representation of the
 	/// `presentingViewController`'s view
 	///
@@ -238,6 +250,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		}
 	}
 	
+	/// Thie method updates the aspect ratio of the snapshot view used to
+	/// represent the presenting view controller.
+	///
+	/// The aspect ratio is only updated when the width of the container changes
+	/// i.e. when just the status bar moves, nothing happens
 	private func updateSnapshotViewAspectRatio() {
 		guard
 			let containerView = containerView,
@@ -252,6 +269,37 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		let aspectRatio = containerView.bounds.width / containerView.bounds.height
 		aspectRatioConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: presentingViewSnapshotView.heightAnchor, multiplier: aspectRatio)
 		aspectRatioConstraint?.isActive = true
+	}
+	
+	// MARK:- Presented view KVO + Rounded view update methods
+	
+	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+		if keyPath == "transform" || keyPath == "frame", let view = object as? UIView {
+			let offset = view.frame.origin.y
+			updateRoundedView(forOffset: offset)
+		}
+	}
+	
+	private func updateRoundedViewMaskPath() {
+		guard let roundedView = roundedView, let maskLayer = maskLayer else {
+			return
+		}
+		
+		let radii = CGSize(width: roundedView.bounds.height, height: roundedView.bounds.height)
+		let boundsPath = UIBezierPath(rect: roundedView.bounds)
+		boundsPath.append(UIBezierPath(roundedRect: roundedView.bounds,
+		                               byRoundingCorners: [.topLeft, .topRight],
+		                               cornerRadii: radii))
+		
+		maskLayer.path = boundsPath.cgPath
+	}
+	
+	private func updateRoundedView(forOffset offset: CGFloat) {
+		guard let roundedView = roundedView else {
+			return
+		}
+		
+		roundedView.frame = CGRect(x: 0, y: offset, width: containerView!.bounds.width, height: 8)
 	}
 	
 	// MARK:- Dismissal
@@ -287,32 +335,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		}
 		
 		dismissCompletion?(completed)
-	}
-	
-	// MARK:- Presented view KVO
-	
-	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		if keyPath == "transform" || keyPath == "frame", let view = object as? UIView {
-			let offset = view.frame.origin.y
-			updateRoundedMask(forOffset: offset)
-		}
-	}
-	
-	private func updateRoundedMask(forOffset offset: CGFloat) {
-		guard let roundedView = roundedView, let maskLayer = maskLayer else {
-			return
-		}
-		
-		roundedView.frame = CGRect(x: 0, y: offset, width: containerView!.bounds.width, height: 8)
-		maskLayer.frame = roundedView.bounds
-		
-		let radii = CGSize(width: roundedView.bounds.height, height: roundedView.bounds.height)
-		let boundsPath = UIBezierPath(rect: roundedView.bounds)
-		boundsPath.append(UIBezierPath(roundedRect: roundedView.bounds,
-		                               byRoundingCorners: [.topLeft, .topRight],
-		                               cornerRadii: radii))
-		
-		maskLayer.path = boundsPath.cgPath
 	}
 	
 	// MARK:- Gesture handling
