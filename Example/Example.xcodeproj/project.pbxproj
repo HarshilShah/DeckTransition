@@ -11,10 +11,25 @@
 		D93F1CC61EAEDD3F009A7474 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93F1CC51EAEDD3F009A7474 /* ViewController.swift */; };
 		D93F1CCB1EAEDD3F009A7474 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D93F1CCA1EAEDD3F009A7474 /* Assets.xcassets */; };
 		D93F1CCE1EAEDD3F009A7474 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93F1CCC1EAEDD3F009A7474 /* LaunchScreen.xib */; };
-		D93F1CD71EAEE00D009A7474 /* DeckTransition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93F1CD61EAEE00D009A7474 /* DeckTransition.framework */; };
+		E854BD7F1F34A06000C0B649 /* DeckTransition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E854BD7E1F34A06000C0B649 /* DeckTransition.framework */; };
+		E854BD801F34A06000C0B649 /* DeckTransition.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E854BD7E1F34A06000C0B649 /* DeckTransition.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E8A9B0461F3468DC00306682 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8A9B0441F3468DC00306682 /* Main.storyboard */; };
 		E8A9B0471F3468DC00306682 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A9B0451F3468DC00306682 /* ModalViewController.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E854BD811F34A06000C0B649 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E854BD801F34A06000C0B649 /* DeckTransition.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		D93F1CC01EAEDD3F009A7474 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -24,6 +39,7 @@
 		D93F1CCD1EAEDD3F009A7474 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		D93F1CCF1EAEDD3F009A7474 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D93F1CD61EAEE00D009A7474 /* DeckTransition.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeckTransition.framework; path = "../../../Library/Developer/Xcode/DerivedData/DeckTransition-ghiobiksiyymbygbpisckcynbsdi/Build/Products/Debug-iphonesimulator/DeckTransition.framework"; sourceTree = "<group>"; };
+		E854BD7E1F34A06000C0B649 /* DeckTransition.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DeckTransition.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8A9B0441F3468DC00306682 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		E8A9B0451F3468DC00306682 /* ModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -33,7 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D93F1CD71EAEE00D009A7474 /* DeckTransition.framework in Frameworks */,
+				E854BD7F1F34A06000C0B649 /* DeckTransition.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +59,7 @@
 		D93F1CB71EAEDD3F009A7474 = {
 			isa = PBXGroup;
 			children = (
+				E854BD7E1F34A06000C0B649 /* DeckTransition.framework */,
 				D93F1CC21EAEDD3F009A7474 /* Source */,
 				D93F1CC11EAEDD3F009A7474 /* Products */,
 				D93F1CD51EAEE00D009A7474 /* Frameworks */,
@@ -97,6 +114,7 @@
 				D93F1CBC1EAEDD3F009A7474 /* Sources */,
 				D93F1CBD1EAEDD3F009A7474 /* Frameworks */,
 				D93F1CBE1EAEDD3F009A7474 /* Resources */,
+				E854BD811F34A06000C0B649 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
