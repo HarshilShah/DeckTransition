@@ -11,7 +11,7 @@ Pod::Spec.new do |spec|
   spec.social_media_url = 'https://twitter.com/harshilshah1910'
 
   spec.source           = { :git => 'https://github.com/HarshilShah/DeckTransition.git', :tag => spec.version.to_s }
-  spec.source_files = 'DeckTransition/Classes/**/*'
+  spec.source_files = 'Sources/**/*'
 
   spec.ios.deployment_target = '9.0'
   spec.framework = 'UIKit'
