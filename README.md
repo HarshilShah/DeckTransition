@@ -1,9 +1,11 @@
 # DeckTransition
 
-[![CI Status](http://img.shields.io/travis/HarshilShah/DeckTransition.svg?style=flat)](https://travis-ci.org/HarshilShah/DeckTransition)
-[![Version](https://img.shields.io/cocoapods/v/DeckTransition.svg?style=flat)](http://cocoapods.org/pods/DeckTransition)
-[![License](https://img.shields.io/cocoapods/l/DeckTransition.svg?style=flat)](http://cocoapods.org/pods/DeckTransition)
-[![Platform](https://img.shields.io/cocoapods/p/DeckTransition.svg?style=flat)](http://cocoapods.org/pods/DeckTransition)
+[![CI Status](http://img.shields.io/travis/HarshilShah/DeckTransition.svg)](https://travis-ci.org/HarshilShah/DeckTransition)
+[![Version](https://img.shields.io/github/release/HarshilShah/DeckTransition.svg)](https://github.com/HarshilShah/DeckTransition/releases/latest)
+[![CocoaPods](https://img.shields.io/badge/CocoaPods-compatible-brightgreen.svg)](http://cocoapods.org/pods/DeckTransition)
+[![Carthage](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
+[![License](https://img.shields.io/cocoapods/l/DeckTransition.svg)](https://github.com/HarshilShah/DeckTransition/blob/master/LICENSE)
+[![Contact](https://img.shields.io/badge/contact-%40HarshilShah1910-3a8fc1.svg)](https://twitter.com/HarshilShah1910)
 
 DeckTransition is an attempt to recreate the card-like transition found in the iOS 10 Apple Music and iMessage apps.
 
@@ -113,7 +115,7 @@ Feel free to submit a PR if you’re using this library in your apps
 
 ## Author
 
-Written by Harshil Shah. You can [find me on Twitter](https://twitter.com/harshilshah1910) if you have any suggestions, requests, or just want to talk!
+Written by Harshil Shah. You can [find me on Twitter](https://twitter.com/HarshilShah1910) if you have any suggestions, requests, or just want to talk!
 
 ## License
 
