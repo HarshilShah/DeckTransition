@@ -16,13 +16,6 @@ protocol DeckPresentationControllerDelegate {
 
 final class DeckPresentationController: UIPresentationController, UIGestureRecognizerDelegate {
 	
-	// MARK:- Constants
-	
-	/// As best as I can tell using my iPhone and a bunch of iOS UI templates I
-	/// came across online, 28 points is the distance between the top edge of
-	/// the screen and the top edge of the modal view
-	let offset: CGFloat = 28
-	
 	// MARK:- Internal variables
 	
     var transitioningDelegate: DeckPresentationControllerDelegate?
@@ -57,7 +50,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
     override var frameOfPresentedViewInContainerView: CGRect {
         if let view = containerView {
-            return CGRect(x: 0, y: offset, width: view.bounds.width, height: view.bounds.height - offset)
+            return CGRect(x: 0, y: Constants.topOffsetForPresentedView, width: view.bounds.width, height: view.bounds.height - Constants.topOffsetForPresentedView)
         } else {
             return .zero
         }
@@ -110,7 +103,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			NSLayoutConstraint.activate([
 				presentingViewSnapshotView!.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
 				presentingViewSnapshotView!.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-				presentingViewSnapshotView!.heightAnchor.constraint(equalTo: containerView.heightAnchor, constant: -40),
+				presentingViewSnapshotView!.heightAnchor.constraint(
+                    equalTo: containerView.heightAnchor,
+                    constant: Constants.topInsetForPresentingView * -2),
 			])
 			
 			updateSnapshotView()
@@ -211,7 +206,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			animations: {
 				containerView.frame.origin.y -= newHeight - currentHeight
 			}, completion: { [weak self] _ in
-				self?.presentingViewController.view.alpha = 0.8
+				self?.presentingViewController.view.alpha = Constants.alphaForPresentingView
 				containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: newHeight)
 			}
 		)
@@ -307,7 +302,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			return
 		}
 		
-		roundedView.frame = CGRect(x: 0, y: offset, width: containerView!.bounds.width, height: 8)
+		roundedView.frame = CGRect(x: 0, y: offset, width: containerView!.bounds.width, height: Constants.cornerRadius)
 	}
 	
 	// MARK:- Dismissal
@@ -319,7 +314,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	/// restores the state of the `presentingViewController`'s view to the
 	/// expected state at the end of the presenting animation
 	override func dismissalTransitionWillBegin() {
-		let scale: CGFloat = 1 - (40/presentingViewController.view.frame.height)
+		let scale: CGFloat = 1 - (Constants.topInsetForPresentingView * 2 / presentingViewController.view.frame.height)
 		presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
 		presentingViewSnapshotView?.alpha = 0
 		backgroundView?.alpha = 0

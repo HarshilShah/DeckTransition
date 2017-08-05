@@ -52,7 +52,7 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
     }
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return duration ?? 0.3
+        return duration ?? Constants.defaultAnimationDuration
     }
 	
 }
