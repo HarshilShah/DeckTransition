@@ -10,6 +10,14 @@ import UIKit
 
 final class RoundedView: UIView {
     
+    // MARK:- Public variables
+    
+    public var cornerRadius = Constants.cornerRadius {
+        didSet {
+            updateMaskPath()
+        }
+    }
+    
     // MARK:- Private variables
     
     private let maskLayer = CAShapeLayer()
@@ -55,7 +63,7 @@ final class RoundedView: UIView {
                              width: bounds.width,
                              height: bounds.height + 2)
         
-        let radii = CGSize(width: bounds.height, height: bounds.height)
+        let radii = CGSize(width: cornerRadius, height: cornerRadius)
         let boundsPath = UIBezierPath(rect: newRect)
         boundsPath.append(UIBezierPath(roundedRect: newRect,
                                        byRoundingCorners: [.topLeft, .topRight],

@@ -32,36 +32,66 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
         
         let containerView = transitionContext.containerView
         
+        let scale: CGFloat = 1 - (Constants.topInsetForPresentingView * 2 / presentingViewController.view.frame.height)
+        
+        let roundedViewForPresentingView = RoundedView()
+        roundedViewForPresentingView.cornerRadius = 0
+        roundedViewForPresentingView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(roundedViewForPresentingView)
+        
+        let initialFrameForRoundedPresentingView = CGRect(
+            x: presentingViewController.view.frame.origin.x,
+            y: presentingViewController.view.frame.origin.y,
+            width: presentingViewController.view.frame.width,
+            height: Constants.cornerRadius)
+        roundedViewForPresentingView.frame = initialFrameForRoundedPresentingView
+        
+        let finalFrameForPresentingView = presentingViewController.view.frame.applying(
+            CGAffineTransform.identity
+                .concatenating(CGAffineTransform(translationX: -presentingViewController.view.frame.width/2,
+                                                 y: -presentingViewController.view.frame.height/2))
+                .concatenating(CGAffineTransform(scaleX: scale, y: scale))
+                .concatenating(CGAffineTransform(translationX: presentingViewController.view.frame.width/2,
+                                                 y: presentingViewController.view.frame.height/2))
+        )
+        let finalFrameForRoundedViewForPresentingView = CGRect(
+            x: finalFrameForPresentingView.origin.x,
+            y: finalFrameForPresentingView.origin.y,
+            width: finalFrameForPresentingView.width,
+            height: Constants.cornerRadius)
+        
         containerView.addSubview(presentedViewController.view)
         presentedViewController.view.frame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
         
-        let roundedView = RoundedView()
-        containerView.addSubview(roundedView)
-        roundedView.frame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: Constants.cornerRadius)
+        let roundedViewForPresentedView = RoundedView()
+        containerView.addSubview(roundedViewForPresentedView)
+        roundedViewForPresentedView.frame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: Constants.cornerRadius)
         
         let finalFrameForPresentedView = transitionContext.finalFrame(for: presentedViewController)
+        let finalFrameForRoundedViewForPresentedView = CGRect(
+            x: finalFrameForPresentedView.origin.x,
+            y: finalFrameForPresentedView.origin.y,
+            width: finalFrameForPresentedView.width,
+            height: Constants.cornerRadius)
         
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
             options: .curveEaseOut,
             animations: { [weak self] in
-                let scale: CGFloat = 1 - (Constants.topInsetForPresentingView * 2 / presentingViewController.view.frame.height)
                 presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
                 presentingViewController.view.alpha = Constants.alphaForPresentingView
-				presentingViewController.view.layer.cornerRadius = Constants.cornerRadius
-				presentingViewController.view.layer.masksToBounds = true
+                
+                roundedViewForPresentingView.cornerRadius = Constants.cornerRadius
+                roundedViewForPresentingView.frame = finalFrameForRoundedViewForPresentingView
 				
                 presentedViewController.view.frame = finalFrameForPresentedView
-                
-                roundedView.frame = CGRect(x: finalFrameForPresentedView.origin.x,
-                                           y: finalFrameForPresentedView.origin.y,
-                                           width: finalFrameForPresentedView.size.width,
-                                           height: Constants.cornerRadius)
+                roundedViewForPresentedView.frame = finalFrameForRoundedViewForPresentedView
                 
 				self?.animation?()
             }, completion: { [weak self] finished in
-                roundedView.removeFromSuperview()
+                roundedViewForPresentingView.removeFromSuperview()
+                roundedViewForPresentedView.removeFromSuperview()
                 transitionContext.completeTransition(finished)
 				self?.completion?(finished)
             }
