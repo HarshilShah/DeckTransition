@@ -53,7 +53,9 @@ class ModalViewController: UIViewController, UITextViewDelegate {
 			} else {
 				if scrollView.isDecelerating {
 					view.transform = CGAffineTransform(translationX: 0, y: -scrollView.contentOffset.y)
-					scrollView.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+					scrollView.subviews.forEach {
+						$0.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
+					}
 				} else {
 					scrollView.bounces = false
 					delegate.isDismissEnabled = true
