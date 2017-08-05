@@ -325,6 +325,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	/// This is required in case the modal is dismissed without animation.
 	override func dismissalTransitionDidEnd(_ completed: Bool) {
 		if completed {
+            presentedViewController.view.removeObserver(self, forKeyPath: "frame")
+            presentedViewController.view.removeObserver(self, forKeyPath: "transform")
+            
 			presentingViewController.view.frame = containerView!.frame
 			presentingViewController.view.transform = .identity
 			presentingViewController.view.layer.cornerRadius = 0
