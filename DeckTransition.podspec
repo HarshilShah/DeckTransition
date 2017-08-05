@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name				= 'DeckTransition'
-  spec.version          = '1.0.0'
+  spec.version          = '1.0.1'
   spec.summary          = 'An attempt to recreate the iOS 10 now playing transition'
   spec.description      = <<-DESC
 						  DeckTransition is an attempt to recreate the iOS 10 Apple Music now playing and iMessage App Store transition.
@@ -12,7 +12,7 @@ Pod::Spec.new do |spec|
 
   spec.source           = { :git => 'https://github.com/HarshilShah/DeckTransition.git', :tag => spec.version.to_s }
   spec.source_files     = 'Source/**/*'
-  
+
   spec.framework        = 'UIKit'
   spec.ios.deployment_target = '9.0'
 

@@ -1,5 +1,10 @@
 ## Changelog
 
+1.0.1 Release notes (5/8/2017)
+----
+
+Fixes an exception caused by KVO observers never being removed
+
 1.0.0 Release notes (5/8/2017)
 ----
 
