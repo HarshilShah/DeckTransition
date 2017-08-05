@@ -32,10 +32,14 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
         
         let containerView = transitionContext.containerView
         
-        let offScreenFrame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
-        
         containerView.addSubview(presentedViewController.view)
-        presentedViewController.view.frame = offScreenFrame
+        presentedViewController.view.frame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
+        
+        let roundedView = RoundedView()
+        containerView.addSubview(roundedView)
+        roundedView.frame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: Constants.cornerRadius)
+        
+        let finalFrameForPresentedView = transitionContext.finalFrame(for: presentedViewController)
         
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
@@ -48,10 +52,16 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
 				presentingViewController.view.layer.cornerRadius = Constants.cornerRadius
 				presentingViewController.view.layer.masksToBounds = true
 				
-                presentedViewController.view.frame = transitionContext.finalFrame(for: presentedViewController)
-                presentedViewController.view.round(corners: [.topLeft, .topRight], withRadius: Constants.cornerRadius)
+                presentedViewController.view.frame = finalFrameForPresentedView
+                
+                roundedView.frame = CGRect(x: finalFrameForPresentedView.origin.x,
+                                           y: finalFrameForPresentedView.origin.y,
+                                           width: finalFrameForPresentedView.size.width,
+                                           height: Constants.cornerRadius)
+                
 				self?.animation?()
             }, completion: { [weak self] finished in
+                roundedView.removeFromSuperview()
                 transitionContext.completeTransition(finished)
 				self?.completion?(finished)
             }

@@ -23,8 +23,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Private variables
 	
-	private var roundedView: UIView?
-	private var maskLayer: CAShapeLayer?
+	private var roundedView: RoundedView?
 	
 	private var backgroundView: UIView?
 	private var presentingViewSnapshotView: UIView?
@@ -80,15 +79,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		}
 		
         if completed {
-			roundedView = UIView()
-			roundedView!.backgroundColor = .black
+			roundedView = RoundedView()
 			roundedView!.translatesAutoresizingMaskIntoConstraints = false
 			containerView.addSubview(roundedView!)
-			
-			maskLayer = CAShapeLayer()
-			maskLayer!.fillColor = UIColor.black.cgColor
-			maskLayer!.fillRule = kCAFillRuleEvenOdd
-			roundedView!.layer.mask = maskLayer
 			
 			presentedViewController.view.addObserver(self, forKeyPath: "frame", options: [.initial], context: nil)
 			presentedViewController.view.addObserver(self, forKeyPath: "transform", options: [.initial], context: nil)
@@ -135,8 +128,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Layout update methods
 	
-	/// This method updates the aspect ratio of the snapshot view and the path
-	/// of the rounded view mask.
+	/// This method updates the aspect ratio of the snapshot view
 	///
 	/// The `snapshotView`'s aspect ratio needs to be updated here because even
 	/// though it is updated with the `snapshotView` in `viewWillTransition:`,
@@ -147,7 +139,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		super.containerViewWillLayoutSubviews()
 		
 		updateSnapshotViewAspectRatio()
-		updateRoundedViewMaskPath()
 	}
     
     /// Method to handle the modal setup's response to a change in
@@ -273,28 +264,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			let offset = view.frame.origin.y
 			updateRoundedView(forOffset: offset)
 		}
-	}
-	
-	private func updateRoundedViewMaskPath() {
-		guard let roundedView = roundedView, let maskLayer = maskLayer else {
-			return
-		}
-		
-		/// The height is a bit higher than the rounded view to accomodate for
-		/// a black line that flickers sometimes because diffing floating points
-		/// is weird
-		let newRect = CGRect(x: roundedView.bounds.origin.x,
-		                     y: roundedView.bounds.origin.y,
-		                     width: roundedView.bounds.width,
-		                     height: roundedView.bounds.height + 2)
-		
-		let radii = CGSize(width: roundedView.bounds.height, height: roundedView.bounds.height)
-		let boundsPath = UIBezierPath(rect: newRect)
-		boundsPath.append(UIBezierPath(roundedRect: newRect,
-		                               byRoundingCorners: [.topLeft, .topRight],
-		                               cornerRadii: radii))
-		
-		maskLayer.path = boundsPath.cgPath
 	}
 	
 	private func updateRoundedView(forOffset offset: CGFloat) {
