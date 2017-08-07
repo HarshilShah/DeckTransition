@@ -23,8 +23,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Private variables
 	
-	private var roundedView: UIView?
-	private var maskLayer: CAShapeLayer?
+    private var roundedViewForPresentingView: RoundedView?
+	private var roundedViewForPresentedView: RoundedView?
 	
 	private var backgroundView: UIView?
 	private var presentingViewSnapshotView: UIView?
@@ -80,15 +80,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		}
 		
         if completed {
-			roundedView = UIView()
-			roundedView!.backgroundColor = .black
-			roundedView!.translatesAutoresizingMaskIntoConstraints = false
-			containerView.addSubview(roundedView!)
-			
-			maskLayer = CAShapeLayer()
-			maskLayer!.fillColor = UIColor.black.cgColor
-			maskLayer!.fillRule = kCAFillRuleEvenOdd
-			roundedView!.layer.mask = maskLayer
+			roundedViewForPresentedView = RoundedView()
+			roundedViewForPresentedView!.translatesAutoresizingMaskIntoConstraints = false
+			containerView.addSubview(roundedViewForPresentedView!)
 			
 			presentedViewController.view.addObserver(self, forKeyPath: "frame", options: [.initial], context: nil)
 			presentedViewController.view.addObserver(self, forKeyPath: "transform", options: [.initial], context: nil)
@@ -109,6 +103,17 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			])
 			
 			updateSnapshotView()
+            
+            roundedViewForPresentingView = RoundedView()
+            roundedViewForPresentingView!.translatesAutoresizingMaskIntoConstraints = false
+            containerView.insertSubview(roundedViewForPresentingView!, aboveSubview: presentingViewSnapshotView!)
+            
+            NSLayoutConstraint.activate([
+                roundedViewForPresentingView!.topAnchor.constraint(equalTo: presentingViewSnapshotView!.topAnchor),
+                roundedViewForPresentingView!.leftAnchor.constraint(equalTo: presentingViewSnapshotView!.leftAnchor),
+                roundedViewForPresentingView!.rightAnchor.constraint(equalTo: presentingViewSnapshotView!.rightAnchor),
+                roundedViewForPresentingView!.heightAnchor.constraint(equalToConstant: Constants.cornerRadius)
+            ])
 			
 			backgroundView = UIView()
 			backgroundView!.backgroundColor = .black
@@ -135,8 +140,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Layout update methods
 	
-	/// This method updates the aspect ratio of the snapshot view and the path
-	/// of the rounded view mask.
+	/// This method updates the aspect ratio of the snapshot view
 	///
 	/// The `snapshotView`'s aspect ratio needs to be updated here because even
 	/// though it is updated with the `snapshotView` in `viewWillTransition:`,
@@ -147,7 +151,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		super.containerViewWillLayoutSubviews()
 		
 		updateSnapshotViewAspectRatio()
-		updateRoundedViewMaskPath()
 	}
     
     /// Method to handle the modal setup's response to a change in
@@ -275,30 +278,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		}
 	}
 	
-	private func updateRoundedViewMaskPath() {
-		guard let roundedView = roundedView, let maskLayer = maskLayer else {
-			return
-		}
-		
-		/// The height is a bit higher than the rounded view to accomodate for
-		/// a black line that flickers sometimes because diffing floating points
-		/// is weird
-		let newRect = CGRect(x: roundedView.bounds.origin.x,
-		                     y: roundedView.bounds.origin.y,
-		                     width: roundedView.bounds.width,
-		                     height: roundedView.bounds.height + 2)
-		
-		let radii = CGSize(width: roundedView.bounds.height, height: roundedView.bounds.height)
-		let boundsPath = UIBezierPath(rect: newRect)
-		boundsPath.append(UIBezierPath(roundedRect: newRect,
-		                               byRoundingCorners: [.topLeft, .topRight],
-		                               cornerRadii: radii))
-		
-		maskLayer.path = boundsPath.cgPath
-	}
-	
 	private func updateRoundedView(forOffset offset: CGFloat) {
-		guard let roundedView = roundedView else {
+		guard let roundedView = roundedViewForPresentedView else {
 			return
 		}
 		
@@ -316,9 +297,10 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	override func dismissalTransitionWillBegin() {
 		let scale: CGFloat = 1 - (Constants.topInsetForPresentingView * 2 / presentingViewController.view.frame.height)
 		presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
-		presentingViewSnapshotView?.alpha = 0
-		backgroundView?.alpha = 0
-		roundedView?.alpha = 0
+		backgroundView?.removeFromSuperview()
+        presentingViewSnapshotView?.removeFromSuperview()
+        roundedViewForPresentingView?.removeFromSuperview()
+        roundedViewForPresentedView?.removeFromSuperview()
 	}
 	
 	/// Method to ensure the layout is as required at the end of the dismissal.
@@ -330,7 +312,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             
 			presentingViewController.view.frame = containerView!.frame
 			presentingViewController.view.transform = .identity
-			presentingViewController.view.layer.cornerRadius = 0
 			dismissAnimation?()
 			
 			if let view = containerView {
