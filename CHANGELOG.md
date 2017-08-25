@@ -1,5 +1,10 @@
 ## Changelog
 
+1.0.2 Release notes (25/8/2017)
+----
+
+Fixes an issue with Xcode 9’s new build system
+
 1.0.1 Release notes (5/8/2017)
 ----
 
