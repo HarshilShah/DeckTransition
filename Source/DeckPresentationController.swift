@@ -151,6 +151,15 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		super.containerViewWillLayoutSubviews()
 		
 		updateSnapshotViewAspectRatio()
+        
+        if let roundedView = roundedViewForPresentedView {
+            containerView?.bringSubview(toFront: roundedView)
+        }
+        
+        UIView.animate(withDuration: 0.1) { [weak self] in
+            guard let `self` = self else { return }
+            self.presentedViewController.view.frame = self.frameOfPresentedViewInContainerView
+        }
 	}
     
     /// Method to handle the modal setup's response to a change in

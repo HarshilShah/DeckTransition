@@ -302,7 +302,7 @@
 				DEVELOPMENT_TEAM = BM5Y87HJ2F;
 				INFOPLIST_FILE = "$(SRCROOT)/Source/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.harshilShah.DeckTransition-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.harshilshah.DeckTransition-Example-Wat";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
@@ -318,7 +318,7 @@
 				DEVELOPMENT_TEAM = BM5Y87HJ2F;
 				INFOPLIST_FILE = "$(SRCROOT)/Source/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.harshilShah.DeckTransition-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.harshilshah.DeckTransition-Example-Wat";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
