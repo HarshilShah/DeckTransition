@@ -1,5 +1,10 @@
 ## Changelog
 
+1.0.3 Release notes (5/9/2017)
+----
+
+Fixed an issue caused when the presented view controller presented and then dismissed a view controller
+
 1.0.2 Release notes (25/8/2017)
 ----
 
