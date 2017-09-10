@@ -1,5 +1,10 @@
 ## Changelog
 
+1.0.4 Release notes (10/9/2017)
+----
+
+Fixed an issue where touches to the presentedView’s subview touches would be cancelled
+
 1.0.3 Release notes (5/9/2017)
 ----
 
