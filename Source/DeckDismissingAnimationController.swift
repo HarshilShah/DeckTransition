@@ -36,19 +36,19 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
         roundedViewForPresentingView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(roundedViewForPresentingView)
         
-        let initialFrameForRoundedPresentingView = CGRect(
-            x: presentingViewController.view.frame.origin.x,
-            y: presentingViewController.view.frame.origin.y,
-            width: presentingViewController.view.frame.width,
-            height: Constants.cornerRadius)
-        roundedViewForPresentingView.frame = initialFrameForRoundedPresentingView
-        
         let finalFrameForPresentingView = transitionContext.finalFrame(for: presentingViewController)
         let finalFrameForRoundedViewForPresentingView = CGRect(
             x: finalFrameForPresentingView.origin.x,
             y: finalFrameForPresentingView.origin.y,
             width: finalFrameForPresentingView.width,
             height: Constants.cornerRadius)
+        roundedViewForPresentingView.frame = finalFrameForRoundedViewForPresentingView
+        
+        let scale: CGFloat = 1 - (Constants.topInsetForPresentingView * 2 / finalFrameForPresentingView.height)
+        let transformForRoundedViewForPresentingView = CGAffineTransform.identity
+            .scaledBy(x: scale, y: 1)
+            .translatedBy(x: 0, y: presentingViewController.view.frame.origin.y - finalFrameForPresentingView.origin.y)
+        roundedViewForPresentingView.transform = transformForRoundedViewForPresentingView
         
         let offScreenFrame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
       
@@ -57,8 +57,8 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
             delay: 0,
             options: .curveEaseOut,
             animations: { [weak self] in
-                roundedViewForPresentingView.cornerRadius = 0
-                roundedViewForPresentingView.frame = finalFrameForRoundedViewForPresentingView
+                roundedViewForPresentingView.transform = .identity
+                
                 presentingViewController.view.alpha = 1
                 presentingViewController.view.transform = .identity
                 

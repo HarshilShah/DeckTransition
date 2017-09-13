@@ -310,13 +310,13 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		backgroundView?.removeFromSuperview()
         presentingViewSnapshotView?.removeFromSuperview()
         roundedViewForPresentingView?.removeFromSuperview()
-        roundedViewForPresentedView?.removeFromSuperview()
 	}
 	
 	/// Method to ensure the layout is as required at the end of the dismissal.
 	/// This is required in case the modal is dismissed without animation.
 	override func dismissalTransitionDidEnd(_ completed: Bool) {
 		if completed {
+            roundedViewForPresentedView?.removeFromSuperview()
             presentedViewController.view.removeObserver(self, forKeyPath: "frame")
             presentedViewController.view.removeObserver(self, forKeyPath: "transform")
             

@@ -39,12 +39,12 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
         roundedViewForPresentingView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(roundedViewForPresentingView)
         
-        let initialFrameForRoundedPresentingView = CGRect(
+        let initialFrameForRoundedViewForPresentingView = CGRect(
             x: presentingViewController.view.frame.origin.x,
             y: presentingViewController.view.frame.origin.y,
             width: presentingViewController.view.frame.width,
             height: Constants.cornerRadius)
-        roundedViewForPresentingView.frame = initialFrameForRoundedPresentingView
+        roundedViewForPresentingView.frame = initialFrameForRoundedViewForPresentingView
         
         let finalFrameForPresentingView = presentingViewController.view.frame.applying(
             CGAffineTransform.identity
@@ -54,11 +54,10 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
                 .concatenating(CGAffineTransform(translationX: presentingViewController.view.frame.width/2,
                                                  y: presentingViewController.view.frame.height/2))
         )
-        let finalFrameForRoundedViewForPresentingView = CGRect(
-            x: finalFrameForPresentingView.origin.x,
-            y: finalFrameForPresentingView.origin.y,
-            width: finalFrameForPresentingView.width,
-            height: Constants.cornerRadius)
+        
+        let transformForRoundedViewForPresentingView = CGAffineTransform.identity
+            .scaledBy(x: scale, y: 1)
+            .translatedBy(x: 0, y: finalFrameForPresentingView.origin.y - presentingViewController.view.frame.origin.y)
         
         containerView.addSubview(presentedViewController.view)
         presentedViewController.view.frame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
@@ -83,7 +82,7 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
                 presentingViewController.view.alpha = Constants.alphaForPresentingView
                 
                 roundedViewForPresentingView.cornerRadius = Constants.cornerRadius
-                roundedViewForPresentingView.frame = finalFrameForRoundedViewForPresentingView
+                roundedViewForPresentingView.transform = transformForRoundedViewForPresentingView
 				
                 presentedViewController.view.frame = finalFrameForPresentedView
                 roundedViewForPresentedView.frame = finalFrameForRoundedViewForPresentedView
