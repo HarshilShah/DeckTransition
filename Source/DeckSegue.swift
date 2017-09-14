@@ -9,11 +9,11 @@
 import UIKit
 
 /// A segue to implement the deck transition via Storyboards
-final class DeckSegue: UIStoryboardSegue {
+public final class DeckSegue: UIStoryboardSegue {
 
     var transition: UIViewControllerTransitioningDelegate!
 
-    override func perform() {
+    public override func perform() {
         transition = DeckTransitioningDelegate()
         destination.transitioningDelegate = transition
         destination.modalPresentationStyle = .custom
