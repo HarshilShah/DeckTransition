@@ -1,5 +1,10 @@
 ## Changelog
 
+1.1.0 Release notes (15/9/2017)
+----
+
+Adds support for iPhone X
+
 1.0.4 Release notes (10/9/2017)
 ----
 
