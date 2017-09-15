@@ -33,9 +33,13 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
         let containerView = transitionContext.containerView
         
         let roundedViewForPresentingView = RoundedView()
+        roundedViewForPresentingView.cornerRadius = Constants.cornerRadius
         roundedViewForPresentingView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(roundedViewForPresentingView)
         
+        /// At the end of the transition the rounded view has to have the same
+        /// frame as the presentingView, except with a height equal to the
+        /// cornerRadius
         let finalFrameForPresentingView = transitionContext.finalFrame(for: presentingViewController)
         let finalFrameForRoundedViewForPresentingView = CGRect(
             x: finalFrameForPresentingView.origin.x,
@@ -44,10 +48,19 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
             height: Constants.cornerRadius)
         roundedViewForPresentingView.frame = finalFrameForRoundedViewForPresentingView
         
-        let scale: CGFloat = 1 - (Constants.topInsetForPresentingView * 2 / finalFrameForPresentingView.height)
+        let scale: CGFloat = 1 - (ManualLayout.presentingViewTopInset * 2 / finalFrameForPresentingView.height)
+        
+        /// The rounded view needs to be scaled by the same amount as the
+        /// presentingView, and also translated down by the same amount.
+        /// Scaling happens with respect to the frame's center, so a
+        /// translate-scale-translate needs to be done to ensure that the
+        /// scaling is performed with respect to the top edge so it still lines
+        /// up with the top edge of the presentingView
         let transformForRoundedViewForPresentingView = CGAffineTransform.identity
-            .scaledBy(x: scale, y: 1)
-            .translatedBy(x: 0, y: presentingViewController.view.frame.origin.y - finalFrameForPresentingView.origin.y)
+            .translatedBy(x: 0, y: ManualLayout.presentingViewTopInset)
+            .translatedBy(x: 0, y: -finalFrameForRoundedViewForPresentingView.height / 2)
+            .scaledBy(x: scale, y: scale)
+            .translatedBy(x: 0, y: finalFrameForRoundedViewForPresentingView.height / 2)
         roundedViewForPresentingView.transform = transformForRoundedViewForPresentingView
         
         let offScreenFrame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)

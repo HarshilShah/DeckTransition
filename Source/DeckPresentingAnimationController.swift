@@ -32,13 +32,15 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
         
         let containerView = transitionContext.containerView
         
-        let scale: CGFloat = 1 - (Constants.topInsetForPresentingView * 2 / presentingViewController.view.frame.height)
+        let scale: CGFloat = 1 - (ManualLayout.presentingViewTopInset * 2 / presentingViewController.view.frame.height)
         
         let roundedViewForPresentingView = RoundedView()
-        roundedViewForPresentingView.cornerRadius = 0
+        roundedViewForPresentingView.cornerRadius = Constants.cornerRadius
         roundedViewForPresentingView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(roundedViewForPresentingView)
         
+        /// Initially the rounded view has the same frame as the presentingView,
+        /// except with a height equal to the cornerRadius
         let initialFrameForRoundedViewForPresentingView = CGRect(
             x: presentingViewController.view.frame.origin.x,
             y: presentingViewController.view.frame.origin.y,
@@ -46,18 +48,17 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
             height: Constants.cornerRadius)
         roundedViewForPresentingView.frame = initialFrameForRoundedViewForPresentingView
         
-        let finalFrameForPresentingView = presentingViewController.view.frame.applying(
-            CGAffineTransform.identity
-                .concatenating(CGAffineTransform(translationX: -presentingViewController.view.frame.width/2,
-                                                 y: -presentingViewController.view.frame.height/2))
-                .concatenating(CGAffineTransform(scaleX: scale, y: scale))
-                .concatenating(CGAffineTransform(translationX: presentingViewController.view.frame.width/2,
-                                                 y: presentingViewController.view.frame.height/2))
-        )
-        
+        /// The rounded view needs to be scaled by the same amount as the
+        /// presentingView, and also translated down by the same amount.
+        /// Scaling happens with respect to the frame's center, so a
+        /// translate-scale-translate needs to be done to ensure that the
+        /// scaling is performed with respect to the top edge so it still lines
+        /// up with the top edge of the presentingView
         let transformForRoundedViewForPresentingView = CGAffineTransform.identity
-            .scaledBy(x: scale, y: 1)
-            .translatedBy(x: 0, y: finalFrameForPresentingView.origin.y - presentingViewController.view.frame.origin.y)
+            .translatedBy(x: 0, y: ManualLayout.presentingViewTopInset)
+            .translatedBy(x: 0, y: -initialFrameForRoundedViewForPresentingView.height / 2)
+            .scaledBy(x: scale, y: scale)
+            .translatedBy(x: 0, y: initialFrameForRoundedViewForPresentingView.height / 2)
         
         containerView.addSubview(presentedViewController.view)
         presentedViewController.view.frame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
@@ -92,7 +93,7 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
                 roundedViewForPresentingView.removeFromSuperview()
                 roundedViewForPresentedView.removeFromSuperview()
                 transitionContext.completeTransition(finished)
-				self?.completion?(finished)
+                self?.completion?(finished)
             }
         )
     }

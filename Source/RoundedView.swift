@@ -55,13 +55,10 @@ final class RoundedView: UIView {
     }
     
     private func updateMaskPath() {
-        /// The height is a bit higher than the rounded view to accomodate for
-        /// a black line that flickers sometimes because diffing floating points
-        /// is weird
         let newRect = CGRect(x: bounds.origin.x,
                              y: bounds.origin.y,
                              width: bounds.width,
-                             height: bounds.height + 2)
+                             height: bounds.height * 2)
         
         let radii = CGSize(width: cornerRadius, height: cornerRadius)
         let boundsPath = UIBezierPath(rect: newRect)

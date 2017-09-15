@@ -19,17 +19,19 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	// MARK:- Internal variables
 	
     var transitioningDelegate: DeckPresentationControllerDelegate?
-    var pan: UIPanGestureRecognizer?
 	
 	// MARK:- Private variables
+    
+    private var pan: UIPanGestureRecognizer?
 	
     private var roundedViewForPresentingView: RoundedView?
 	private var roundedViewForPresentedView: RoundedView?
-	
 	private var backgroundView: UIView?
-	private var presentingViewSnapshotView: UIView?
+    
 	private var cachedContainerWidth: CGFloat = 0
-	private var aspectRatioConstraint: NSLayoutConstraint?
+    private var presentingViewSnapshotView: UIView?
+    private var snapshotViewHeightConstraint: NSLayoutConstraint?
+	private var snapshotViewAspectRatioConstraint: NSLayoutConstraint?
 	
 	private var presentAnimation: (() -> ())? = nil
 	private var presentCompletion: ((Bool) -> ())? = nil
@@ -47,13 +49,24 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(updateForStatusBar), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
 	}
+    
+    // MARK:- Sizing
+    
+    var statusBarHeight: CGFloat {
+        return UIApplication.shared.statusBarFrame.height
+    }
 	
     override var frameOfPresentedViewInContainerView: CGRect {
-        if let view = containerView {
-            return CGRect(x: 0, y: Constants.topOffsetForPresentedView, width: view.bounds.width, height: view.bounds.height - Constants.topOffsetForPresentedView)
-        } else {
+        guard let containerView = containerView else {
             return .zero
         }
+        
+        let yOffset = ManualLayout.presentingViewTopInset + Constants.insetForPresentedView
+        
+        return CGRect(x: 0,
+                      y: yOffset,
+                      width: containerView.bounds.width,
+                      height: containerView.bounds.height - yOffset)
     }
 	
 	// MARK:- Presentation
@@ -86,20 +99,16 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 			
 			presentedViewController.view.addObserver(self, forKeyPath: "frame", options: [.initial], context: nil)
 			presentedViewController.view.addObserver(self, forKeyPath: "transform", options: [.initial], context: nil)
-			presentedViewController.view.layer.mask = nil
             presentedViewController.view.frame = frameOfPresentedViewInContainerView
 			presentAnimation?()
 			
 			presentingViewSnapshotView = UIView()
 			presentingViewSnapshotView!.translatesAutoresizingMaskIntoConstraints = false
 			containerView.insertSubview(presentingViewSnapshotView!, belowSubview: presentedViewController.view)
-			
+            
 			NSLayoutConstraint.activate([
 				presentingViewSnapshotView!.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-				presentingViewSnapshotView!.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-				presentingViewSnapshotView!.heightAnchor.constraint(
-                    equalTo: containerView.heightAnchor,
-                    constant: Constants.topInsetForPresentingView * -2),
+				presentingViewSnapshotView!.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
 			])
 			
 			updateSnapshotView()
@@ -202,17 +211,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		presentingViewController.view.alpha = 0
 		
 		let fullHeight = containerView.window!.frame.size.height
-		let statusBarHeight: CGFloat = {
-			let tempHeight = UIApplication.shared.statusBarFrame.height
-			if tempHeight >= 20 {
-				return tempHeight - 20
-			} else {
-				return tempHeight
-			}
-		}()
 		
 		let currentHeight = containerView.frame.height
-		let newHeight = fullHeight - statusBarHeight
+		let newHeight = fullHeight - ManualLayout.containerViewTopInset
 		
 		UIView.animate(
 			withDuration: 0.1,
@@ -220,7 +221,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 				containerView.frame.origin.y -= newHeight - currentHeight
 			}, completion: { [weak self] _ in
 				self?.presentingViewController.view.alpha = Constants.alphaForPresentingView
-				containerView.frame = CGRect(x: 0, y: statusBarHeight, width: containerView.frame.width, height: newHeight)
+                containerView.frame = CGRect(x: 0, y: ManualLayout.containerViewTopInset, width: containerView.frame.width, height: newHeight)
 			}
 		)
 	}
@@ -258,25 +259,33 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		}
 	}
 	
-	/// Thie method updates the aspect ratio of the snapshot view used to
-	/// represent the presenting view controller.
+	/// Thie method updates the aspect ratio and the height of the snapshot view
+    /// used to represent the presenting view controller.
 	///
 	/// The aspect ratio is only updated when the width of the container changes
 	/// i.e. when just the status bar moves, nothing happens
 	private func updateSnapshotViewAspectRatio() {
-		guard
-			let containerView = containerView,
-			let presentingViewSnapshotView = presentingViewSnapshotView,
-			cachedContainerWidth != containerView.bounds.width
+		guard let containerView = containerView,
+              let presentingViewSnapshotView = presentingViewSnapshotView,
+			  cachedContainerWidth != containerView.bounds.width
 		else {
 			return
 		}
 		
 		cachedContainerWidth = containerView.bounds.width
-		aspectRatioConstraint?.isActive = false
+        
+        snapshotViewHeightConstraint?.isActive = false
+		snapshotViewAspectRatioConstraint?.isActive = false
+        
+        let heightConstant = ManualLayout.presentingViewTopInset * -2
 		let aspectRatio = containerView.bounds.width / containerView.bounds.height
-		aspectRatioConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: presentingViewSnapshotView.heightAnchor, multiplier: aspectRatio)
-		aspectRatioConstraint?.isActive = true
+        
+        roundedViewForPresentingView?.cornerRadius = Constants.cornerRadius * (1 - (heightConstant / containerView.frame.height))
+        snapshotViewHeightConstraint = presentingViewSnapshotView.heightAnchor.constraint(equalTo: containerView.heightAnchor,constant: heightConstant)
+        snapshotViewAspectRatioConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: presentingViewSnapshotView.heightAnchor, multiplier: aspectRatio)
+		
+        snapshotViewHeightConstraint?.isActive = true
+        snapshotViewAspectRatioConstraint?.isActive = true
 	}
 	
 	// MARK:- Presented view KVO + Rounded view update methods
@@ -305,7 +314,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	/// restores the state of the `presentingViewController`'s view to the
 	/// expected state at the end of the presenting animation
 	override func dismissalTransitionWillBegin() {
-		let scale: CGFloat = 1 - (Constants.topInsetForPresentingView * 2 / presentingViewController.view.frame.height)
+		let scale: CGFloat = 1 - (ManualLayout.presentingViewTopInset * 2 / presentingViewController.view.frame.height)
 		presentingViewController.view.transform = CGAffineTransform(scaleX: scale, y: scale)
 		backgroundView?.removeFromSuperview()
         presentingViewSnapshotView?.removeFromSuperview()
