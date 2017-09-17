@@ -1,5 +1,10 @@
 ## Changelog
 
+1.2.0 Release notes (17/9/2017)
+----
+
+Rounded corners are now manually rendered without using a mask
+
 1.1.0 Release notes (15/9/2017)
 ----
 
