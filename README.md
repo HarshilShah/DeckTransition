@@ -110,6 +110,7 @@ func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
 ## Apps Using DeckTransition
 - [Petty](https://zachsim.one/projects/petty) by [Zach Simone](https://twitter.com/zachsimone)
+- [Bitbook](https://bitbookapp.com) by [Sammy Gutierrez](https://sammygutierrez.com)
 
 Feel free to submit a PR if you’re using this library in your apps
 
