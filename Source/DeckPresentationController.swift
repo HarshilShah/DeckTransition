@@ -14,7 +14,25 @@ protocol DeckPresentationControllerDelegate {
     func isDismissGestureEnabled() -> Bool
 }
 
-final class DeckPresentationController: UIPresentationController, UIGestureRecognizerDelegate {
+/// A protocol to communicate to the transition that an update of the snapshot
+/// view is required. This is adopted only by the presentation controller
+public protocol DeckSnapshotUpdater {
+    
+    /// For various reasons (performance, the way iOS handles safe area,
+    /// layout issues, etc.) this transition uses a snapshot view of your
+    /// `presentingViewController` and not the live view itself.
+    ///
+    /// In some cases this snapshot might become outdated before the dismissal,
+    /// and for those cases you can request to have the snapshot updated. While
+    /// the transition only shows a small portion of the presenting view, in
+    /// some cases that might become inconsistent enough to demand an update.
+    ///
+    /// This is an expensive process and should only be used if necessary, for
+    /// example if you are updating your entire app's theme.
+    func requestPresentedViewSnapshotUpdate()
+}
+
+final class DeckPresentationController: UIPresentationController, UIGestureRecognizerDelegate, DeckSnapshotUpdater {
 	
 	// MARK:- Internal variables
 	
@@ -50,9 +68,15 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		NotificationCenter.default.addObserver(self, selector: #selector(updateForStatusBar), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
 	}
     
+    // MARK:- Public methods
+    
+    public func requestPresentedViewSnapshotUpdate() {
+        updateSnapshotView()
+    }
+    
     // MARK:- Sizing
     
-    var statusBarHeight: CGFloat {
+    private var statusBarHeight: CGFloat {
         return UIApplication.shared.statusBarFrame.height
     }
 	
@@ -228,7 +252,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	/// The containerView is the only thing that received layout updates;
 	/// AutoLayout and the snapshotView method handle the rest. Additionally,
 	/// the mask for the `presentedViewController` is also reset
-	@objc func updateForStatusBar() {
+	@objc private func updateForStatusBar() {
 		guard let containerView = containerView else {
 			return
 		}
