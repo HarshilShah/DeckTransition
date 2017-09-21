@@ -13,15 +13,11 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
 	// MARK:- Private variables
 	
 	private let duration: TimeInterval?
-	private let animation: (() -> ())?
-	private let completion: ((Bool) -> ())?
 	
 	// MARK:- Initializers
 	
-	init(duration: TimeInterval?, animation: (() -> ())?, completion: ((Bool) -> ())?) {
+	init(duration: TimeInterval?) {
 		self.duration = duration
-		self.animation = animation
-		self.completion = completion
 	}
 	
 	// MARK:- UIViewControllerAnimatedTransitioning
@@ -33,18 +29,16 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
         
         let containerView = transitionContext.containerView
         
-        let offScreenFrame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
+        let offscreenFrame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
       
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
             options: .curveEaseOut,
-            animations: { [weak self] in
-                presentedViewController.view.frame = offScreenFrame
-				self?.animation?()
-            }, completion: { [weak self] finished in
+            animations: {
+                presentedViewController.view.frame = offscreenFrame
+            }, completion: { finished in
                 transitionContext.completeTransition(finished)
-				self?.completion?(finished)
             })
     }
     

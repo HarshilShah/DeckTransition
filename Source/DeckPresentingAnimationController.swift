@@ -13,15 +13,11 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
 	// MARK:- Private variables
 	
 	private let duration: TimeInterval?
-	private let animation: (() -> ())?
-	private let completion: ((Bool) -> ())?
 	
 	// MARK:- Initializers
 	
-	init(duration: TimeInterval?, animation: (() -> ())?, completion: ((Bool) -> ())?) {
+	init(duration: TimeInterval?) {
 		self.duration = duration
-		self.animation = animation
-		self.completion = completion
 	}
 	
 	// MARK:- UIViewControllerAnimatedTransitioning
@@ -41,12 +37,10 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
             options: .curveEaseOut,
-            animations: { [weak self] in
+            animations: {
                 presentedViewController.view.frame = finalFrameForPresentedView
-				self?.animation?()
-            }, completion: { [weak self] finished in
+            }, completion: { finished in
                 transitionContext.completeTransition(finished)
-                self?.completion?(finished)
             }
         )
     }

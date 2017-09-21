@@ -62,17 +62,11 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
 	// MARK:- UIViewControllerTransitioningDelegate
     
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return DeckPresentingAnimationController(
-			duration: presentDuration,
-			animation: presentAnimation,
-			completion: presentCompletion)
+        return DeckPresentingAnimationController(duration: presentDuration)
     }
     
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return DeckDismissingAnimationController(
-			duration: dismissDuration,
-			animation: dismissAnimation,
-			completion: dismissCompletion)
+        return DeckDismissingAnimationController(duration: dismissDuration)
     }
     
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
