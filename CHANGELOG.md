@@ -1,5 +1,11 @@
 ## Changelog
 
+1.3.0 Release notes (22/9/2017)
+----
+
+- Support for safe area based layouts
+- Added a new `DeckSnapshotUpdater` API to update presenting view snapshots
+
 1.2.0 Release notes (17/9/2017)
 ----
 
