@@ -108,6 +108,26 @@ func scrollViewDidScroll(_ scrollView: UIScrollView) {
 }
 ```
 
+### Snapshots
+
+For a variety of reasons, and especially because of iOS 11's safe area layout, DeckTransition uses a snapshot of your presenting view controller's view instead of using the view directly. This view is automatically updated whenever the frame is resized.
+
+However, there can be some cases where you might want to update the snapshot view by yourself, and this can be achieved using the following one line snippet:
+
+```swift
+(presentationController as? DeckSnapshotUpdater)?.requestPresentedViewSnapshotUpdate()
+```
+
+All this does is request the presentation controller to update the snapshot.
+
+You can also choose to update snapshot directly from the presenting view controller, as follows:
+
+```swift
+(presentedViewController?.presentationController as? DeckSnapshotUpdater)?.requestPresentedViewSnapshotUpdate()
+```
+
+It's worth noting that updating the snapshot is an expensive process and should only be used if necessary, for example if you are updating your entire app's theme.
+
 ## Apps Using DeckTransition
 - [Petty](https://zachsim.one/projects/petty) by [Zach Simone](https://twitter.com/zachsimone)
 - [Bitbook](https://bitbookapp.com) by [Sammy Gutierrez](https://sammygutierrez.com)
