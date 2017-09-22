@@ -136,7 +136,7 @@ Feel free to submit a PR if you’re using this library in your apps
 
 ## Author
 
-Written by Harshil Shah. You can [find me on Twitter](https://twitter.com/HarshilShah1910) if you have any suggestions, requests, or just want to talk!
+Written by [Harshil Shah](https://twitter.com/HarshilShah1910)
 
 ## License
 
