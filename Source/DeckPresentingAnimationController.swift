@@ -23,7 +23,9 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
 	// MARK:- UIViewControllerAnimatedTransitioning
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let presentedViewController = transitionContext.viewController(forKey: .to) else {
+        guard let presentedViewController = transitionContext.viewController(forKey: .to),
+              let presentingViewController = transitionContext.viewController(forKey: .from)
+        else {
             return
         }
         
@@ -33,6 +35,9 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
         
         let finalFrameForPresentedView = transitionContext.finalFrame(for: presentedViewController)
         
+        presentedViewController.beginAppearanceTransition(true, animated: true)
+        presentingViewController.beginAppearanceTransition(false, animated: true)
+        
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
@@ -41,6 +46,8 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
                 presentedViewController.view.frame = finalFrameForPresentedView
             }, completion: { finished in
                 transitionContext.completeTransition(finished)
+                presentedViewController.endAppearanceTransition()
+                presentingViewController.endAppearanceTransition()
             }
         )
     }
