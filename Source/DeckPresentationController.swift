@@ -107,7 +107,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         presentedViewController.view.addObserver(self, forKeyPath: "frame", options: [.initial], context: nil)
         presentedViewController.view.addObserver(self, forKeyPath: "transform", options: [.initial], context: nil)
         
-        presentingViewSnapshotView.alpha = Constants.alphaForPresentingView
         containerView.insertSubview(presentingViewSnapshotView, belowSubview: presentedViewController.view)
         presentingViewSnapshotView.frame = containerView.bounds
         updateSnapshotView()
@@ -147,6 +146,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         presentedViewController.transitionCoordinator?.animate(
             alongsideTransition: { [unowned self] context in
                 self.presentAnimation?()
+                self.presentingViewSnapshotView.alpha = Constants.alphaForPresentingView
                 self.presentingViewSnapshotView.transform = CGAffineTransform(scaleX: scale, y: scale)
                 self.roundedViewForPresentingView.transform = transformForRoundedViewForPresentingView
             }
