@@ -1,5 +1,10 @@
 ## Changelog
 
+1.3.1 Release notes (26/9/2017)
+----
+
+- Fixed the alpha animation during presentation
+
 1.3.0 Release notes (22/9/2017)
 ----
 
