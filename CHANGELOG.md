@@ -1,5 +1,10 @@
 ## Changelog
 
+## 1.3.2 Release notes (1/10/2017)
+----
+
+- Moved appearance transition methods to the presentation controller
+
 1.3.1 Release notes (26/9/2017)
 ----
 
