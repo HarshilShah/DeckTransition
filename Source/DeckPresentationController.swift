@@ -100,6 +100,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return
         }
         
+        if let animated = presentedViewController.transitionCoordinator?.isAnimated {
+            presentedViewController.beginAppearanceTransition(true, animated: animated)
+            presentingViewController.beginAppearanceTransition(false, animated: animated)
+        }
+        
         let scale: CGFloat = 1 - (ManualLayout.presentingViewTopInset * 2 / containerView.frame.height)
         
         roundedViewForPresentedView.translatesAutoresizingMaskIntoConstraints = false
@@ -173,6 +178,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		guard let containerView = containerView else {
 			return
 		}
+        
+        presentedViewController.endAppearanceTransition()
+        presentingViewController.endAppearanceTransition()
         
         presentedViewController.view.frame = frameOfPresentedViewInContainerView
         
@@ -360,6 +368,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return
         }
         
+        if let animated = presentedViewController.transitionCoordinator?.isAnimated {
+            presentingViewController.beginAppearanceTransition(true, animated: animated)
+            presentedViewController.beginAppearanceTransition(false, animated: animated)
+        }
+        
         let scale: CGFloat = 1 - (ManualLayout.presentingViewTopInset * 2 / containerView.frame.height)
         
         snapshotViewHeightConstraint?.isActive = false
@@ -396,6 +409,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         guard let containerView = containerView else {
             return
         }
+        
+        presentedViewController.endAppearanceTransition()
+        presentingViewController.endAppearanceTransition()
         
 		backgroundView.removeFromSuperview()
         presentingViewSnapshotView.removeFromSuperview()

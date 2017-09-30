@@ -31,18 +31,13 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
         /// should thus be the `presentingViewController`, it's referred to as
         /// the `presentedViewController` here
         
-        guard let presentedViewController = transitionContext.viewController(forKey: .from),
-              let presentingViewController = transitionContext.viewController(forKey: .to)
-        else {
+        guard let presentedViewController = transitionContext.viewController(forKey: .from) else {
             return
         }
         
         let containerView = transitionContext.containerView
         
         let offscreenFrame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
-      
-        presentedViewController.beginAppearanceTransition(false, animated: true)
-        presentingViewController.beginAppearanceTransition(true, animated: true)
         
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
@@ -52,8 +47,6 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
                 presentedViewController.view.frame = offscreenFrame
             }, completion: { finished in
                 transitionContext.completeTransition(finished)
-                presentedViewController.endAppearanceTransition()
-                presentingViewController.endAppearanceTransition()
             })
     }
     
