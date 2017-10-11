@@ -1,5 +1,10 @@
 ## Changelog
 
+## 1.3.3 Release notes (11/10/2017)
+----
+
+- Corner rounding is now animated
+
 ## 1.3.2 Release notes (1/10/2017)
 ----
 
