@@ -12,19 +12,27 @@ final class CornerView: UIView {
     
     // MARK:- Public variables
     
-    var cornerRadius: CGFloat = 0 {
-        didSet {
-            updateCornerShape()
-        }
+    var cornerRadius: CGFloat {
+        get { return cornerLayer.radius }
+        set { cornerLayer.radius = newValue }
     }
     
     var corner: Corner? {
-        didSet { updateCornerShape() }
+        get { return cornerLayer.corner }
+        set { cornerLayer.corner = newValue }
     }
     
     // MARK:- Private variables
     
-    private let cornerShapeLayer = CAShapeLayer()
+    private var cornerLayer: CornerLayer {
+        return layer as! CornerLayer
+    }
+    
+    // MARK:- Layer override
+    
+    override class var layerClass: AnyClass {
+        return CornerLayer.self
+    }
     
     // MARK:- Initializers
     
@@ -44,27 +52,76 @@ final class CornerView: UIView {
     }
     
     private func setup() {
-        layer.addSublayer(cornerShapeLayer)
-        cornerShapeLayer.fillColor = UIColor.black.cgColor
+        cornerLayer.fillColor = UIColor.black.cgColor
     }
     
-    // MARK:- UIView methods
+}
+
+private final class CornerLayer: CAShapeLayer {
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        cornerShapeLayer.frame = bounds
-        updateCornerShape()
+    // MARK:- Public variables
+    
+    @NSManaged var radius: CGFloat
+    
+    var corner: Corner? {
+        didSet { setNeedsDisplay() }
+    }
+    
+    // MARK:- Private variables
+    
+    private static let radiusKey = "radius"
+    
+    // MARK:- Animation overrides
+    
+    override static func needsDisplay(forKey key: String) -> Bool {
+        guard key == radiusKey else {
+            return super.needsDisplay(forKey: key)
+        }
+        
+        return true
+    }
+    
+    override func action(forKey event: String) -> CAAction? {
+        /// As best as I can tell, the only way to get all the properties
+        /// related to the ongoing transition is to just copy them from the
+        /// animation that is created for any random animatable property
+        ///
+        /// https://stackoverflow.com/questions/14192816/create-a-custom-animatable-property
+        
+        guard event == CornerLayer.radiusKey,
+              let action = super.action(forKey: "backgroundColor") as? CAAnimation
+        else {
+            return super.action(forKey: event)
+        }
+        
+        let animation = CABasicAnimation(keyPath: CornerLayer.radiusKey)
+        animation.fromValue = presentation()?.value(forKey: event) ?? radius
+        animation.duration = action.duration
+        animation.speed = action.speed
+        animation.timeOffset = action.timeOffset
+        animation.repeatCount = action.repeatCount
+        animation.repeatDuration = action.repeatDuration
+        animation.autoreverses = action.autoreverses
+        animation.fillMode = action.fillMode
+        animation.timingFunction = action.timingFunction
+        animation.delegate = action.delegate
+        return animation
+    }
+    
+    // MARK:- CALayer methods
+    
+    override func display() {
+        self.path = currentPath()
     }
     
     // MARK:- Private methods
     
-    private func updateCornerShape() {
+    private func currentPath() -> CGPath? {
         guard let corner = corner else {
-            cornerShapeLayer.path = nil
-            return
+            return nil
         }
         
-        let side = cornerRadius
+        let side = presentation()?.radius ?? radius
         let size = CGSize(width: side, height: side)
         let targetRect = CGRect(withCorner: corner, at: bounds.getCorner(corner), size: size)
         
@@ -114,9 +171,7 @@ final class CornerView: UIView {
             }
         }()
         
-        cornerShapeLayer.path = path.cgPath
+        return path.cgPath
     }
     
 }
-
-

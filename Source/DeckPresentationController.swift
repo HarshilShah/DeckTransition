@@ -117,6 +117,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         updateSnapshotView()
         
         containerView.insertSubview(roundedViewForPresentingView, aboveSubview: presentingViewSnapshotView)
+        roundedViewForPresentingView.cornerRadius = 0
         
         let initialFrameForRoundedViewForPresentingView = CGRect(
             x: presentingViewController.view.frame.origin.x,
@@ -153,6 +154,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                 self.presentAnimation?()
                 self.presentingViewSnapshotView.alpha = Constants.alphaForPresentingView
                 self.presentingViewSnapshotView.transform = CGAffineTransform(scaleX: scale, y: scale)
+                self.roundedViewForPresentingView.cornerRadius = Constants.cornerRadius
                 self.roundedViewForPresentingView.transform = transformForRoundedViewForPresentingView
             }
         )
@@ -331,11 +333,12 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         snapshotViewHeightConstraint?.isActive = false
 		snapshotViewAspectRatioConstraint?.isActive = false
         
-        let heightConstant = ManualLayout.presentingViewTopInset * -2
+        let heightConstant = ManualLayout.presentingViewTopInset * 2
 		let aspectRatio = containerView.bounds.width / containerView.bounds.height
         
         roundedViewForPresentingView.cornerRadius = Constants.cornerRadius * (1 - (heightConstant / containerView.frame.height))
-        snapshotViewHeightConstraint = presentingViewSnapshotView.heightAnchor.constraint(equalTo: containerView.heightAnchor,constant: heightConstant)
+        print(roundedViewForPresentingView.cornerRadius)
+        snapshotViewHeightConstraint = presentingViewSnapshotView.heightAnchor.constraint(equalTo: containerView.heightAnchor,constant: -heightConstant)
         snapshotViewAspectRatioConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: presentingViewSnapshotView.heightAnchor, multiplier: aspectRatio)
 		
         snapshotViewHeightConstraint?.isActive = true
@@ -398,6 +401,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                 self.dismissAnimation?()
                 self.presentingViewSnapshotView.alpha = 1
                 self.presentingViewSnapshotView.layoutIfNeeded()
+                self.roundedViewForPresentingView.cornerRadius = 0
                 self.roundedViewForPresentingView.transform = .identity
             }
         )

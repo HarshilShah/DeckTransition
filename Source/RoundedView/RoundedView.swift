@@ -13,7 +13,10 @@ final class RoundedView: UIView {
     // MARK:- Public variables
     
     public var cornerRadius = Constants.cornerRadius {
-        didSet { layoutSubviews() }
+        didSet {
+            leftCorner.cornerRadius = cornerRadius
+            rightCorner.cornerRadius = cornerRadius
+        }
     }
     
     // MARK:- Private variables
@@ -42,6 +45,9 @@ final class RoundedView: UIView {
         leftCorner.corner = .topLeft
         rightCorner.corner = .topRight
         
+        leftCorner.cornerRadius = cornerRadius
+        rightCorner.cornerRadius = cornerRadius
+        
         leftCorner.translatesAutoresizingMaskIntoConstraints = false
         rightCorner.translatesAutoresizingMaskIntoConstraints = false
         
@@ -49,16 +55,13 @@ final class RoundedView: UIView {
         addSubview(rightCorner)
     }
     
-    // MARK:- UUView methods
+    // MARK:- UIView methods
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
         leftCorner.frame = bounds
         rightCorner.frame = bounds
-        
-        leftCorner.cornerRadius = cornerRadius
-        rightCorner.cornerRadius = cornerRadius
     }
     
 }
