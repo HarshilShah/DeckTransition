@@ -61,6 +61,10 @@ private final class CornerLayer: CAShapeLayer {
     
     // MARK:- Public variables
     
+    override var frame: CGRect {
+        didSet { setNeedsDisplay() }
+    }
+    
     @NSManaged var radius: CGFloat
     
     var corner: Corner? {

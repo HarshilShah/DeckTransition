@@ -337,7 +337,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		snapshotViewAspectRatioConstraint?.isActive = false
         
         let heightConstant = ManualLayout.presentingViewTopInset * 2
-        print(roundedViewForPresentingView.cornerRadius)
 		let aspectRatio = containerView.bounds.width / containerView.bounds.height
         
         roundedViewForPresentingView.cornerRadius = Constants.cornerRadius * (1 - (heightConstant / containerView.frame.height))
