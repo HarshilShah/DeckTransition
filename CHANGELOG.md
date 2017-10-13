@@ -1,5 +1,10 @@
 ## Changelog
 
+## 1.3.4 Release notes (13/10/2017)
+----
+
+- Fixed an issue where rotation would break the rounded corners
+
 ## 1.3.3 Release notes (11/10/2017)
 ----
 
