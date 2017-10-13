@@ -50,6 +50,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	private var cachedContainerWidth: CGFloat = 0
     private var snapshotViewHeightConstraint: NSLayoutConstraint?
 	private var snapshotViewAspectRatioConstraint: NSLayoutConstraint?
+    
+    private var presentedViewFrameObserver: NSKeyValueObservation?
+    private var presentedViewTransformObserver: NSKeyValueObservation?
 	
 	private var presentAnimation: (() -> ())? = nil
 	private var presentCompletion: ((Bool) -> ())? = nil
@@ -100,6 +103,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return
         }
         
+        setupPresentedViewKVO()
+        
         if let animated = presentedViewController.transitionCoordinator?.isAnimated {
             presentedViewController.beginAppearanceTransition(true, animated: animated)
             presentingViewController.beginAppearanceTransition(false, animated: animated)
@@ -109,8 +114,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         
         roundedViewForPresentedView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(roundedViewForPresentedView)
-        presentedViewController.view.addObserver(self, forKeyPath: "frame", options: [.initial], context: nil)
-        presentedViewController.view.addObserver(self, forKeyPath: "transform", options: [.initial], context: nil)
         
         containerView.insertSubview(presentingViewSnapshotView, belowSubview: presentedViewController.view)
         presentingViewSnapshotView.frame = containerView.bounds
@@ -334,10 +337,10 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		snapshotViewAspectRatioConstraint?.isActive = false
         
         let heightConstant = ManualLayout.presentingViewTopInset * 2
+        print(roundedViewForPresentingView.cornerRadius)
 		let aspectRatio = containerView.bounds.width / containerView.bounds.height
         
         roundedViewForPresentingView.cornerRadius = Constants.cornerRadius * (1 - (heightConstant / containerView.frame.height))
-        print(roundedViewForPresentingView.cornerRadius)
         snapshotViewHeightConstraint = presentingViewSnapshotView.heightAnchor.constraint(equalTo: containerView.heightAnchor,constant: -heightConstant)
         snapshotViewAspectRatioConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: presentingViewSnapshotView.heightAnchor, multiplier: aspectRatio)
 		
@@ -347,14 +350,23 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	
 	// MARK:- Presented view KVO + Rounded view update methods
 	
-	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		if keyPath == "transform" || keyPath == "frame", let view = object as? UIView {
-			let offset = view.frame.origin.y
-			updateRoundedView(forOffset: offset)
-		}
-	}
-	
-	private func updateRoundedView(forOffset offset: CGFloat) {
+    private func setupPresentedViewKVO() {
+        presentedViewFrameObserver = presentedViewController.view.observe(\.frame, options: [.initial]) { [weak self] _, _ in
+            self?.presentedViewWasUpdated()
+        }
+        
+        presentedViewTransformObserver = presentedViewController.view.observe(\.transform, options: [.initial]) { [weak self] _, _ in
+            self?.presentedViewWasUpdated()
+        }
+    }
+    
+    private func invalidatePresentedViewKVO() {
+        presentedViewFrameObserver = nil
+        presentedViewTransformObserver = nil
+    }
+    
+    private func presentedViewWasUpdated() {
+        let offset = presentedViewController.view.frame.origin.y
 		roundedViewForPresentedView.frame = CGRect(x: 0, y: offset, width: containerView!.bounds.width, height: Constants.cornerRadius)
 	}
 	
@@ -428,8 +440,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         presentedViewController.view.frame = offscreenFrame
         presentedViewController.view.transform = .identity
         
-        presentedViewController.view.removeObserver(self, forKeyPath: "frame")
-        presentedViewController.view.removeObserver(self, forKeyPath: "transform")
+        invalidatePresentedViewKVO()
 		
 		dismissCompletion?(completed)
 	}
