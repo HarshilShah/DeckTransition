@@ -15,7 +15,7 @@ Hereʼs a GIF showing it in action.
 
 ## Requirements
 
-- Swift 3
+- Swift 4
 - iOS 9 or later
 
 ## Installation
