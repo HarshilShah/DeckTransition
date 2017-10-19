@@ -26,7 +26,13 @@ class ModalViewController: UIViewController, UITextViewDelegate {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.font = UIFont.systemFont(ofSize: 40, weight: UIFontWeightHeavy)
         textView.textAlignment = .center
-        textView.text = "This is the presented modal view controller.\n\nWhen youʼre scrolled to the very top of the view, you can swipe downwards to dismiss it.\n\nThe swipe works in one fluid gesture if youʼre scrolling up as well. Scroll around a bit here to give that a shot."
+        textView.text = """
+        This is the presented modal view controller.\n
+        When youʼre scrolled to the very top of the view, you can swipe downwards to dismiss it.\n
+        The swipe works in one fluid gesture if youʼre scrolling up as well.\n
+        You can also tap again to present another modal
+        """
+        
         view.addSubview(textView)
         textView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
         textView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
@@ -35,6 +41,17 @@ class ModalViewController: UIViewController, UITextViewDelegate {
 		textView.bounces = false
 		
         textView.delegate = self
+    
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.viewWasTapped))
+        view.addGestureRecognizer(tap)
+    }
+    
+    func viewWasTapped() {
+        let modal = ModalViewController()
+        let transitionDelegate = DeckTransitioningDelegate()
+        modal.transitioningDelegate = transitionDelegate
+        modal.modalPresentationStyle = .custom
+        present(modal, animated: true, completion: nil)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {

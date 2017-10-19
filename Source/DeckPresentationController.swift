@@ -116,30 +116,20 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         containerView.addSubview(roundedViewForPresentedView)
         
         containerView.insertSubview(presentingViewSnapshotView, belowSubview: presentedViewController.view)
-        presentingViewSnapshotView.frame = containerView.bounds
+        presentingViewSnapshotView.frame = presentingViewController.view.frame
         updateSnapshotView()
         
-        containerView.insertSubview(roundedViewForPresentingView, aboveSubview: presentingViewSnapshotView)
-        roundedViewForPresentingView.cornerRadius = 0
-        
-        let initialFrameForRoundedViewForPresentingView = CGRect(
-            x: presentingViewController.view.frame.origin.x,
-            y: presentingViewController.view.frame.origin.y,
-            width: presentingViewController.view.frame.width,
-            height: Constants.cornerRadius)
-        roundedViewForPresentingView.frame = initialFrameForRoundedViewForPresentingView
-        
-        /// The rounded view needs to be scaled by the same amount as the
-        /// presentingView, and also translated down by the same amount.
-        /// Scaling happens with respect to the frame's center, so a
-        /// translate-scale-translate needs to be done to ensure that the
-        /// scaling is performed with respect to the top edge so it still lines
-        /// up with the top edge of the presentingView
-        let transformForRoundedViewForPresentingView = CGAffineTransform.identity
+        let transformForSnapshotView = CGAffineTransform.identity
+            .translatedBy(x: 0, y: -presentingViewSnapshotView.frame.origin.y)
             .translatedBy(x: 0, y: ManualLayout.presentingViewTopInset)
-            .translatedBy(x: 0, y: -initialFrameForRoundedViewForPresentingView.height / 2)
+            .translatedBy(x: 0, y: -presentingViewSnapshotView.frame.height / 2)
             .scaledBy(x: scale, y: scale)
-            .translatedBy(x: 0, y: initialFrameForRoundedViewForPresentingView.height / 2)
+            .translatedBy(x: 0, y: presentingViewSnapshotView.frame.height / 2)
+        
+        roundedViewForPresentingView.backgroundColor = UIColor.black.withAlphaComponent(0)
+        roundedViewForPresentingView.cornerRadius = presentingViewController.isPresentedWithDeck ? Constants.cornerRadius : 0
+        containerView.insertSubview(roundedViewForPresentingView, aboveSubview: presentingViewSnapshotView)
+        roundedViewForPresentingView.frame = presentingViewSnapshotView.frame
         
         backgroundView.backgroundColor = .black
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
@@ -152,13 +142,40 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             backgroundView.bottomAnchor.constraint(equalTo: window.bottomAnchor)
         ])
         
+        var rootSnapshotView: UIView?
+        var rootSnapshotRoundedView: RoundedView?
+        
+        if presentingViewController.isPresentedWithDeck {
+            guard let rootController = presentingViewController.presentingViewController,
+                  let snapshotView = rootController.view.snapshotView(afterScreenUpdates: false)
+            else {
+                return
+            }
+            
+            containerView.insertSubview(snapshotView, aboveSubview: backgroundView)
+            snapshotView.frame = presentingViewSnapshotView.frame
+            snapshotView.transform = transformForSnapshotView
+            snapshotView.alpha = Constants.alphaForPresentingView
+            rootSnapshotView = snapshotView
+            
+            let snapshotRoundedView = RoundedView()
+            snapshotRoundedView.cornerRadius = Constants.cornerRadius
+            containerView.insertSubview(snapshotRoundedView, aboveSubview: snapshotView)
+            snapshotRoundedView.frame = presentingViewSnapshotView.frame
+            snapshotRoundedView.transform = transformForSnapshotView
+            rootSnapshotRoundedView = snapshotRoundedView
+        }
+        
         presentedViewController.transitionCoordinator?.animate(
             alongsideTransition: { [unowned self] context in
                 self.presentAnimation?()
-                self.presentingViewSnapshotView.alpha = Constants.alphaForPresentingView
-                self.presentingViewSnapshotView.transform = CGAffineTransform(scaleX: scale, y: scale)
+                self.presentingViewSnapshotView.transform = transformForSnapshotView
                 self.roundedViewForPresentingView.cornerRadius = Constants.cornerRadius
-                self.roundedViewForPresentingView.transform = transformForRoundedViewForPresentingView
+                self.roundedViewForPresentingView.transform = transformForSnapshotView
+                self.roundedViewForPresentingView.backgroundColor = UIColor.black.withAlphaComponent(1 - Constants.alphaForPresentingView)
+            }, completion: { _ in
+                rootSnapshotView?.removeFromSuperview()
+                rootSnapshotRoundedView?.removeFromSuperview()
             }
         )
     }
@@ -203,7 +220,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             roundedViewForPresentingView.topAnchor.constraint(equalTo: presentingViewSnapshotView.topAnchor),
             roundedViewForPresentingView.leftAnchor.constraint(equalTo: presentingViewSnapshotView.leftAnchor),
             roundedViewForPresentingView.rightAnchor.constraint(equalTo: presentingViewSnapshotView.rightAnchor),
-            roundedViewForPresentingView.heightAnchor.constraint(equalToConstant: Constants.cornerRadius)
+            roundedViewForPresentingView.bottomAnchor.constraint(equalTo: presentingViewSnapshotView.bottomAnchor)
         ])
         
         pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
@@ -387,33 +404,77 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             presentedViewController.beginAppearanceTransition(false, animated: animated)
         }
         
-        let scale: CGFloat = 1 - (ManualLayout.presentingViewTopInset * 2 / containerView.frame.height)
+        let initialFrame: CGRect = {
+            if presentingViewController.isPresentedWithDeck {
+                return CGRect(origin: containerView.bounds.origin,
+                              size: frameOfPresentedViewInContainerView.size)
+            } else {
+                return containerView.bounds
+            }
+        }()
+        
+        let scale: CGFloat = {
+            if presentingViewController.isPresentedWithDeck {
+                return 1 - (ManualLayout.presentingViewTopInset * 2 / frameOfPresentedViewInContainerView.height)
+            } else {
+                return 1 - (ManualLayout.presentingViewTopInset * 2 / containerView.frame.height)
+            }
+        }()
+        
+        roundedViewForPresentingView.translatesAutoresizingMaskIntoConstraints = true
+        roundedViewForPresentingView.frame = initialFrame
+        roundedViewForPresentingView.transform = CGAffineTransform(scaleX: scale, y: scale)
         
         snapshotViewHeightConstraint?.isActive = false
-        snapshotViewHeightConstraint = self.presentingViewSnapshotView.heightAnchor.constraint(equalTo: containerView.heightAnchor)
-        snapshotViewHeightConstraint?.isActive = true
+        snapshotViewAspectRatioConstraint?.isActive = false
+        presentingViewSnapshotView.translatesAutoresizingMaskIntoConstraints = true
+        presentingViewSnapshotView.frame = initialFrame
+        presentingViewSnapshotView.transform = CGAffineTransform(scaleX: scale, y: scale)
         
-        let finalFrameForRoundedViewForPresentingView = CGRect(
-            x: presentingViewController.view.frame.origin.x,
-            y: presentingViewController.view.frame.origin.y,
-            width: presentingViewController.view.frame.width,
-            height: Constants.cornerRadius)
-        roundedViewForPresentingView.frame = finalFrameForRoundedViewForPresentingView
+        let finalCornerRadius = presentingViewController.isPresentedWithDeck ? Constants.cornerRadius : 0
         
-        let transformForRoundedViewForPresentingView = CGAffineTransform.identity
-            .translatedBy(x: 0, y: ManualLayout.presentingViewTopInset)
-            .translatedBy(x: 0, y: -finalFrameForRoundedViewForPresentingView.height / 2)
-            .scaledBy(x: scale, y: scale)
-            .translatedBy(x: 0, y: finalFrameForRoundedViewForPresentingView.height / 2)
-        roundedViewForPresentingView.transform = transformForRoundedViewForPresentingView
+        let finalTransform: CGAffineTransform = {
+            if presentingViewController.isPresentedWithDeck {
+                return CGAffineTransform.identity
+                    .translatedBy(x: 0, y: ManualLayout.presentingViewTopInset)
+                    .translatedBy(x: 0, y: Constants.insetForPresentedView)
+            } else {
+                return .identity
+            }
+        }()
+        
+        var rootSnapshotView: UIView?
+        var rootSnapshotRoundedView: RoundedView?
+        
+        if presentingViewController.isPresentedWithDeck {
+            guard let rootController = presentingViewController.presentingViewController,
+                  let snapshotView = rootController.view.snapshotView(afterScreenUpdates: false)
+            else {
+                return
+            }
+            
+            containerView.insertSubview(snapshotView, aboveSubview: backgroundView)
+            snapshotView.frame = presentingViewSnapshotView.frame
+            snapshotView.alpha = Constants.alphaForPresentingView
+            rootSnapshotView = snapshotView
+            
+            let snapshotRoundedView = RoundedView()
+            snapshotRoundedView.cornerRadius = Constants.cornerRadius
+            containerView.insertSubview(snapshotRoundedView, aboveSubview: snapshotView)
+            snapshotRoundedView.frame = presentingViewSnapshotView.frame
+            rootSnapshotRoundedView = snapshotRoundedView
+        }
         
         presentedViewController.transitionCoordinator?.animate(
             alongsideTransition: { [unowned self] context in
                 self.dismissAnimation?()
-                self.presentingViewSnapshotView.alpha = 1
-                self.presentingViewSnapshotView.layoutIfNeeded()
-                self.roundedViewForPresentingView.cornerRadius = 0
-                self.roundedViewForPresentingView.transform = .identity
+                self.presentingViewSnapshotView.transform = finalTransform
+                self.roundedViewForPresentingView.transform = finalTransform
+                self.roundedViewForPresentingView.cornerRadius = finalCornerRadius
+                self.roundedViewForPresentingView.backgroundColor = .clear
+            }, completion: { _ in
+                rootSnapshotView?.removeFromSuperview()
+                rootSnapshotRoundedView?.removeFromSuperview()
             }
         )
 	}
@@ -431,9 +492,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		backgroundView.removeFromSuperview()
         presentingViewSnapshotView.removeFromSuperview()
         roundedViewForPresentingView.removeFromSuperview()
-        
-        presentingViewController.view.frame = containerView.frame
-        presentingViewController.view.transform = .identity
         
         let offscreenFrame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
         presentedViewController.view.frame = offscreenFrame
@@ -530,6 +588,18 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         }
 		
         return true
+    }
+    
+}
+
+fileprivate extension UIViewController {
+    
+    /// A Boolean value indicating whether the view controller is presented
+    /// using Deck.
+    var isPresentedWithDeck: Bool {
+        return transitioningDelegate is DeckTransitioningDelegate
+            && modalPresentationStyle == .custom
+            && presentingViewController != nil
     }
     
 }
