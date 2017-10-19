@@ -48,7 +48,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     private let roundedViewForPresentedView = RoundedView()
     
 	private var cachedContainerWidth: CGFloat = 0
-    private var snapshotViewHeightConstraint: NSLayoutConstraint?
+    private var snapshotViewTopConstraint: NSLayoutConstraint?
+    private var snapshotViewWidthConstraint: NSLayoutConstraint?
 	private var snapshotViewAspectRatioConstraint: NSLayoutConstraint?
     
     private var presentedViewFrameObserver: NSKeyValueObservation?
@@ -208,10 +209,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         
         presentingViewSnapshotView.transform = .identity
         presentingViewSnapshotView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            presentingViewSnapshotView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            presentingViewSnapshotView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
-        ])
+        presentingViewSnapshotView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
         updateSnapshotViewAspectRatio()
         
         roundedViewForPresentingView.transform = .identity
@@ -350,17 +348,30 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		
 		cachedContainerWidth = containerView.bounds.width
         
-        snapshotViewHeightConstraint?.isActive = false
+        snapshotViewTopConstraint?.isActive = false
+        snapshotViewWidthConstraint?.isActive = false
 		snapshotViewAspectRatioConstraint?.isActive = false
         
-        let heightConstant = ManualLayout.presentingViewTopInset * 2
-		let aspectRatio = containerView.bounds.width / containerView.bounds.height
+        let snapshotReferenceSize: CGSize = {
+            if presentingViewController.isPresentedWithDeck {
+                return frameOfPresentedViewInContainerView.size
+            } else {
+                return containerView.frame.size
+            }
+        }()
         
-        roundedViewForPresentingView.cornerRadius = Constants.cornerRadius * (1 - (heightConstant / containerView.frame.height))
-        snapshotViewHeightConstraint = presentingViewSnapshotView.heightAnchor.constraint(equalTo: containerView.heightAnchor,constant: -heightConstant)
+        let topInset = ManualLayout.presentingViewTopInset
+        let heightRatio = 1 - (2 * topInset / containerView.frame.height)
+		let aspectRatio = snapshotReferenceSize.width / snapshotReferenceSize.height
+        
+        roundedViewForPresentingView.cornerRadius = Constants.cornerRadius * heightRatio
+        
+        snapshotViewTopConstraint = presentingViewSnapshotView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topInset)
+        snapshotViewWidthConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: heightRatio)
         snapshotViewAspectRatioConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: presentingViewSnapshotView.heightAnchor, multiplier: aspectRatio)
-		
-        snapshotViewHeightConstraint?.isActive = true
+        
+        snapshotViewTopConstraint?.isActive = true
+        snapshotViewWidthConstraint?.isActive = true
         snapshotViewAspectRatioConstraint?.isActive = true
 	}
 	
@@ -425,7 +436,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         roundedViewForPresentingView.frame = initialFrame
         roundedViewForPresentingView.transform = CGAffineTransform(scaleX: scale, y: scale)
         
-        snapshotViewHeightConstraint?.isActive = false
+        snapshotViewTopConstraint?.isActive = false
+        snapshotViewWidthConstraint?.isActive = false
         snapshotViewAspectRatioConstraint?.isActive = false
         presentingViewSnapshotView.translatesAutoresizingMaskIntoConstraints = true
         presentingViewSnapshotView.frame = initialFrame
