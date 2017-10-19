@@ -89,11 +89,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return 0
         }
         
-        if presentingViewController.isPresentedWithDeck {
-            return 1 - (ManualLayout.presentingViewTopInset * 2 / frameOfPresentedViewInContainerView.height)
-        } else {
-            return 1 - (ManualLayout.presentingViewTopInset * 2 / containerView.frame.height)
-        }
+        return 1 - (ManualLayout.presentingViewTopInset * 2 / containerView.frame.height)
     }
 	
     override var frameOfPresentedViewInContainerView: CGRect {
@@ -420,16 +416,23 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         let initialFrame = CGRect(origin: containerView.frame.origin,
                                   size: presentingViewController.view.frame.size)
         
+        let initialTransform = CGAffineTransform.identity
+            .translatedBy(x: 0, y: -initialFrame.origin.y)
+            .translatedBy(x: 0, y: ManualLayout.presentingViewTopInset)
+            .translatedBy(x: 0, y: -presentingViewSnapshotView.frame.height / 2)
+            .scaledBy(x: scaleForPresentingView, y: scaleForPresentingView)
+            .translatedBy(x: 0, y: presentingViewSnapshotView.frame.height / 2)
+        
         roundedViewForPresentingView.translatesAutoresizingMaskIntoConstraints = true
         roundedViewForPresentingView.frame = initialFrame
-        roundedViewForPresentingView.transform = CGAffineTransform(scaleX: scaleForPresentingView, y: scaleForPresentingView)
+        roundedViewForPresentingView.transform = initialTransform
         
         snapshotViewTopConstraint?.isActive = false
         snapshotViewWidthConstraint?.isActive = false
         snapshotViewAspectRatioConstraint?.isActive = false
         presentingViewSnapshotView.translatesAutoresizingMaskIntoConstraints = true
         presentingViewSnapshotView.frame = initialFrame
-        presentingViewSnapshotView.transform = CGAffineTransform(scaleX: scaleForPresentingView, y: scaleForPresentingView)
+        presentingViewSnapshotView.transform = initialTransform
         
         let finalCornerRadius = presentingViewController.isPresentedWithDeck ? Constants.cornerRadius : 0
         
