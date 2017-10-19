@@ -360,13 +360,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         snapshotViewWidthConstraint?.isActive = false
 		snapshotViewAspectRatioConstraint?.isActive = false
         
-        let snapshotReferenceSize: CGSize = {
-            if presentingViewController.isPresentedWithDeck {
-                return frameOfPresentedViewInContainerView.size
-            } else {
-                return containerView.frame.size
-            }
-        }()
+        let snapshotReferenceSize = presentingViewController.view.frame.size
         
         let topInset = ManualLayout.presentingViewTopInset
         
@@ -423,14 +417,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             presentedViewController.beginAppearanceTransition(false, animated: animated)
         }
         
-        let initialFrame: CGRect = {
-            if presentingViewController.isPresentedWithDeck {
-                return CGRect(origin: containerView.bounds.origin,
-                              size: frameOfPresentedViewInContainerView.size)
-            } else {
-                return containerView.bounds
-            }
-        }()
+        let initialFrame = CGRect(origin: containerView.frame.origin,
+                                  size: presentingViewController.view.frame.size)
         
         roundedViewForPresentingView.translatesAutoresizingMaskIntoConstraints = true
         roundedViewForPresentingView.frame = initialFrame
