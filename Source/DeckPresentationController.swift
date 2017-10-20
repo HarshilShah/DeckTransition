@@ -111,13 +111,16 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return
         }
         
-        setupPresentedViewKVO()
-        
         if let animated = presentedViewController.transitionCoordinator?.isAnimated {
             presentedViewController.beginAppearanceTransition(true, animated: animated)
             presentingViewController.beginAppearanceTransition(false, animated: animated)
         }
         
+        /// A CGRect to be used as a proxy for the frame of the presentingView
+        ///
+        /// The actual frame isn't used directly because in the case of the
+        /// double height status bar on non-X iPhones, the containerView has a
+        /// reduced height
         let initialFrame: CGRect = {
             if presentingViewController.isPresentedWithDeck {
                 return presentingViewController.view.frame
@@ -126,13 +129,27 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             }
         }()
         
+        /// The presented view's rounded view's frame is updated using KVO
         roundedViewForPresentedView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(roundedViewForPresentedView)
+        setupPresentedViewKVO()
         
+        /// The snapshot view initially has the same frame as the presentingView
         containerView.insertSubview(presentingViewSnapshotView, belowSubview: presentedViewController.view)
         presentingViewSnapshotView.frame = initialFrame
         updateSnapshotView()
         
+        /// The following transforms are performed on the snapshot view:
+        /// 1. It's frame's origin is reset to 0. This is done because for
+        ///    recursive Deck modals, the reference frame will not have its
+        ///    origin at `.zero`
+        /// 2. It is translated down by `ManualLayout.presentingViewTopInset`
+        ///    points This is the desired inset from the top of the
+        ///    containerView
+        /// 3. It is scaled down by `scaleForPresentingView` along both axes,
+        ///    such that it's top edge is at the same position. In order to do
+        ///    this, we translate it up by half it's height, perform the
+        ///    scaling, and then translate it back down by the same amount
         let transformForSnapshotView = CGAffineTransform.identity
             .translatedBy(x: 0, y: -presentingViewSnapshotView.frame.origin.y)
             .translatedBy(x: 0, y: ManualLayout.presentingViewTopInset)
@@ -140,11 +157,14 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             .scaledBy(x: scaleForPresentingView, y: scaleForPresentingView)
             .translatedBy(x: 0, y: presentingViewSnapshotView.frame.height / 2)
         
+        /// For a recursive modal, the `presentingView` already has rounded
+        /// corners so the animation must respect that
         roundedViewForPresentingView.backgroundColor = UIColor.black.withAlphaComponent(0)
         roundedViewForPresentingView.cornerRadius = presentingViewController.isPresentedWithDeck ? Constants.cornerRadius : 0
         containerView.insertSubview(roundedViewForPresentingView, aboveSubview: presentingViewSnapshotView)
         roundedViewForPresentingView.frame = initialFrame
         
+        /// The background view is used to cover up the `presentedView`
         backgroundView.backgroundColor = .black
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
         containerView.insertSubview(backgroundView, belowSubview: presentingViewSnapshotView)
@@ -156,6 +176,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             backgroundView.bottomAnchor.constraint(equalTo: window.bottomAnchor)
         ])
         
+        /// A snapshot view is used to represent the hierarchy of cards in the
+        /// case of recursive presentation
         var rootSnapshotView: UIView?
         var rootSnapshotRoundedView: RoundedView?
         
