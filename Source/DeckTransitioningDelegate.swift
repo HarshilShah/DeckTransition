@@ -8,6 +8,20 @@
 
 import UIKit
 
+/// The DeckTransitioningDelegate class vends out the presentation and animation
+/// controllers required to present a view controller with the Deck transition
+/// style
+///
+/// The following snippet described the steps for presenting a given
+/// `ModalViewController` with the `DeckTransitioningDelegate`
+///
+/// ```swift
+/// let modal = ModalViewController()
+/// let transitionDelegate = DeckTransitioningDelegate()
+/// modal.transitioningDelegate = transitionDelegate
+/// modal.modalPresentationStyle = .custom
+/// present(modal, animated: true, completion: nil)
+/// ```
 public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate, DeckPresentationControllerDelegate {
     
     // MARK: - Public variables
@@ -30,7 +44,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     
     // MARK: - Initializers
     
-    /// Returns a transitioning delegate to perform a card transition. All
+    /// Returns a transitioning delegate to perform a Deck transition. All
     /// parameters are optional. Leaving the duration parameters empty gives you
     /// animations with the default durations (0.3s for both)
     ///
@@ -61,14 +75,42 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     
     // MARK: - UIViewControllerTransitioningDelegate
     
+    /// Returns an animation controller that animates the modal presentation
+    ///
+    /// This is internal infrastructure handled entirely by UIKit and shouldn't
+    /// be called directly
+    ///
+    /// - Parameters:
+    ///   - presented: The modal view controller to be presented onscreen
+    ///   - presenting: The view controller that will be presenting the modal
+    ///   - source: The view controller whose `present` method is called
+    /// - Returns: An animation controller that animates the modal presentation
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return DeckPresentingAnimationController(duration: presentDuration)
     }
     
+    /// Returns an animation controller that animates the modal dismissal
+    ///
+    /// This is internal infrastructure handled entirely by UIKit and shouldn't
+    /// be called directly
+    ///
+    /// - Parameter dismissed: The modal view controller which will be dismissed
+    /// - Returns: An animation controller that animates the modal dismisall
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return DeckDismissingAnimationController(duration: dismissDuration)
     }
     
+    /// Returns a presentation controller that manages the modal presentation
+    ///
+    /// This is internal infrastructure handled entirely by UIKit and shouldn't
+    /// be called directly
+    ///
+    /// - Parameters:
+    ///   - presented: The modal view controller
+    ///   - presenting: The view controller which presented the modal
+    ///   - source: The view controller whose `present` method was called to
+    ///     present the modal
+    /// - Returns: A presentation controller that manages the modal presentation
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let presentationController = DeckPresentationController(
             presentedViewController: presented,
@@ -83,7 +125,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     
     // MARK: - DeckPresentationControllerDelegate methods
     
-    internal func isDismissGestureEnabled() -> Bool {
+    func isDismissGestureEnabled() -> Bool {
         return isDismissEnabled
     }
     

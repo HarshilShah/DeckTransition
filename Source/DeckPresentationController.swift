@@ -15,7 +15,8 @@ protocol DeckPresentationControllerDelegate {
 }
 
 /// A protocol to communicate to the transition that an update of the snapshot
-/// view is required. This is adopted only by the presentation controller
+/// view is required. This is adopted only by the presentation controller of
+/// any view controller presented using DeckTransition
 public protocol DeckSnapshotUpdater {
     
     /// For various reasons (performance, the way iOS handles safe area,
