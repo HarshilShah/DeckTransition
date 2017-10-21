@@ -9,18 +9,18 @@
 import UIKit
 
 final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimatedTransitioning {
-	
-	// MARK: - Private variables
-	
-	private let duration: TimeInterval?
-	
-	// MARK: - Initializers
-	
-	init(duration: TimeInterval?) {
-		self.duration = duration
-	}
-	
-	// MARK: - UIViewControllerAnimatedTransitioning
+    
+    // MARK: - Private variables
+    
+    private let duration: TimeInterval?
+    
+    // MARK: - Initializers
+    
+    init(duration: TimeInterval?) {
+        self.duration = duration
+    }
+    
+    // MARK: - UIViewControllerAnimatedTransitioning
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let presentedViewController = transitionContext.viewController(forKey: .to) else {
@@ -41,8 +41,7 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
                 presentedViewController.view.frame = finalFrameForPresentedView
             }, completion: { finished in
                 transitionContext.completeTransition(finished)
-            }
-        )
+            })
     }
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -50,3 +49,4 @@ final class DeckPresentingAnimationController: NSObject, UIViewControllerAnimate
     }
     
 }
+
