@@ -19,7 +19,11 @@ class ViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 40, weight: UIFontWeightHeavy)
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "This is the presenting view controller.\n\nTap anywhere to show the modal."
+        label.text = """
+        This is the presenting view controller.\n
+        Tap anywhere to show the modal.
+        """
+        
         view.addSubview(label)
         label.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         label.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
