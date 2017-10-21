@@ -10,7 +10,7 @@ import UIKit
 
 final class RoundedView: UIView {
     
-    // MARK:- Public variables
+    // MARK: - Public variables
     
     public var cornerRadius = Constants.cornerRadius {
         didSet {
@@ -19,12 +19,12 @@ final class RoundedView: UIView {
         }
     }
     
-    // MARK:- Private variables
+    // MARK: - Private variables
     
     private let leftCorner = CornerView()
     private let rightCorner = CornerView()
     
-    // MARK:- Initializers
+    // MARK: - Initializers
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,7 +55,7 @@ final class RoundedView: UIView {
         addSubview(rightCorner)
     }
     
-    // MARK:- UIView methods
+    // MARK: - UIView methods
     
     override func layoutSubviews() {
         super.layoutSubviews()

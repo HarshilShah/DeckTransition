@@ -10,7 +10,7 @@ import UIKit
 
 public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate, DeckPresentationControllerDelegate {
 	
-	// MARK:- Public variables
+	// MARK: - Public variables
 	
 	/// A variable indicating whether or not the presenting view controller
 	/// can currently be dismissed using a pan gestures from top to bottom.
@@ -19,7 +19,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
 	/// using a pan gesture. The default value of this property is `true`
 	public var isDismissEnabled = true
 	
-	// MARK:- Private variables
+	// MARK: - Private variables
 	
 	private let presentDuration: TimeInterval?
 	private let presentAnimation: (() -> ())?
@@ -28,7 +28,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
 	private let dismissAnimation: (() -> ())?
 	private let dismissCompletion: ((Bool) -> ())?
 	
-	// MARK:- Initializers
+	// MARK: - Initializers
 	
 	/// Returns a transitioning delegate to perform a card transition. All
 	/// parameters are optional. Leaving the duration parameters empty gives you
@@ -59,7 +59,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
 		self.dismissCompletion = dismissCompletion
 	}
 	
-	// MARK:- UIViewControllerTransitioningDelegate
+	// MARK: - UIViewControllerTransitioningDelegate
     
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return DeckPresentingAnimationController(duration: presentDuration)

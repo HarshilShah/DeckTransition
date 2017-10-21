@@ -34,11 +34,11 @@ public protocol DeckSnapshotUpdater {
 
 final class DeckPresentationController: UIPresentationController, UIGestureRecognizerDelegate, DeckSnapshotUpdater {
 	
-	// MARK:- Internal variables
+	// MARK: - Internal variables
 	
     var transitioningDelegate: DeckPresentationControllerDelegate?
 	
-	// MARK:- Private variables
+	// MARK: - Private variables
     
     private var pan: UIPanGestureRecognizer?
     
@@ -59,7 +59,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 	private var dismissAnimation: (() -> ())? = nil
 	private var dismissCompletion: ((Bool) -> ())? = nil
 	
-	// MARK:- Initializers
+	// MARK: - Initializers
 	
 	convenience init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, presentAnimation: (() -> ())? = nil, presentCompletion: ((Bool) ->())? = nil, dismissAnimation: (() -> ())? = nil, dismissCompletion: ((Bool) -> ())? = nil) {
 		self.init(presentedViewController: presentedViewController, presenting: presentingViewController)
@@ -71,13 +71,13 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		NotificationCenter.default.addObserver(self, selector: #selector(updateForStatusBar), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
 	}
     
-    // MARK:- Public methods
+    // MARK: - Public methods
     
     public func requestPresentedViewSnapshotUpdate() {
         updateSnapshotView()
     }
     
-    // MARK:- Sizing
+    // MARK: - Sizing
     
     private var statusBarHeight: CGFloat {
         return UIApplication.shared.statusBarFrame.height
@@ -104,7 +104,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                       height: containerView.bounds.height - yOffset)
     }
 	
-	// MARK:- Presentation
+	// MARK: - Presentation
     
     override func presentationTransitionWillBegin() {
         guard let containerView = containerView, let window = containerView.window else {
@@ -257,7 +257,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		presentCompletion?(completed)
     }
 	
-	// MARK:- Layout update methods
+	// MARK: - Layout update methods
 	
 	/// This method updates the aspect ratio of the snapshot view
 	///
@@ -334,7 +334,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		)
 	}
 	
-	// MARK:- Snapshot view update methods
+	// MARK: - Snapshot view update methods
 	
 	/// Method to update the snapshot view showing a representation of the
 	/// `presentingViewController`'s view
@@ -394,7 +394,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         snapshotViewAspectRatioConstraint?.isActive = true
 	}
 	
-	// MARK:- Presented view KVO + Rounded view update methods
+	// MARK: - Presented view KVO + Rounded view update methods
 	
     private func setupPresentedViewKVO() {
         presentedViewFrameObserver = presentedViewController.view.observe(\.frame, options: [.initial]) { [weak self] _, _ in
@@ -416,7 +416,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		roundedViewForPresentedView.frame = CGRect(x: 0, y: offset, width: containerView!.bounds.width, height: Constants.cornerRadius)
 	}
 	
-	// MARK:- Dismissal
+	// MARK: - Dismissal
 	
 	/// Method to prepare the view hirarchy for the dismissal animation
 	///
@@ -516,7 +516,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		dismissCompletion?(completed)
 	}
 	
-	// MARK:- Gesture handling
+	// MARK: - Gesture handling
 	
     @objc private func handlePan(gestureRecognizer: UIPanGestureRecognizer) {
         guard gestureRecognizer.isEqual(pan) else {

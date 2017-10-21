@@ -10,7 +10,7 @@ import UIKit
 
 final class CornerView: UIView {
     
-    // MARK:- Public variables
+    // MARK: - Public variables
     
     var cornerRadius: CGFloat {
         get { return cornerLayer.radius }
@@ -22,19 +22,19 @@ final class CornerView: UIView {
         set { cornerLayer.corner = newValue }
     }
     
-    // MARK:- Private variables
+    // MARK: - Private variables
     
     private var cornerLayer: CornerLayer {
         return layer as! CornerLayer
     }
     
-    // MARK:- Layer override
+    // MARK: - Layer override
     
     override class var layerClass: AnyClass {
         return CornerLayer.self
     }
     
-    // MARK:- Initializers
+    // MARK: - Initializers
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -59,7 +59,7 @@ final class CornerView: UIView {
 
 private final class CornerLayer: CAShapeLayer {
     
-    // MARK:- Public variables
+    // MARK: - Public variables
     
     override var frame: CGRect {
         didSet { setNeedsDisplay() }
@@ -71,11 +71,11 @@ private final class CornerLayer: CAShapeLayer {
         didSet { setNeedsDisplay() }
     }
     
-    // MARK:- Private variables
+    // MARK: - Private variables
     
     private static let radiusKey = "radius"
     
-    // MARK:- Animation overrides
+    // MARK: - Animation overrides
     
     override static func needsDisplay(forKey key: String) -> Bool {
         guard key == radiusKey else {
@@ -112,13 +112,13 @@ private final class CornerLayer: CAShapeLayer {
         return animation
     }
     
-    // MARK:- CALayer methods
+    // MARK: - CALayer methods
     
     override func display() {
         self.path = currentPath()
     }
     
-    // MARK:- Private methods
+    // MARK: - Private methods
     
     private func currentPath() -> CGPath? {
         guard let corner = corner else {
