@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DeckTransition  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a title="DeckTransition  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">DeckTransition Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="https://github.com/HarshilShah/DeckTransition"><img src="img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fharshilshah%2Egithub%2Eio%2Fdocsets%2FDeckTransition%2Exml"><img src="img/dash.png"/>Install in Dash</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">DeckTransition Reference</a>
+        <img id="carat" src="img/carat.png" />
+        DeckTransition  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/DeckSegue.html">DeckSegue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DeckTransitioningDelegate.html">DeckTransitioningDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/DeckSnapshotUpdater.html">DeckSnapshotUpdater</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <h1 id='decktransition' class='heading'>DeckTransition</h1>
+
+<p><a href="https://travis-ci.org/HarshilShah/DeckTransition"><img src="http://img.shields.io/travis/HarshilShah/DeckTransition.svg" alt="CI Status"></a>
+<a href="https://github.com/HarshilShah/DeckTransition/releases/latest"><img src="https://img.shields.io/github/release/HarshilShah/DeckTransition.svg" alt="Version"></a>
+<a href="http://cocoapods.org/pods/DeckTransition"><img src="https://img.shields.io/badge/CocoaPods-compatible-fb0006.svg" alt="CocoaPods"></a>
+<a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg" alt="Carthage"></a>
+<a href="https://github.com/HarshilShah/DeckTransition/blob/master/LICENSE"><img src="https://img.shields.io/cocoapods/l/DeckTransition.svg" alt="License"></a>
+<a href="https://twitter.com/HarshilShah1910"><img src="https://img.shields.io/badge/contact-%40HarshilShah1910-3a8fc1.svg" alt="Contact"></a></p>
+
+<p>DeckTransition is an attempt to recreate the card-like transition found in the iOS 10 Apple Music and iMessage apps.</p>
+
+<p>Hereʼs a GIF showing it in action.</p>
+
+<p><img src="https://raw.githubusercontent.com/HarshilShah/DeckTransition/master/Resources/demo.gif" alt="Demo"></p>
+<h2 id='requirements' class='heading'>Requirements</h2>
+
+<ul>
+<li>Swift 4</li>
+<li>iOS 9 or later</li>
+</ul>
+<h2 id='installation' class='heading'>Installation</h2>
+<h3 id='cocoapods' class='heading'>CocoaPods</h3>
+
+<p>To install DeckTransition using <a href="http://cocoapods.org">CocoaPods</a>, add the following line to your Podfile:</p>
+<pre class="highlight plaintext"><code>pod 'DeckTransition', '~&gt; 1.0'
+</code></pre>
+<h3 id='carthage' class='heading'>Carthage</h3>
+
+<p>To install DeckTransition using <a href="https://github.com/Carthage/Carthage">Carthage</a>, add the following line to your Cartfile:</p>
+<pre class="highlight plaintext"><code>github "HarshilShah/DeckTransition" ~&gt; 1.0
+</code></pre>
+<h2 id='usage' class='heading'>Usage</h2>
+<h3 id='basics' class='heading'>Basics</h3>
+
+<p>Set <code>modalPresentationCapturesStatusBarAppearance</code> to <code>true</code> in your modal view controller, and override the <code>preferredStatusBarStyle</code> variable to return <code>.lightContent</code>.</p>
+
+<p>The background color for the presentation can be changed by changing the <code>backgroundColor</code> property of the <code>window</code>. This is <code>.black</code> by default.</p>
+<h3 id='presentation' class='heading'>Presentation</h3>
+
+<p>The transition can be called from code or using a storyboard.</p>
+
+<p>To use via storyboards, just setup a custom segue (<code>kind</code> set to <code>custom</code>), and set the <code>class</code> to <code><a href="Classes/DeckSegue.html">DeckSegue</a></code>.</p>
+
+<p>Hereʼs a snippet showing usage via code. Just replace <code>ModalViewController()</code> with your view controller&rsquo;s class and youʼre good to go.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">modal</span> <span class="o">=</span> <span class="kt">ModalViewController</span><span class="p">()</span>
+<span class="k">let</span> <span class="nv">transitionDelegate</span> <span class="o">=</span> <span class="kt">DeckTransitioningDelegate</span><span class="p">()</span>
+<span class="n">modal</span><span class="o">.</span><span class="n">transitioningDelegate</span> <span class="o">=</span> <span class="n">transitionDelegate</span>
+<span class="n">modal</span><span class="o">.</span><span class="n">modalPresentationStyle</span> <span class="o">=</span> <span class="o">.</span><span class="n">custom</span>
+<span class="nf">present</span><span class="p">(</span><span class="n">modal</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+</code></pre>
+<h3 id='dismissal' class='heading'>Dismissal</h3>
+
+<p>This is the part where it gets a bit tricky. If youʼve got a fixed-sized i.e. non-scrolling modal, feel free to just skip the rest of this section. Swipe-to-dismiss will work perfectly for you</p>
+
+<p>For modals which have a vertically scrolling layout, the dismissal gesture should be fired only when the view is scrolled to the top. To achieve this behaviour, you need to modify the <code>isDismissEnabled</code> property of the <code><a href="Classes/DeckTransitioningDelegate.html">DeckTransitioningDelegate</a></code>. (You can also set <code>isDismissEnabled</code> to false if you want to disable the swipe-to-dismiss UI.)</p>
+
+<p>The one issue with doing this in response to the scrollviewʼs <code>contentOffset</code> is momentum scrolling. When the user pans from top the bottom, once the top of the scrollview is reached (<code>contentOffset.y</code> is 0), the dismiss gesture should take over and the scrollview should stop scrolling, not showing the usual iOS bounce effect. The dismiss gesture, however, only responds to pans and not swipes, so should you swipe and not pan, the scrollview will scroll to the top and abruptly stop (as the <code>contentOffset.y</code> is  0) without the usual iOS bounce effect.</p>
+
+<p>I&rsquo;ve found a temporary workaround for this, the code for this can be found below. Itʼs a bit messy right now, but is the only workaround Iʼve found for this issue (so far). It has one caveat, in that it fails utterly miserably when using with a scrollview whose <code>backgroundColor</code> isnʼt <code>.clear</code>.
+Iʼll update this project if/when I find a better solution.</p>
+<h4 id='dismissal-code-for-scrolling-modals' class='heading'>Dismissal code for scrolling modals</h4>
+
+<p>First up, make your modal view controller conform to <code>UIScrollViewDelegate</code> (or <code>UITableViewDelegate</code>/<code>UITextFieldDelegate</code>, as the case may be), and assign self as the scrollview&rsquo;s <code>delegate</code>.</p>
+
+<p>Next, add this method to your modal view controller, swapping in your scrollviewʼs variable for <code>textView</code>.</p>
+<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">scrollViewDidScroll</span><span class="p">(</span><span class="n">_</span> <span class="nv">scrollView</span><span class="p">:</span> <span class="kt">UIScrollView</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">guard</span> <span class="n">scrollView</span><span class="o">.</span><span class="nf">isEqual</span><span class="p">(</span><span class="n">textView</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">delegate</span> <span class="o">=</span> <span class="n">transitioningDelegate</span> <span class="k">as?</span> <span class="kt">DeckTransitioningDelegate</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="c1">// Normal behaviour if the `scrollView` isn't scrolled to the top</span>
+            <span class="n">scrollView</span><span class="o">.</span><span class="n">bounces</span> <span class="o">=</span> <span class="kc">true</span>
+            <span class="n">delegate</span><span class="o">.</span><span class="n">isDismissEnabled</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">isDecelerating</span> <span class="p">{</span>
+                <span class="c1">// If the `scrollView` is scrolled to the top but is decelerating</span>
+                <span class="c1">// that means a swipe has been performed. The view and</span>
+                <span class="c1">// scrollviewʼs subviews are both translated in response to this.</span>
+                <span class="n">view</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="kt">CGAffineTransform</span><span class="p">(</span><span class="nv">translationX</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="o">-</span><span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                <span class="n">scrollView</span><span class="o">.</span><span class="n">subviews</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span>
+                    <span class="nv">$0</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="kt">CGAffineTransform</span><span class="p">(</span><span class="nv">translationX</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="c1">// If the user has panned to the top, the scrollview doesnʼt bounce and</span>
+                <span class="c1">// the dismiss gesture is enabled.</span>
+                <span class="n">scrollView</span><span class="o">.</span><span class="n">bounces</span> <span class="o">=</span> <span class="kc">false</span>
+                <span class="n">delegate</span><span class="o">.</span><span class="n">isDismissEnabled</span> <span class="o">=</span> <span class="kc">true</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='snapshots' class='heading'>Snapshots</h3>
+
+<p>For a variety of reasons, and especially because of iOS 11&rsquo;s safe area layout, DeckTransition uses a snapshot of your presenting view controller&rsquo;s view instead of using the view directly. This view is automatically updated whenever the frame is resized.</p>
+
+<p>However, there can be some cases where you might want to update the snapshot view by yourself, and this can be achieved using the following one line snippet:</p>
+<pre class="highlight swift"><code><span class="p">(</span><span class="n">presentationController</span> <span class="k">as?</span> <span class="kt">DeckSnapshotUpdater</span><span class="p">)?</span><span class="o">.</span><span class="nf">requestPresentedViewSnapshotUpdate</span><span class="p">()</span>
+</code></pre>
+
+<p>All this does is request the presentation controller to update the snapshot.</p>
+
+<p>You can also choose to update snapshot directly from the presenting view controller, as follows:</p>
+<pre class="highlight swift"><code><span class="p">(</span><span class="n">presentedViewController</span><span class="p">?</span><span class="o">.</span><span class="n">presentationController</span> <span class="k">as?</span> <span class="kt">DeckSnapshotUpdater</span><span class="p">)?</span><span class="o">.</span><span class="nf">requestPresentedViewSnapshotUpdate</span><span class="p">()</span>
+</code></pre>
+
+<p>It&rsquo;s worth noting that updating the snapshot is an expensive process and should only be used if necessary, for example if you are updating your entire app&rsquo;s theme.</p>
+<h2 id='apps-using-decktransition' class='heading'>Apps Using DeckTransition</h2>
+
+<ul>
+<li><a href="https://zachsim.one/projects/petty">Petty</a> by <a href="https://twitter.com/zachsimone">Zach Simone</a></li>
+<li><a href="https://bitbookapp.com">Bitbook</a> by <a href="https://sammygutierrez.com">Sammy Gutierrez</a></li>
+</ul>
+
+<p>Feel free to submit a PR if you’re using this library in your apps</p>
+<h2 id='author' class='heading'>Author</h2>
+
+<p>Written by <a href="https://twitter.com/HarshilShah1910">Harshil Shah</a></p>
+<h2 id='license' class='heading'>License</h2>
+
+<p>DeckTransition is available under the MIT license. See the LICENSE file for more info.</p>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>Copyright © 2017 Harshil Shah. Available under the MIT License.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
