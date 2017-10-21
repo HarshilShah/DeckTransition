@@ -1,5 +1,10 @@
 ## Changelog
 
+## 1.4.0 Release notes (21/10/2017)
+
+- Updated animations to work much better when presenting mutliple view controllers using DeckTransition
+- Fixes an issue where the appearance method calls were sometimes unbalanced
+
 ## 1.3.4 Release notes (13/10/2017)
 ----
 
