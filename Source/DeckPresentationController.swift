@@ -111,11 +111,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return
         }
         
-        if let animated = presentedViewController.transitionCoordinator?.isAnimated {
-            presentedViewController.beginAppearanceTransition(true, animated: animated)
-            presentingViewController.beginAppearanceTransition(false, animated: animated)
-        }
-        
         /// A CGRect to be used as a proxy for the frame of the presentingView
         ///
         /// The actual frame isn't used directly because in the case of the
@@ -236,9 +231,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
 		guard let containerView = containerView else {
 			return
 		}
-        
-        presentedViewController.endAppearanceTransition()
-        presentingViewController.endAppearanceTransition()
         
         presentedViewController.view.frame = frameOfPresentedViewInContainerView
         
@@ -437,11 +429,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return
         }
         
-        if let animated = presentedViewController.transitionCoordinator?.isAnimated {
-            presentingViewController.beginAppearanceTransition(true, animated: animated)
-            presentedViewController.beginAppearanceTransition(false, animated: animated)
-        }
-        
         let initialFrame: CGRect = {
             if presentingViewController.isPresentedWithDeck {
                 return presentingViewController.view.frame
@@ -515,9 +502,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         guard let containerView = containerView else {
             return
         }
-        
-        presentedViewController.endAppearanceTransition()
-        presentingViewController.endAppearanceTransition()
         
 		backgroundView.removeFromSuperview()
         presentingViewSnapshotView.removeFromSuperview()
