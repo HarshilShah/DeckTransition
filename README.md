@@ -11,7 +11,7 @@ DeckTransition is an attempt to recreate the card-like transition found in the i
 
 Hereʼs a GIF showing it in action.
 
-![Demo](demo.gif)
+![Demo](https://raw.githubusercontent.com/HarshilShah/DeckTransition/master/Resources/demo.gif)
 
 ## Requirements
 
