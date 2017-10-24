@@ -131,6 +131,7 @@ It's worth noting that updating the snapshot is an expensive process and should 
 ## Apps Using DeckTransition
 - [Petty](https://zachsim.one/projects/petty) by [Zach Simone](https://twitter.com/zachsimone)
 - [Bitbook](https://bitbookapp.com) by [Sammy Gutierrez](https://sammygutierrez.com)
+- [BookPlayer](https://github.com/GianniCarlo/Audiobook-Player) by [Gianni Carlo](https://twitter.com/GCarlo89)
 
 Feel free to submit a PR if you’re using this library in your apps
 
