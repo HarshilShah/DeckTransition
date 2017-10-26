@@ -2,16 +2,16 @@
 
 [![CI Status](http://img.shields.io/travis/HarshilShah/DeckTransition.svg)](https://travis-ci.org/HarshilShah/DeckTransition)
 [![Version](https://img.shields.io/github/release/HarshilShah/DeckTransition.svg)](https://github.com/HarshilShah/DeckTransition/releases/latest)
-[![CocoaPods](https://img.shields.io/badge/CocoaPods-compatible-fb0006.svg)](http://cocoapods.org/pods/DeckTransition)
-[![Carthage](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg)](https://github.com/Carthage/Carthage)
-[![License](https://img.shields.io/cocoapods/l/DeckTransition.svg)](https://github.com/HarshilShah/DeckTransition/blob/master/LICENSE)
+![Package Managers](https://img.shields.io/badge/supports-CocoaPods%20%7C%20Carthage-green.svg)
+[![Documentation](https://img.shields.io/badge/docs-100%25%20Documented-orange.svg)](https://harshilshah.github.com/DeckTransition)
+[![License](https://img.shields.io/badge/license-MIT-999999.svg)](https://github.com/HarshilShah/DeckTransition/blob/master/LICENSE)
 [![Contact](https://img.shields.io/badge/contact-%40HarshilShah1910-3a8fc1.svg)](https://twitter.com/HarshilShah1910)
 
 DeckTransition is an attempt to recreate the card-like transition found in the iOS 10 Apple Music and iMessage apps.
 
 Hereʼs a GIF showing it in action.
 
-![Demo](demo.gif)
+![Demo](https://raw.githubusercontent.com/HarshilShah/DeckTransition/master/Resources/demo.gif)
 
 ## Requirements
 
@@ -35,6 +35,10 @@ To install DeckTransition using [Carthage](https://github.com/Carthage/Carthage)
 ```
 github "HarshilShah/DeckTransition" ~> 1.0
 ```
+
+## Documentation
+
+You can find [the docs here](https://harshilshah.github.io/DeckTransition "Documentation"). Documentation is generated with [Jazzy](https://github.com/realm/jazzy), and hosted on [GitHub Pages](https://pages.github.com).
 
 ## Usage
 

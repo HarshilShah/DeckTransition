@@ -47,7 +47,6 @@ extension CGRect {
         return getCorner(.bottomRight)
     }
     
-    
 }
 
 

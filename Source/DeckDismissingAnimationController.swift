@@ -9,19 +9,19 @@
 import UIKit
 
 final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimatedTransitioning {
-	
-	// MARK:- Private variables
-	
-	private let duration: TimeInterval?
-	
-	// MARK:- Initializers
-	
-	init(duration: TimeInterval?) {
-		self.duration = duration
-	}
-	
-	// MARK:- UIViewControllerAnimatedTransitioning
-	
+    
+    // MARK: - Private variables
+    
+    private let duration: TimeInterval?
+    
+    // MARK: - Initializers
+    
+    init(duration: TimeInterval?) {
+        self.duration = duration
+    }
+    
+    // MARK: - UIViewControllerAnimatedTransitioning
+    
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         
         /// The presentedViewController throughout this library refers to the
@@ -53,5 +53,6 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return duration ?? Constants.defaultAnimationDuration
     }
-	
+    
 }
+
