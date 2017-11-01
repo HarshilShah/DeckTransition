@@ -2,8 +2,8 @@
 
 [![CI Status](http://img.shields.io/travis/HarshilShah/DeckTransition.svg)](https://travis-ci.org/HarshilShah/DeckTransition)
 [![Version](https://img.shields.io/github/release/HarshilShah/DeckTransition.svg)](https://github.com/HarshilShah/DeckTransition/releases/latest)
-![Package Managers](https://img.shields.io/badge/supports-CocoaPods%20%7C%20Carthage-green.svg)
-[![Documentation](https://img.shields.io/badge/docs-100%25%20Documented-orange.svg)](https://harshilshah.github.com/DeckTransition)
+![Package Managers](https://img.shields.io/badge/supports-CocoaPods%20%7C%20Carthage-orange.svg)
+[![Documentation](https://cdn.rawgit.com/HarshilShah/DeckTransition/master/docs/badge.svg)](https://harshilshah.github.com/DeckTransition)
 [![License](https://img.shields.io/badge/license-MIT-999999.svg)](https://github.com/HarshilShah/DeckTransition/blob/master/LICENSE)
 [![Contact](https://img.shields.io/badge/contact-%40HarshilShah1910-3a8fc1.svg)](https://twitter.com/HarshilShah1910)
 
