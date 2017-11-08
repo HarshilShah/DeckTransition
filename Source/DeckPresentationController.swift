@@ -277,12 +277,18 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
         
-        updateSnapshotViewAspectRatio()
-        containerView?.bringSubview(toFront: roundedViewForPresentedView)
+        guard let containerView = containerView else {
+            return
+        }
         
-        UIView.animate(withDuration: 0.1) { [weak self] in
-            guard let `self` = self else { return }
-            self.presentedViewController.view.frame = self.frameOfPresentedViewInContainerView
+        updateSnapshotViewAspectRatio()
+        containerView.bringSubview(toFront: roundedViewForPresentedView)
+        
+        if presentedViewController.view.isDescendant(of: containerView) {
+            UIView.animate(withDuration: 0.1) { [weak self] in
+                guard let `self` = self else { return }
+                self.presentedViewController.view.frame = self.frameOfPresentedViewInContainerView
+            }
         }
     }
     
