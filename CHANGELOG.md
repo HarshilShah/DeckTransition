@@ -1,5 +1,10 @@
 ## Changelog
 
+## 1.4.1 Release notes (9/11/2017)
+
+- Added [documentation](https://harshilshah.github.io/DeckTransition/), generated using [Jazzy](https://github.com/realm/jazzy)
+- Fixed an animation glitch when presenting a modal with the push style
+
 ## 1.4.0 Release notes (21/10/2017)
 
 - Updated language requirement to Swift 4
