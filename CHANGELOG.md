@@ -7,19 +7,18 @@
 
 ## 1.4.0 Release notes (21/10/2017)
 
-- Updated language requirement to Swift 4
 - Updated animations to work much better when presenting mutliple view controllers using DeckTransition
 - Fixes an issue where the appearance method calls were sometimes unbalanced
 
 ## 1.3.4 Release notes (13/10/2017)
 ----
 
-This is the last version of this framework to support Swift 3.x. Further development will be done on Swift 4.x
-
 - Fixed an issue where rotation would break the rounded corners
 
 ## 1.3.3 Release notes (11/10/2017)
 ----
+
+This is the last version of this framework to support Swift 3.x. Further development will be done on Swift 4.x
 
 - Corner rounding is now animated
 
