@@ -217,7 +217,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         }
         
         presentedViewController.transitionCoordinator?.animate(
-            alongsideTransition: { [unowned self] context in
+            alongsideTransition: { [weak self] context in
+                guard let `self` = self else {
+                    return
+                }
+                
                 self.presentAnimation?()
                 self.snapshotView?.transform = transformForSnapshotView
                 self.roundedViewForPresentingView.cornerRadius = Constants.cornerRadius
@@ -298,7 +302,10 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         
         if presentedViewController.view.isDescendant(of: containerView) {
             UIView.animate(withDuration: 0.1) { [weak self] in
-                guard let `self` = self else { return }
+                guard let `self` = self else {
+                    return
+                }
+                
                 self.presentedViewController.view.frame = self.frameOfPresentedViewInContainerView
             }
         }
@@ -512,7 +519,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         }
         
         presentedViewController.transitionCoordinator?.animate(
-            alongsideTransition: { [unowned self] context in
+            alongsideTransition: { [weak self] context in
+                guard let `self` = self else {
+                    return
+                }
+                
                 self.dismissAnimation?()
                 self.snapshotViewContainer.transform = finalTransform
                 self.roundedViewForPresentingView.transform = finalTransform
