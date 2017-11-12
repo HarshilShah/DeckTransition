@@ -1,6 +1,12 @@
 ## Changelog
 
+## 1.4.2 Release notes (12/11/2017)
+----
+
+- Fixed an issue where animations were incorrect on older versions of iOS
+
 ## 1.4.1 Release notes (9/11/2017)
+----
 
 - Added [documentation](https://harshilshah.github.io/DeckTransition/), generated using [Jazzy](https://github.com/realm/jazzy)
 - Fixed an animation glitch when presenting a modal with the push style
