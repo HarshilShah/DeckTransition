@@ -44,9 +44,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     private var pan: UIPanGestureRecognizer?
     
     private let backgroundView = UIView()
-    private let presentingViewSnapshotView = UIView()
     private let roundedViewForPresentingView = RoundedView()
     private let roundedViewForPresentedView = RoundedView()
+    
+    private let snapshotViewContainer = UIView()
+    private var snapshotView: UIView?
     
     private var snapshotViewTopConstraint: NSLayoutConstraint?
     private var snapshotViewWidthConstraint: NSLayoutConstraint?
@@ -138,8 +140,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         setupPresentedViewKVO()
         
         /// The snapshot view initially has the same frame as the presentingView
-        containerView.insertSubview(presentingViewSnapshotView, belowSubview: presentedViewController.view)
-        presentingViewSnapshotView.frame = initialFrame
+        containerView.insertSubview(snapshotViewContainer, belowSubview: presentedViewController.view)
+        snapshotViewContainer.frame = initialFrame
         updateSnapshotView()
         
         /// The following transforms are performed on the snapshot view:
@@ -153,24 +155,33 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         ///    such that it's top edge is at the same position. In order to do
         ///    this, we translate it up by half it's height, perform the
         ///    scaling, and then translate it back down by the same amount
+        ///
+        /// On versions of iOS before 11, applying a transform to the parent
+        /// view modifies the frame of subviews immediately to the model value,
+        /// so this transform is applied directly to the snapshot view and not
+        /// the snapshot container view
+        ///
+        /// Note: For some reason, this behaviour only happens in the
+        /// presentation phase; constraints animate as expected on iOS <11 in
+        /// the dismissal 🤷🏽‍♂️
         let transformForSnapshotView = CGAffineTransform.identity
-            .translatedBy(x: 0, y: -presentingViewSnapshotView.frame.origin.y)
+            .translatedBy(x: 0, y: -snapshotViewContainer.frame.origin.y)
             .translatedBy(x: 0, y: ManualLayout.presentingViewTopInset)
-            .translatedBy(x: 0, y: -presentingViewSnapshotView.frame.height / 2)
+            .translatedBy(x: 0, y: -snapshotViewContainer.frame.height / 2)
             .scaledBy(x: scaleForPresentingView, y: scaleForPresentingView)
-            .translatedBy(x: 0, y: presentingViewSnapshotView.frame.height / 2)
+            .translatedBy(x: 0, y: snapshotViewContainer.frame.height / 2)
         
         /// For a recursive modal, the `presentingView` already has rounded
         /// corners so the animation must respect that
         roundedViewForPresentingView.backgroundColor = UIColor.black.withAlphaComponent(0)
         roundedViewForPresentingView.cornerRadius = presentingViewController.isPresentedWithDeck ? Constants.cornerRadius : 0
-        containerView.insertSubview(roundedViewForPresentingView, aboveSubview: presentingViewSnapshotView)
+        containerView.insertSubview(roundedViewForPresentingView, aboveSubview: snapshotViewContainer)
         roundedViewForPresentingView.frame = initialFrame
         
         /// The background view is used to cover up the `presentedView`
         backgroundView.backgroundColor = .black
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.insertSubview(backgroundView, belowSubview: presentingViewSnapshotView)
+        containerView.insertSubview(backgroundView, belowSubview: snapshotViewContainer)
         
         NSLayoutConstraint.activate([
             backgroundView.topAnchor.constraint(equalTo: window.topAnchor),
@@ -208,11 +219,12 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         presentedViewController.transitionCoordinator?.animate(
             alongsideTransition: { [unowned self] context in
                 self.presentAnimation?()
-                self.presentingViewSnapshotView.transform = transformForSnapshotView
+                self.snapshotView?.transform = transformForSnapshotView
                 self.roundedViewForPresentingView.cornerRadius = Constants.cornerRadius
                 self.roundedViewForPresentingView.transform = transformForSnapshotView
                 self.roundedViewForPresentingView.backgroundColor = UIColor.black.withAlphaComponent(1 - Constants.alphaForPresentingView)
             }, completion: { _ in
+                self.snapshotView?.transform = .identity
                 rootSnapshotView?.removeFromSuperview()
                 rootSnapshotRoundedView?.removeFromSuperview()
             }
@@ -242,18 +254,18 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         
         presentedViewController.view.frame = frameOfPresentedViewInContainerView
         
-        presentingViewSnapshotView.transform = .identity
-        presentingViewSnapshotView.translatesAutoresizingMaskIntoConstraints = false
-        presentingViewSnapshotView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
+        snapshotViewContainer.transform = .identity
+        snapshotViewContainer.translatesAutoresizingMaskIntoConstraints = false
+        snapshotViewContainer.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
         updateSnapshotViewAspectRatio()
         
         roundedViewForPresentingView.transform = .identity
         roundedViewForPresentingView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            roundedViewForPresentingView.topAnchor.constraint(equalTo: presentingViewSnapshotView.topAnchor),
-            roundedViewForPresentingView.leftAnchor.constraint(equalTo: presentingViewSnapshotView.leftAnchor),
-            roundedViewForPresentingView.rightAnchor.constraint(equalTo: presentingViewSnapshotView.rightAnchor),
-            roundedViewForPresentingView.bottomAnchor.constraint(equalTo: presentingViewSnapshotView.bottomAnchor)
+            roundedViewForPresentingView.topAnchor.constraint(equalTo: snapshotViewContainer.topAnchor),
+            roundedViewForPresentingView.leftAnchor.constraint(equalTo: snapshotViewContainer.leftAnchor),
+            roundedViewForPresentingView.rightAnchor.constraint(equalTo: snapshotViewContainer.rightAnchor),
+            roundedViewForPresentingView.bottomAnchor.constraint(equalTo: snapshotViewContainer.bottomAnchor)
         ])
         
         pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
@@ -360,21 +372,22 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     /// then generates a new snapshot of the `presentingViewController`'s view,
     /// and then replaces the existing snapshot with it
     private func updateSnapshotView() {
-        guard let snapshotView = presentingViewController.view.snapshotView(afterScreenUpdates: true) else {
+        guard let currentSnapshotView = presentingViewController.view.snapshotView(afterScreenUpdates: true) else {
             return
         }
         
-        presentingViewSnapshotView.subviews.forEach { $0.removeFromSuperview() }
+        snapshotView?.removeFromSuperview()
         
-        snapshotView.translatesAutoresizingMaskIntoConstraints = false
-        presentingViewSnapshotView.addSubview(snapshotView)
-        
+        currentSnapshotView.translatesAutoresizingMaskIntoConstraints = false
+        snapshotViewContainer.addSubview(currentSnapshotView)
         NSLayoutConstraint.activate([
-            snapshotView.topAnchor.constraint(equalTo: presentingViewSnapshotView.topAnchor),
-            snapshotView.leftAnchor.constraint(equalTo: presentingViewSnapshotView.leftAnchor),
-            snapshotView.rightAnchor.constraint(equalTo: presentingViewSnapshotView.rightAnchor),
-            snapshotView.bottomAnchor.constraint(equalTo: presentingViewSnapshotView.bottomAnchor)
+            currentSnapshotView.topAnchor.constraint(equalTo: snapshotViewContainer.topAnchor),
+            currentSnapshotView.leftAnchor.constraint(equalTo: snapshotViewContainer.leftAnchor),
+            currentSnapshotView.rightAnchor.constraint(equalTo: snapshotViewContainer.rightAnchor),
+            currentSnapshotView.bottomAnchor.constraint(equalTo: snapshotViewContainer.bottomAnchor)
         ])
+        
+        snapshotView = currentSnapshotView
 	}
 	
     /// Thie method updates the aspect ratio and the height of the snapshot view
@@ -384,7 +397,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     /// i.e. when just the status bar moves, nothing happens
     private func updateSnapshotViewAspectRatio() {
         guard let containerView = containerView,
-              presentingViewSnapshotView.translatesAutoresizingMaskIntoConstraints == false
+              snapshotViewContainer.translatesAutoresizingMaskIntoConstraints == false
         else {
             return
         }
@@ -401,9 +414,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         
         roundedViewForPresentingView.cornerRadius = Constants.cornerRadius * scaleForPresentingView
         
-        snapshotViewTopConstraint = presentingViewSnapshotView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topInset)
-        snapshotViewWidthConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: scaleForPresentingView)
-        snapshotViewAspectRatioConstraint = presentingViewSnapshotView.widthAnchor.constraint(equalTo: presentingViewSnapshotView.heightAnchor, multiplier: aspectRatio)
+        snapshotViewTopConstraint = snapshotViewContainer.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topInset)
+        snapshotViewWidthConstraint = snapshotViewContainer.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: scaleForPresentingView)
+        snapshotViewAspectRatioConstraint = snapshotViewContainer.widthAnchor.constraint(equalTo: snapshotViewContainer.heightAnchor, multiplier: aspectRatio)
         
         snapshotViewTopConstraint?.isActive = true
         snapshotViewWidthConstraint?.isActive = true
@@ -467,9 +480,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         snapshotViewTopConstraint?.isActive = false
         snapshotViewWidthConstraint?.isActive = false
         snapshotViewAspectRatioConstraint?.isActive = false
-        presentingViewSnapshotView.translatesAutoresizingMaskIntoConstraints = true
-        presentingViewSnapshotView.frame = initialFrame
-        presentingViewSnapshotView.transform = initialTransform
+        snapshotViewContainer.translatesAutoresizingMaskIntoConstraints = true
+        snapshotViewContainer.frame = initialFrame
+        snapshotViewContainer.transform = initialTransform
         
         let finalCornerRadius = presentingViewController.isPresentedWithDeck ? Constants.cornerRadius : 0
         let finalTransform: CGAffineTransform = .identity
@@ -501,7 +514,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         presentedViewController.transitionCoordinator?.animate(
             alongsideTransition: { [unowned self] context in
                 self.dismissAnimation?()
-                self.presentingViewSnapshotView.transform = finalTransform
+                self.snapshotViewContainer.transform = finalTransform
                 self.roundedViewForPresentingView.transform = finalTransform
                 self.roundedViewForPresentingView.cornerRadius = finalCornerRadius
                 self.roundedViewForPresentingView.backgroundColor = .clear
@@ -520,7 +533,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         }
         
         backgroundView.removeFromSuperview()
-        presentingViewSnapshotView.removeFromSuperview()
+        snapshotView?.removeFromSuperview()
+        snapshotViewContainer.removeFromSuperview()
         roundedViewForPresentingView.removeFromSuperview()
         
         let offscreenFrame = CGRect(x: 0, y: containerView.bounds.height, width: containerView.bounds.width, height: containerView.bounds.height)
