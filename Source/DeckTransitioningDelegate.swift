@@ -31,7 +31,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     ///
     /// When set to `true`, this allows the presented modal view to be dismissed
     /// using a pan gesture. The default value of this property is `true`
-    public var isDismissEnabled = true
+    @objc public var isDismissEnabled = true
     
     // MARK: - Private variables
     
