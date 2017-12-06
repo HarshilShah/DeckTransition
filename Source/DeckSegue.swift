@@ -14,7 +14,7 @@ import UIKit
 /// `custom`
 public final class DeckSegue: UIStoryboardSegue {
     
-    var transition: UIViewControllerTransitioningDelegate!
+    var transition: UIViewControllerTransitioningDelegate?
     
     /// Performs the visual transition for the Deck segue.
     public override func perform() {

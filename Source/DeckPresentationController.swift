@@ -8,36 +8,19 @@
 
 import UIKit
 
-/// Delegate that communicates to the `DeckPresentationController` whether the
-/// dismiss by pan gesture is enabled
-protocol DeckPresentationControllerDelegate {
-    func isDismissGestureEnabled() -> Bool
-}
-
-/// A protocol to communicate to the transition that an update of the snapshot
-/// view is required. This is adopted only by the presentation controller of
-/// any view controller presented using DeckTransition
-public protocol DeckSnapshotUpdater {
-    
-    /// For various reasons (performance, the way iOS handles safe area,
-    /// layout issues, etc.) this transition uses a snapshot view of your
-    /// `presentingViewController` and not the live view itself.
-    ///
-    /// In some cases this snapshot might become outdated before the dismissal,
-    /// and for those cases you can request to have the snapshot updated. While
-    /// the transition only shows a small portion of the presenting view, in
-    /// some cases that might become inconsistent enough to demand an update.
-    ///
-    /// This is an expensive process and should only be used if necessary, for
-    /// example if you are updating your entire app's theme.
-    func requestPresentedViewSnapshotUpdate()
-}
-
 final class DeckPresentationController: UIPresentationController, UIGestureRecognizerDelegate, DeckSnapshotUpdater {
     
     // MARK: - Internal variables
     
-    var transitioningDelegate: DeckPresentationControllerDelegate?
+    /// The presentation controller holds a strong reference to the
+    /// transitioning delegate because `UIViewController.transitioningDelegate`
+    /// is a weak property, and thus the `DeckTransitioningDelegate` would be
+    /// unallocated right after the presentation animation.
+    ///
+    /// Since the transitioningDelegate only vends the presentation controller
+    /// object and does not hold a reference to it, there is no issue of a
+    /// circular dependency here.
+    var transitioningDelegate: DeckTransitioningDelegate?
     
     // MARK: - Private variables
     
@@ -645,18 +628,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         }
         
         return true
-    }
-    
-}
-
-fileprivate extension UIViewController {
-    
-    /// A Boolean value indicating whether the view controller is presented
-    /// using Deck.
-    var isPresentedWithDeck: Bool {
-        return transitioningDelegate is DeckTransitioningDelegate
-            && modalPresentationStyle == .custom
-            && presentingViewController != nil
     }
     
 }

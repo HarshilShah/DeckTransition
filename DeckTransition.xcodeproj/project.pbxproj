@@ -26,6 +26,8 @@
 		E87B47261F6E7983004AA6C7 /* CGRect+Corners.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B47251F6E7983004AA6C7 /* CGRect+Corners.swift */; };
 		E87B47281F6E799D004AA6C7 /* Corner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B47271F6E799D004AA6C7 /* Corner.swift */; };
 		E87B472A1F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B47291F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift */; };
+		E8B20A8F1FD84CE400648C9A /* UIViewController+IsPresentedWithDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B20A8E1FD84CE400648C9A /* UIViewController+IsPresentedWithDeck.swift */; };
+		E8B20A921FD84F1500648C9A /* DeckSnapshotUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B20A911FD84F1500648C9A /* DeckSnapshotUpdater.swift */; };
 		E8B271621FD7E117009883B2 /* DeckTransitionViewControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B271611FD7E117009883B2 /* DeckTransitionViewControllerProtocol.swift */; };
 		E8B271641FD7E145009883B2 /* UIViewController+DeckTransitionViewControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B271631FD7E145009883B2 /* UIViewController+DeckTransitionViewControllerProtocol.swift */; };
 		E8B271661FD7E208009883B2 /* ScrollViewDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B271651FD7E208009883B2 /* ScrollViewDetector.swift */; };
@@ -65,6 +67,8 @@
 		E87B47251F6E7983004AA6C7 /* CGRect+Corners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+Corners.swift"; sourceTree = "<group>"; };
 		E87B47271F6E799D004AA6C7 /* Corner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Corner.swift; sourceTree = "<group>"; };
 		E87B47291F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+InitWithCorner.swift"; sourceTree = "<group>"; };
+		E8B20A8E1FD84CE400648C9A /* UIViewController+IsPresentedWithDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+IsPresentedWithDeck.swift"; sourceTree = "<group>"; };
+		E8B20A911FD84F1500648C9A /* DeckSnapshotUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckSnapshotUpdater.swift; sourceTree = "<group>"; };
 		E8B271611FD7E117009883B2 /* DeckTransitionViewControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckTransitionViewControllerProtocol.swift; sourceTree = "<group>"; };
 		E8B271631FD7E145009883B2 /* UIViewController+DeckTransitionViewControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+DeckTransitionViewControllerProtocol.swift"; sourceTree = "<group>"; };
 		E8B271651FD7E208009883B2 /* ScrollViewDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewDetector.swift; sourceTree = "<group>"; };
@@ -117,13 +121,14 @@
 				E8683D891F34479E005C7E9A /* DeckPresentationController.swift */,
 				E8683D811F34471B005C7E9A /* DeckPresentingAnimationController.swift */,
 				E8683D8B1F3447A5005C7E9A /* DeckDismissingAnimationController.swift */,
+				E8B20A911FD84F1500648C9A /* DeckSnapshotUpdater.swift */,
 				E8B271611FD7E117009883B2 /* DeckTransitionViewControllerProtocol.swift */,
-				E8B271631FD7E145009883B2 /* UIViewController+DeckTransitionViewControllerProtocol.swift */,
 				E8B271651FD7E208009883B2 /* ScrollViewDetector.swift */,
 				E8B271671FD7E20F009883B2 /* ScrollViewUpdater.swift */,
 				E857980F1F34D63200C6CABE /* Constants.swift */,
 				E8473CC71F698D3700852FE3 /* ManualLayout.swift */,
 				E828C6F61F6E7C2200BD04F5 /* RoundedView */,
+				E8B20A901FD84D0900648C9A /* Extensions */,
 				E8683D801F344638005C7E9A /* Supporting Files */,
 			);
 			path = Source;
@@ -144,8 +149,6 @@
 				E83354ED1F35EC3B00D1FB23 /* RoundedView.swift */,
 				E87B47231F6E793D004AA6C7 /* CornerView.swift */,
 				E87B47271F6E799D004AA6C7 /* Corner.swift */,
-				E87B47291F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift */,
-				E87B47251F6E7983004AA6C7 /* CGRect+Corners.swift */,
 			);
 			path = RoundedView;
 			sourceTree = "<group>";
@@ -168,6 +171,17 @@
 				D93F1C9C1EAEDB6E009A7474 /* Info.plist */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E8B20A901FD84D0900648C9A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E8B20A8E1FD84CE400648C9A /* UIViewController+IsPresentedWithDeck.swift */,
+				E8B271631FD7E145009883B2 /* UIViewController+DeckTransitionViewControllerProtocol.swift */,
+				E87B47291F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift */,
+				E87B47251F6E7983004AA6C7 /* CGRect+Corners.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -286,6 +300,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8B20A921FD84F1500648C9A /* DeckSnapshotUpdater.swift in Sources */,
 				E8B271661FD7E208009883B2 /* ScrollViewDetector.swift in Sources */,
 				E83354EE1F35EC3B00D1FB23 /* RoundedView.swift in Sources */,
 				E8683D821F34471B005C7E9A /* DeckPresentingAnimationController.swift in Sources */,
@@ -299,6 +314,7 @@
 				E8683D8A1F34479E005C7E9A /* DeckPresentationController.swift in Sources */,
 				E8B271621FD7E117009883B2 /* DeckTransitionViewControllerProtocol.swift in Sources */,
 				E85798101F34D63200C6CABE /* Constants.swift in Sources */,
+				E8B20A8F1FD84CE400648C9A /* UIViewController+IsPresentedWithDeck.swift in Sources */,
 				E8683D861F34478A005C7E9A /* DeckTransitioningDelegate.swift in Sources */,
 				E87B472A1F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift in Sources */,
 				E8683D8C1F3447A5005C7E9A /* DeckDismissingAnimationController.swift in Sources */,

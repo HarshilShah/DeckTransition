@@ -22,16 +22,7 @@ import UIKit
 /// modal.modalPresentationStyle = .custom
 /// present(modal, animated: true, completion: nil)
 /// ```
-public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate, DeckPresentationControllerDelegate {
-    
-    // MARK: - Public variables
-    
-    /// A variable indicating whether or not the presenting view controller
-    /// can currently be dismissed using a pan gestures from top to bottom.
-    ///
-    /// When set to `true`, this allows the presented modal view to be dismissed
-    /// using a pan gesture. The default value of this property is `true`
-    @objc public var isDismissEnabled = true
+public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     
     // MARK: - Private variables
     
@@ -121,12 +112,6 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
             dismissCompletion: dismissCompletion)
         presentationController.transitioningDelegate = self
         return presentationController
-    }
-    
-    // MARK: - DeckPresentationControllerDelegate methods
-    
-    func isDismissGestureEnabled() -> Bool {
-        return isDismissEnabled
     }
     
 }
