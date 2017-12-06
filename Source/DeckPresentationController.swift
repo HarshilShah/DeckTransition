@@ -42,6 +42,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     // MARK: - Private variables
     
     private var pan: UIPanGestureRecognizer?
+    private var scrollViewUpdater: ScrollViewUpdater?
     
     private let backgroundView = UIView()
     private let roundedViewForPresentingView = RoundedView()
@@ -567,18 +568,20 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         switch gestureRecognizer.state {
         
         case .began:
+            let detector = ScrollViewDetector(withViewController: presentedViewController)
+            if let scrollView = detector.scrollView {
+                scrollViewUpdater = ScrollViewUpdater(
+                    withRootView: presentedViewController.view,
+                    scrollView: scrollView)
+            }
             gestureRecognizer.setTranslation(CGPoint(x: 0, y: 0), in: containerView)
         
         case .changed:
-            if let view = presentedView {
-                /// The dismiss gesture needs to be enabled for the pan gesture
-                /// to do anything.
-                if transitioningDelegate?.isDismissGestureEnabled() ?? false {
-                    let translation = gestureRecognizer.translation(in: view)
-                    updatePresentedViewForTranslation(inVerticalDirection: translation.y)
-                } else {
-                    gestureRecognizer.setTranslation(.zero, in: view)
-                }
+            if scrollViewUpdater?.isDismissEnabled ?? false {
+                let translation = gestureRecognizer.translation(in: presentedView)
+                updatePresentedViewForTranslation(inVerticalDirection: translation.y)
+            } else {
+                gestureRecognizer.setTranslation(.zero, in: presentedView)
             }
         
         case .ended:
