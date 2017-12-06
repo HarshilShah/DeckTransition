@@ -24,7 +24,7 @@ class ModalViewController: UIViewController {
         textView.isSelectable = false
         textView.showsVerticalScrollIndicator = false
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.font = UIFont.systemFont(ofSize: 40, weight: UIFontWeightHeavy)
+        textView.font = UIFont.systemFont(ofSize: 40, weight: .heavy)
         textView.textAlignment = .center
         textView.text = """
         This is the presented modal view controller.\n
@@ -43,7 +43,7 @@ class ModalViewController: UIViewController {
         view.addGestureRecognizer(tap)
     }
     
-    func viewWasTapped() {
+    @objc func viewWasTapped() {
         let modal = ModalViewController()
         let transitionDelegate = DeckTransitioningDelegate()
         modal.transitioningDelegate = transitionDelegate

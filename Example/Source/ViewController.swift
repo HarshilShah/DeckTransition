@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 40, weight: UIFontWeightHeavy)
+        label.font = UIFont.systemFont(ofSize: 40, weight: .heavy)
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = """
@@ -33,7 +33,7 @@ class ViewController: UIViewController {
         view.addGestureRecognizer(tap)
     }
     
-    func viewWasTapped() {
+    @objc func viewWasTapped() {
         let modal = ModalViewController()
         let transitionDelegate = DeckTransitioningDelegate()
         modal.transitioningDelegate = transitionDelegate
