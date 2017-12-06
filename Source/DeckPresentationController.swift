@@ -24,6 +24,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     
     // MARK: - Private variables
     
+    private var isSwipeToDismissGestureEnabled = true
     private var pan: UIPanGestureRecognizer?
     private var scrollViewUpdater: ScrollViewUpdater?
     
@@ -50,6 +51,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     
     convenience init(presentedViewController: UIViewController,
                      presenting presentingViewController: UIViewController?,
+                     isSwipeToDismissGestureEnabled: Bool,
                      presentAnimation: (() -> ())? = nil,
                      presentCompletion: ((Bool) ->())? = nil,
                      dismissAnimation: (() -> ())? = nil,
@@ -57,6 +59,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         self.init(presentedViewController: presentedViewController,
                   presenting: presentingViewController)
         
+        self.isSwipeToDismissGestureEnabled = isSwipeToDismissGestureEnabled
         self.presentAnimation = presentAnimation
         self.presentCompletion = presentCompletion
         self.dismissAnimation = dismissAnimation
@@ -256,11 +259,13 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             roundedViewForPresentingView.bottomAnchor.constraint(equalTo: snapshotViewContainer.bottomAnchor)
         ])
         
-        pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        pan!.delegate = self
-        pan!.maximumNumberOfTouches = 1
-        pan!.cancelsTouchesInView = false
-        presentedViewController.view.addGestureRecognizer(pan!)
+        if isSwipeToDismissGestureEnabled {
+            pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+            pan!.delegate = self
+            pan!.maximumNumberOfTouches = 1
+            pan!.cancelsTouchesInView = false
+            presentedViewController.view.addGestureRecognizer(pan!)
+        }
 
         presentCompletion?(completed)
     }
@@ -543,8 +548,16 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     
     // MARK: - Gesture handling
     
+    private func isSwipeToDismissAllowed() -> Bool {
+        guard let updater = scrollViewUpdater else {
+            return isSwipeToDismissGestureEnabled
+        }
+        
+        return updater.isDismissEnabled
+    }
+    
     @objc private func handlePan(gestureRecognizer: UIPanGestureRecognizer) {
-        guard gestureRecognizer.isEqual(pan) else {
+        guard gestureRecognizer.isEqual(pan), isSwipeToDismissGestureEnabled else {
             return
         }
         
@@ -560,7 +573,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             gestureRecognizer.setTranslation(CGPoint(x: 0, y: 0), in: containerView)
         
         case .changed:
-            if scrollViewUpdater?.isDismissEnabled ?? false {
+            if isSwipeToDismissAllowed() {
                 let translation = gestureRecognizer.translation(in: presentedView)
                 updatePresentedViewForTranslation(inVerticalDirection: translation.y)
             } else {
