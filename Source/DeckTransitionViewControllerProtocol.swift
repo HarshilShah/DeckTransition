@@ -8,12 +8,14 @@
 
 import UIKit
 
-/// A set of methods that vend objects used to customize a `DeckTransition`
-/// presentation.
+/// A set of methods that vend objects used to customize a DeckTransition
+/// presentation's swipe-to-dismiss behaviour.
 ///
 /// The transition has an internal heuristic to determine which `UIScrollView`
 /// should be tracked for the swipe-to-dismiss gesture. However that has some
-/// edge cases, which this protocol helps you work around.
+/// edge cases, which can we worked around by making your modal view controller
+/// and view controllers presented by or contained within it conform to this
+/// protocol.
 @objc public protocol DeckTransitionViewControllerProtocol: class {
     
     /// The child view controller which contains the scroll view that should
