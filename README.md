@@ -25,7 +25,7 @@ Hereʼs a GIF showing it in action.
 To install DeckTransition using [CocoaPods](http://cocoapods.org), add the following line to your Podfile:
 
 ```
-pod 'DeckTransition', '~> 1.0'
+pod 'DeckTransition', '~> 2.0'
 ```
 
 ### Carthage
@@ -33,7 +33,7 @@ pod 'DeckTransition', '~> 1.0'
 To install DeckTransition using [Carthage](https://github.com/Carthage/Carthage), add the following line to your Cartfile:
 
 ```
-github "HarshilShah/DeckTransition" ~> 1.0
+github "HarshilShah/DeckTransition" ~> 2.0
 ```
 
 ## Documentation

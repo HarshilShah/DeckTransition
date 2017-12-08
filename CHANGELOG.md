@@ -1,5 +1,20 @@
 ## Changelog
 
+## 2.0.0 Release notes (8/12/2017)
+----
+
+DeckTransition is now at version 2.0! 🎉
+
+This is a major API upgrade. The previous API which required `UIScrollViewDelegate` conformance has been entirely removed, and is replaced by an automatic `UIScrollView` detection mechanism.
+
+### API Breaking Changes
+- The `isDismissEnabled` property on `DeckTransitioningDelegate` is removed. This behaviour is now managed automatically, which means that your old dismissal code is no longer needed and can be removed entirely, and your existing view controllers should "just work" in most cases.
+
+  There exist some edge cases with the new mechanism, more about which, including workarounds, can be found in the documentationʼs new [UIScrollView detection guide](https://harshilshah.github.io/DeckTransition/uiscrollview-detection.html).
+
+### Other Changes
+- A new `isSwipeToDismissEnabled` parameter is added to the `DeckTransitioningDelegate` initializer, to disable the swipe-to-dismiss gesture entirely, if need be. This is set to `true` by default and requires no change to retain previous behaviour.
+
 ## 1.4.2 Release notes (12/11/2017)
 ----
 
