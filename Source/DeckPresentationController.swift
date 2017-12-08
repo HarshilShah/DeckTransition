@@ -8,40 +8,25 @@
 
 import UIKit
 
-/// Delegate that communicates to the `DeckPresentationController` whether the
-/// dismiss by pan gesture is enabled
-protocol DeckPresentationControllerDelegate {
-    func isDismissGestureEnabled() -> Bool
-}
-
-/// A protocol to communicate to the transition that an update of the snapshot
-/// view is required. This is adopted only by the presentation controller of
-/// any view controller presented using DeckTransition
-public protocol DeckSnapshotUpdater {
-    
-    /// For various reasons (performance, the way iOS handles safe area,
-    /// layout issues, etc.) this transition uses a snapshot view of your
-    /// `presentingViewController` and not the live view itself.
-    ///
-    /// In some cases this snapshot might become outdated before the dismissal,
-    /// and for those cases you can request to have the snapshot updated. While
-    /// the transition only shows a small portion of the presenting view, in
-    /// some cases that might become inconsistent enough to demand an update.
-    ///
-    /// This is an expensive process and should only be used if necessary, for
-    /// example if you are updating your entire app's theme.
-    func requestPresentedViewSnapshotUpdate()
-}
-
 final class DeckPresentationController: UIPresentationController, UIGestureRecognizerDelegate, DeckSnapshotUpdater {
     
     // MARK: - Internal variables
     
-    var transitioningDelegate: DeckPresentationControllerDelegate?
+    /// The presentation controller holds a strong reference to the
+    /// transitioning delegate because `UIViewController.transitioningDelegate`
+    /// is a weak property, and thus the `DeckTransitioningDelegate` would be
+    /// unallocated right after the presentation animation.
+    ///
+    /// Since the transitioningDelegate only vends the presentation controller
+    /// object and does not hold a reference to it, there is no issue of a
+    /// circular dependency here.
+    var transitioningDelegate: DeckTransitioningDelegate?
     
     // MARK: - Private variables
     
+    private var isSwipeToDismissGestureEnabled = true
     private var pan: UIPanGestureRecognizer?
+    private var scrollViewUpdater: ScrollViewUpdater?
     
     private let backgroundView = UIView()
     private let roundedViewForPresentingView = RoundedView()
@@ -66,6 +51,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     
     convenience init(presentedViewController: UIViewController,
                      presenting presentingViewController: UIViewController?,
+                     isSwipeToDismissGestureEnabled: Bool,
                      presentAnimation: (() -> ())? = nil,
                      presentCompletion: ((Bool) ->())? = nil,
                      dismissAnimation: (() -> ())? = nil,
@@ -73,6 +59,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         self.init(presentedViewController: presentedViewController,
                   presenting: presentingViewController)
         
+        self.isSwipeToDismissGestureEnabled = isSwipeToDismissGestureEnabled
         self.presentAnimation = presentAnimation
         self.presentCompletion = presentCompletion
         self.dismissAnimation = dismissAnimation
@@ -272,11 +259,13 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             roundedViewForPresentingView.bottomAnchor.constraint(equalTo: snapshotViewContainer.bottomAnchor)
         ])
         
-        pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        pan!.delegate = self
-        pan!.maximumNumberOfTouches = 1
-        pan!.cancelsTouchesInView = false
-        presentedViewController.view.addGestureRecognizer(pan!)
+        if isSwipeToDismissGestureEnabled {
+            pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+            pan!.delegate = self
+            pan!.maximumNumberOfTouches = 1
+            pan!.cancelsTouchesInView = false
+            presentedViewController.view.addGestureRecognizer(pan!)
+        }
 
         presentCompletion?(completed)
     }
@@ -559,26 +548,36 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     
     // MARK: - Gesture handling
     
+    private func isSwipeToDismissAllowed() -> Bool {
+        guard let updater = scrollViewUpdater else {
+            return isSwipeToDismissGestureEnabled
+        }
+        
+        return updater.isDismissEnabled
+    }
+    
     @objc private func handlePan(gestureRecognizer: UIPanGestureRecognizer) {
-        guard gestureRecognizer.isEqual(pan) else {
+        guard gestureRecognizer.isEqual(pan), isSwipeToDismissGestureEnabled else {
             return
         }
         
         switch gestureRecognizer.state {
         
         case .began:
+            let detector = ScrollViewDetector(withViewController: presentedViewController)
+            if let scrollView = detector.scrollView {
+                scrollViewUpdater = ScrollViewUpdater(
+                    withRootView: presentedViewController.view,
+                    scrollView: scrollView)
+            }
             gestureRecognizer.setTranslation(CGPoint(x: 0, y: 0), in: containerView)
         
         case .changed:
-            if let view = presentedView {
-                /// The dismiss gesture needs to be enabled for the pan gesture
-                /// to do anything.
-                if transitioningDelegate?.isDismissGestureEnabled() ?? false {
-                    let translation = gestureRecognizer.translation(in: view)
-                    updatePresentedViewForTranslation(inVerticalDirection: translation.y)
-                } else {
-                    gestureRecognizer.setTranslation(.zero, in: view)
-                }
+            if isSwipeToDismissAllowed() {
+                let translation = gestureRecognizer.translation(in: presentedView)
+                updatePresentedViewForTranslation(inVerticalDirection: translation.y)
+            } else {
+                gestureRecognizer.setTranslation(.zero, in: presentedView)
             }
         
         case .ended:
@@ -642,18 +641,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         }
         
         return true
-    }
-    
-}
-
-fileprivate extension UIViewController {
-    
-    /// A Boolean value indicating whether the view controller is presented
-    /// using Deck.
-    var isPresentedWithDeck: Bool {
-        return transitioningDelegate is DeckTransitioningDelegate
-            && modalPresentationStyle == .custom
-            && presentingViewController != nil
     }
     
 }

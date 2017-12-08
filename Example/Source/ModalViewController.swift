@@ -9,7 +9,7 @@
 import UIKit
 import DeckTransition
 
-class ModalViewController: UIViewController, UITextViewDelegate {
+class ModalViewController: UIViewController {
 
     let textView = UITextView()
 
@@ -24,7 +24,7 @@ class ModalViewController: UIViewController, UITextViewDelegate {
         textView.isSelectable = false
         textView.showsVerticalScrollIndicator = false
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.font = UIFont.systemFont(ofSize: 40, weight: UIFontWeightHeavy)
+        textView.font = UIFont.systemFont(ofSize: 40, weight: .heavy)
         textView.textAlignment = .center
         textView.text = """
         This is the presented modal view controller.\n
@@ -38,15 +38,12 @@ class ModalViewController: UIViewController, UITextViewDelegate {
         textView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
         textView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
         textView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20).isActive = true
-		textView.bounces = false
-		
-        textView.delegate = self
-    
+	
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.viewWasTapped))
         view.addGestureRecognizer(tap)
     }
     
-    func viewWasTapped() {
+    @objc func viewWasTapped() {
         let modal = ModalViewController()
         let transitionDelegate = DeckTransitioningDelegate()
         modal.transitioningDelegate = transitionDelegate
@@ -56,29 +53,6 @@ class ModalViewController: UIViewController, UITextViewDelegate {
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
-    }
-	
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard scrollView.isEqual(textView) else {
-            return
-        }
-        
-        if let delegate = transitioningDelegate as? DeckTransitioningDelegate {
-            if scrollView.contentOffset.y > 0 {
-                scrollView.bounces = true
-                delegate.isDismissEnabled = false
-			} else {
-				if scrollView.isDecelerating {
-					view.transform = CGAffineTransform(translationX: 0, y: -scrollView.contentOffset.y)
-					scrollView.subviews.forEach {
-						$0.transform = CGAffineTransform(translationX: 0, y: scrollView.contentOffset.y)
-					}
-				} else {
-					scrollView.bounces = false
-					delegate.isDismissEnabled = true
-				}
-			}
-        }
     }
 	
 }

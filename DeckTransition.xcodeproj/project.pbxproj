@@ -26,6 +26,12 @@
 		E87B47261F6E7983004AA6C7 /* CGRect+Corners.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B47251F6E7983004AA6C7 /* CGRect+Corners.swift */; };
 		E87B47281F6E799D004AA6C7 /* Corner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B47271F6E799D004AA6C7 /* Corner.swift */; };
 		E87B472A1F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B47291F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift */; };
+		E8B20A8F1FD84CE400648C9A /* UIViewController+IsPresentedWithDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B20A8E1FD84CE400648C9A /* UIViewController+IsPresentedWithDeck.swift */; };
+		E8B20A921FD84F1500648C9A /* DeckSnapshotUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B20A911FD84F1500648C9A /* DeckSnapshotUpdater.swift */; };
+		E8B271621FD7E117009883B2 /* DeckTransitionViewControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B271611FD7E117009883B2 /* DeckTransitionViewControllerProtocol.swift */; };
+		E8B271641FD7E145009883B2 /* UIViewController+DeckTransitionViewControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B271631FD7E145009883B2 /* UIViewController+DeckTransitionViewControllerProtocol.swift */; };
+		E8B271661FD7E208009883B2 /* ScrollViewDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B271651FD7E208009883B2 /* ScrollViewDetector.swift */; };
+		E8B271681FD7E20F009883B2 /* ScrollViewUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B271671FD7E20F009883B2 /* ScrollViewUpdater.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +67,12 @@
 		E87B47251F6E7983004AA6C7 /* CGRect+Corners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+Corners.swift"; sourceTree = "<group>"; };
 		E87B47271F6E799D004AA6C7 /* Corner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Corner.swift; sourceTree = "<group>"; };
 		E87B47291F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+InitWithCorner.swift"; sourceTree = "<group>"; };
+		E8B20A8E1FD84CE400648C9A /* UIViewController+IsPresentedWithDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+IsPresentedWithDeck.swift"; sourceTree = "<group>"; };
+		E8B20A911FD84F1500648C9A /* DeckSnapshotUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckSnapshotUpdater.swift; sourceTree = "<group>"; };
+		E8B271611FD7E117009883B2 /* DeckTransitionViewControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckTransitionViewControllerProtocol.swift; sourceTree = "<group>"; };
+		E8B271631FD7E145009883B2 /* UIViewController+DeckTransitionViewControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+DeckTransitionViewControllerProtocol.swift"; sourceTree = "<group>"; };
+		E8B271651FD7E208009883B2 /* ScrollViewDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewDetector.swift; sourceTree = "<group>"; };
+		E8B271671FD7E20F009883B2 /* ScrollViewUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewUpdater.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,9 +121,14 @@
 				E8683D891F34479E005C7E9A /* DeckPresentationController.swift */,
 				E8683D811F34471B005C7E9A /* DeckPresentingAnimationController.swift */,
 				E8683D8B1F3447A5005C7E9A /* DeckDismissingAnimationController.swift */,
+				E8B20A911FD84F1500648C9A /* DeckSnapshotUpdater.swift */,
+				E8B271611FD7E117009883B2 /* DeckTransitionViewControllerProtocol.swift */,
+				E8B271651FD7E208009883B2 /* ScrollViewDetector.swift */,
+				E8B271671FD7E20F009883B2 /* ScrollViewUpdater.swift */,
 				E857980F1F34D63200C6CABE /* Constants.swift */,
 				E8473CC71F698D3700852FE3 /* ManualLayout.swift */,
 				E828C6F61F6E7C2200BD04F5 /* RoundedView */,
+				E8B20A901FD84D0900648C9A /* Extensions */,
 				E8683D801F344638005C7E9A /* Supporting Files */,
 			);
 			path = Source;
@@ -132,8 +149,6 @@
 				E83354ED1F35EC3B00D1FB23 /* RoundedView.swift */,
 				E87B47231F6E793D004AA6C7 /* CornerView.swift */,
 				E87B47271F6E799D004AA6C7 /* Corner.swift */,
-				E87B47291F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift */,
-				E87B47251F6E7983004AA6C7 /* CGRect+Corners.swift */,
 			);
 			path = RoundedView;
 			sourceTree = "<group>";
@@ -156,6 +171,17 @@
 				D93F1C9C1EAEDB6E009A7474 /* Info.plist */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E8B20A901FD84D0900648C9A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E8B20A8E1FD84CE400648C9A /* UIViewController+IsPresentedWithDeck.swift */,
+				E8B271631FD7E145009883B2 /* UIViewController+DeckTransitionViewControllerProtocol.swift */,
+				E87B47291F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift */,
+				E87B47251F6E7983004AA6C7 /* CGRect+Corners.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,13 +241,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "Harshil Shah";
 				TargetAttributes = {
 					D93F1C971EAEDB6E009A7474 = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = BM5Y87HJ2F;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 					D93F1CA01EAEDB6E009A7474 = {
@@ -274,15 +300,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8B20A921FD84F1500648C9A /* DeckSnapshotUpdater.swift in Sources */,
+				E8B271661FD7E208009883B2 /* ScrollViewDetector.swift in Sources */,
 				E83354EE1F35EC3B00D1FB23 /* RoundedView.swift in Sources */,
 				E8683D821F34471B005C7E9A /* DeckPresentingAnimationController.swift in Sources */,
 				E87B47281F6E799D004AA6C7 /* Corner.swift in Sources */,
 				E87B47261F6E7983004AA6C7 /* CGRect+Corners.swift in Sources */,
 				E8683D881F344793005C7E9A /* DeckSegue.swift in Sources */,
+				E8B271641FD7E145009883B2 /* UIViewController+DeckTransitionViewControllerProtocol.swift in Sources */,
+				E8B271681FD7E20F009883B2 /* ScrollViewUpdater.swift in Sources */,
 				E8473CC81F698D3700852FE3 /* ManualLayout.swift in Sources */,
 				E87B47241F6E793D004AA6C7 /* CornerView.swift in Sources */,
 				E8683D8A1F34479E005C7E9A /* DeckPresentationController.swift in Sources */,
+				E8B271621FD7E117009883B2 /* DeckTransitionViewControllerProtocol.swift in Sources */,
 				E85798101F34D63200C6CABE /* Constants.swift in Sources */,
+				E8B20A8F1FD84CE400648C9A /* UIViewController+IsPresentedWithDeck.swift in Sources */,
 				E8683D861F34478A005C7E9A /* DeckTransitioningDelegate.swift in Sources */,
 				E87B472A1F6E79C0004AA6C7 /* CGRect+InitWithCorner.swift in Sources */,
 				E8683D8C1F3447A5005C7E9A /* DeckDismissingAnimationController.swift in Sources */,
@@ -318,7 +350,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -326,7 +360,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -372,7 +410,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -380,7 +420,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -414,7 +458,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = BM5Y87HJ2F;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -427,7 +471,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -447,7 +492,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.harshilShah.DeckTransition;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
