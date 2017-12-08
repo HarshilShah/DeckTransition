@@ -9,4 +9,5 @@ jazzy \
     --github_url https://github.com/HarshilShah/DeckTransition \
     --github-file-prefix https://github.com/HarshilShah/DeckTransition/tree/master \
     --root-url https://harshilshah.github.io/DeckTransition \
+    --documentation "Guides/*.md" \
     --output docs/ \
