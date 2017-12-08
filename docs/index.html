@@ -29,6 +29,14 @@
       <nav class="sidebar">
         <ul class="nav-groups">
           <li class="nav-group-name">
+            <a href="Guides.html">Guides</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="uiscrollview-detection.html">UIScrollView Detection</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
             <a href="Classes.html">Classes</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
@@ -40,10 +48,24 @@
             </ul>
           </li>
           <li class="nav-group-name">
+            <a href="Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Extensions/UINavigationController.html">UINavigationController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/UITabBarController.html">UITabBarController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
             <a href="Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="Protocols/DeckSnapshotUpdater.html">DeckSnapshotUpdater</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/DeckTransitionViewControllerProtocol.html">DeckTransitionViewControllerProtocol</a>
               </li>
             </ul>
           </li>
@@ -92,7 +114,7 @@
 
 <p>Set <code>modalPresentationCapturesStatusBarAppearance</code> to <code>true</code> in your modal view controller, and override the <code>preferredStatusBarStyle</code> variable to return <code>.lightContent</code>.</p>
 
-<p>The background color for the presentation can be changed by changing the <code>backgroundColor</code> property of the <code>window</code>. This is <code>.black</code> by default.</p>
+<p>Additionally, the <code>UIScrollView</code> instances which should be tracked for the swipe-to-dismiss gesture should have their <code>backgroundColor</code> set to <code>.clear</code>.</p>
 <h3 id='presentation' class='heading'>Presentation</h3>
 
 <p>The transition can be called from code or using a storyboard.</p>
@@ -108,48 +130,14 @@
 </code></pre>
 <h3 id='dismissal' class='heading'>Dismissal</h3>
 
-<p>This is the part where it gets a bit tricky. If youʼve got a fixed-sized i.e. non-scrolling modal, feel free to just skip the rest of this section. Swipe-to-dismiss will work perfectly for you</p>
+<p>By default, DeckTransition has a swipe-to-dismiss gesture which is automatically enabled when your modalʼs main <code>UIScrollView</code> is scrolled to the top.</p>
 
-<p>For modals which have a vertically scrolling layout, the dismissal gesture should be fired only when the view is scrolled to the top. To achieve this behaviour, you need to modify the <code>isDismissEnabled</code> property of the <code><a href="Classes/DeckTransitioningDelegate.html">DeckTransitioningDelegate</a></code>. (You can also set <code>isDismissEnabled</code> to false if you want to disable the swipe-to-dismiss UI.)</p>
+<p>You can opt-out of this behaviour by passing in <code>false</code> for the <code>isSwipeToDismissEnabled</code> parameter while initialising your <code><a href="Classes/DeckTransitioningDelegate.html">DeckTransitioningDelegate</a></code>.</p>
+<h3 id='code-uiscrollview-code-detection' class='heading'><code>UIScrollView</code> detection</h3>
 
-<p>The one issue with doing this in response to the scrollviewʼs <code>contentOffset</code> is momentum scrolling. When the user pans from top the bottom, once the top of the scrollview is reached (<code>contentOffset.y</code> is 0), the dismiss gesture should take over and the scrollview should stop scrolling, not showing the usual iOS bounce effect. The dismiss gesture, however, only responds to pans and not swipes, so should you swipe and not pan, the scrollview will scroll to the top and abruptly stop (as the <code>contentOffset.y</code> is  0) without the usual iOS bounce effect.</p>
+<p>DeckTransition has an internal heuristic to determine which <code>UIScrollView</code> should be tracked for the swipe-to-dismiss gesture. In general, this should be sufficient for and cover most use cases.</p>
 
-<p>I&rsquo;ve found a temporary workaround for this, the code for this can be found below. Itʼs a bit messy right now, but is the only workaround Iʼve found for this issue (so far). It has one caveat, in that it fails utterly miserably when using with a scrollview whose <code>backgroundColor</code> isnʼt <code>.clear</code>.
-Iʼll update this project if/when I find a better solution.</p>
-<h4 id='dismissal-code-for-scrolling-modals' class='heading'>Dismissal code for scrolling modals</h4>
-
-<p>First up, make your modal view controller conform to <code>UIScrollViewDelegate</code> (or <code>UITableViewDelegate</code>/<code>UITextFieldDelegate</code>, as the case may be), and assign self as the scrollview&rsquo;s <code>delegate</code>.</p>
-
-<p>Next, add this method to your modal view controller, swapping in your scrollviewʼs variable for <code>textView</code>.</p>
-<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">scrollViewDidScroll</span><span class="p">(</span><span class="n">_</span> <span class="nv">scrollView</span><span class="p">:</span> <span class="kt">UIScrollView</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">guard</span> <span class="n">scrollView</span><span class="o">.</span><span class="nf">isEqual</span><span class="p">(</span><span class="n">textView</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="k">return</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="k">let</span> <span class="nv">delegate</span> <span class="o">=</span> <span class="n">transitioningDelegate</span> <span class="k">as?</span> <span class="kt">DeckTransitioningDelegate</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
-            <span class="c1">// Normal behaviour if the `scrollView` isn't scrolled to the top</span>
-            <span class="n">scrollView</span><span class="o">.</span><span class="n">bounces</span> <span class="o">=</span> <span class="kc">true</span>
-            <span class="n">delegate</span><span class="o">.</span><span class="n">isDismissEnabled</span> <span class="o">=</span> <span class="kc">false</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">isDecelerating</span> <span class="p">{</span>
-                <span class="c1">// If the `scrollView` is scrolled to the top but is decelerating</span>
-                <span class="c1">// that means a swipe has been performed. The view and</span>
-                <span class="c1">// scrollviewʼs subviews are both translated in response to this.</span>
-                <span class="n">view</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="kt">CGAffineTransform</span><span class="p">(</span><span class="nv">translationX</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="o">-</span><span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
-                <span class="n">scrollView</span><span class="o">.</span><span class="n">subviews</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span>
-                    <span class="nv">$0</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="kt">CGAffineTransform</span><span class="p">(</span><span class="nv">translationX</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
-                <span class="p">}</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="c1">// If the user has panned to the top, the scrollview doesnʼt bounce and</span>
-                <span class="c1">// the dismiss gesture is enabled.</span>
-                <span class="n">scrollView</span><span class="o">.</span><span class="n">bounces</span> <span class="o">=</span> <span class="kc">false</span>
-                <span class="n">delegate</span><span class="o">.</span><span class="n">isDismissEnabled</span> <span class="o">=</span> <span class="kc">true</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre>
+<p>However there are some edge cases, and should you run into one, these can we worked around by making your modal view controller conform to the <code><a href="Protocols/DeckTransitionViewControllerProtocol.html">DeckTransitionViewControllerProtocol</a></code> protocol. More information about this can be found in the documentation page about <a href="https://harshilshah.github.io/DeckTransition/uiscrollview-detection.html">UIScrollView detection</a>.</p>
 <h3 id='snapshots' class='heading'>Snapshots</h3>
 
 <p>For a variety of reasons, and especially because of iOS 11&rsquo;s safe area layout, DeckTransition uses a snapshot of your presenting view controller&rsquo;s view instead of using the view directly. This view is automatically updated whenever the frame is resized.</p>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>UIScrollView Detection  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a title="UIScrollView Detection  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">DeckTransition Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="https://github.com/HarshilShah/DeckTransition"><img src="img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fharshilshah%2Egithub%2Eio%2Fdocsets%2FDeckTransition%2Exml"><img src="img/dash.png"/>Install in Dash</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">DeckTransition Reference</a>
+        <img id="carat" src="img/carat.png" />
+        UIScrollView Detection  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Guides.html">Guides</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="uiscrollview-detection.html">UIScrollView Detection</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/DeckSegue.html">DeckSegue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/DeckTransitioningDelegate.html">DeckTransitioningDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Extensions/UINavigationController.html">UINavigationController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/UITabBarController.html">UITabBarController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/DeckSnapshotUpdater.html">DeckSnapshotUpdater</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/DeckTransitionViewControllerProtocol.html">DeckTransitionViewControllerProtocol</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <h1 id='code-uiscrollview-code-detection' class='heading'><code>UIScrollView</code> Detection</h1>
+
+<p>This guide explains various DeckTransitionʼs <code>UIScrollView</code> detection heuristic, some edge cases, and how these can be worked around.</p>
+<h2 id='how-it-works' class='heading'>How It Works</h2>
+
+<p>In keeping with the style used in Apple Musicʼs iOS app, DeckTransition has a fluid swipe-to-dismiss gesture.</p>
+
+<p>In order to activate this, you just need to swipe down on the card. If there is a <code>UIScrollView</code> within the card, the gesture is activated as soon as the scroll view is scrolled to the very top. This is a fluid gesture: The same pan used to scroll the scroll view to the top can be continued to dismiss the modal without starting a new touch, so it’s important for DeckTransition to detect the main scroll view of your view hierarchy.</p>
+
+<p>DeckTransition’s internal methodology to detect which <code>UIScrollView</code> has two parts:</p>
+
+<ol>
+<li>Detecting the UIViewController instance which should contain the <code>UIScrollView</code>.</li>
+<li>Detecting the <code>UIScrollView</code> instance within it.</li>
+</ol>
+<h2 id='detecting-the-code-uiviewcontroller-code' class='heading'>Detecting The <code>UIViewController</code></h2>
+
+<p>The view controller presented using DeckTransition itself may not contain the <code>UIScrollView</code> instance which needs to be tracked for a dismiss gesture.</p>
+
+<p>You may be using containment to better organise your code, in which case you can conform your view controllers to <code><a href="Protocols/DeckTransitionViewControllerProtocol.html">DeckTransitionViewControllerProtocol</a></code> and implement the <code>childViewControllerForDeck</code> variable to return the child view controller which contains the <code>UIScrollView</code> instance to be tracked. This works with nested containment as well.</p>
+
+<p>DeckTransition will traverse your view hierarchy until it reaches a <code>UIViewController</code> which either doesn’t conform to the protocol, or returns <code>nil</code>. The view controller reached at the end of this search process will be further searched for the <code>UIScrollView</code> instance to track.</p>
+<h2 id='detecting-the-code-uiscrollview-code' class='heading'>Detecting the <code>UIScrollView</code></h2>
+
+<p>Once the view controller is correctly identified, DeckTransition searches its view’s top-level subviews (i.e. <code>viewController.view.subviews</code>), and by default uses the lowermost <code>UIScrollView</code> instance, if one is found.</p>
+
+<p>However this may not always find the <code>UIScrollView</code> instance you may want it to, in which case you can conform your view controllers to <code><a href="Protocols/DeckTransitionViewControllerProtocol.html">DeckTransitionViewControllerProtocol</a></code> and implement the <code>scrollViewForDeck</code> variable to return <code>UIScrollView</code> instance to be tracked.</p>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>Copyright © 2017 Harshil Shah. Available under the MIT License.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

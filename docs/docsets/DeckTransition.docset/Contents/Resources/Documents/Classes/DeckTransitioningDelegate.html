@@ -30,6 +30,14 @@
       <nav class="sidebar">
         <ul class="nav-groups">
           <li class="nav-group-name">
+            <a href="../Guides.html">Guides</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../uiscrollview-detection.html">UIScrollView Detection</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
             <a href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
@@ -41,10 +49,24 @@
             </ul>
           </li>
           <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/UINavigationController.html">UINavigationController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UITabBarController.html">UITabBarController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
             <a href="../Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="../Protocols/DeckSnapshotUpdater.html">DeckSnapshotUpdater</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DeckTransitionViewControllerProtocol.html">DeckTransitionViewControllerProtocol</a>
               </li>
             </ul>
           </li>
@@ -56,7 +78,7 @@
             <h1>DeckTransitioningDelegate</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">DeckTransitioningDelegate</span><span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">UIViewControllerTransitioningDelegate</span><span class="p">,</span> <span class="kt">DeckPresentationControllerDelegate</span></code></pre>
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">DeckTransitioningDelegate</span><span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">UIViewControllerTransitioningDelegate</span></code></pre>
 
                 </div>
               </div>
@@ -77,51 +99,6 @@ style</p>
           <section class="section task-group-section">
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Public%20variables"></a>
-                <a name="//apple_ref/swift/Section/Public variables" class="dashAnchor"></a>
-                <a href="#/Public%20variables">
-                  <h3 class="section-name">Public variables</h3>
-                </a>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@DeckTransition@objc(cs)DeckTransitioningDelegate(py)isDismissEnabled"></a>
-                    <a name="//apple_ref/swift/Property/isDismissEnabled" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@DeckTransition@objc(cs)DeckTransitioningDelegate(py)isDismissEnabled">isDismissEnabled</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>A variable indicating whether or not the presenting view controller
-can currently be dismissed using a pan gestures from top to bottom.</p>
-
-<p>When set to <code>true</code>, this allows the presented modal view to be dismissed
-using a pan gesture. The default value of this property is <code>true</code></p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isDismissEnabled</span> <span class="o">=</span> <span class="kc">true</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitioningDelegate.swift#L34">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
                 <a name="/Initializers"></a>
                 <a name="//apple_ref/swift/Section/Initializers" class="dashAnchor"></a>
                 <a href="#/Initializers">
@@ -132,9 +109,9 @@ using a pan gesture. The default value of this property is <code>true</code></p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@M@DeckTransition@objc(cs)DeckTransitioningDelegate(im)initWithPresentDuration:presentAnimation:presentCompletion:dismissDuration:dismissAnimation:dismissCompletion:"></a>
-                    <a name="//apple_ref/swift/Method/init(presentDuration:presentAnimation:presentCompletion:dismissDuration:dismissAnimation:dismissCompletion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@DeckTransition@objc(cs)DeckTransitioningDelegate(im)initWithPresentDuration:presentAnimation:presentCompletion:dismissDuration:dismissAnimation:dismissCompletion:">init(presentDuration:presentAnimation:presentCompletion:dismissDuration:dismissAnimation:dismissCompletion:)</a>
+                    <a name="/c:@M@DeckTransition@objc(cs)DeckTransitioningDelegate(im)initWithIsSwipeToDismissEnabled:presentDuration:presentAnimation:presentCompletion:dismissDuration:dismissAnimation:dismissCompletion:"></a>
+                    <a name="//apple_ref/swift/Method/init(isSwipeToDismissEnabled:presentDuration:presentAnimation:presentCompletion:dismissDuration:dismissAnimation:dismissCompletion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@DeckTransition@objc(cs)DeckTransitioningDelegate(im)initWithIsSwipeToDismissEnabled:presentDuration:presentAnimation:presentCompletion:dismissDuration:dismissAnimation:dismissCompletion:">init(isSwipeToDismissEnabled:presentDuration:presentAnimation:presentCompletion:dismissDuration:dismissAnimation:dismissCompletion:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -143,15 +120,17 @@ using a pan gesture. The default value of this property is <code>true</code></p>
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Returns a transitioning delegate to perform a Deck transition. All
-parameters are optional. Leaving the duration parameters empty gives you
-animations with the default durations (0.3s for both)</p>
+parameters are optional. Swipe-to-dimiss is enabled by default. Leaving
+the duration parameters empty gives you animations with the default
+durations (0.3s for both)</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">presentDuration</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">isSwipeToDismissEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
+                  <span class="nv">presentDuration</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
                   <span class="nv">presentAnimation</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
                   <span class="nv">presentCompletion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">())?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
                   <span class="nv">dismissDuration</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
@@ -164,6 +143,19 @@ animations with the default durations (0.3s for both)</p>
                         <h4>Parameters</h4>
                         <table class="graybox">
                           <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isSwipeToDismissEnabled</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Whether the modal view controller should
+be dismissed with a swipe gesture from top to bottom</p>
+                                </div>
+                              </td>
+                            </tr>
                             <tr>
                               <td>
                                 <code>
@@ -244,7 +236,7 @@ dismissed</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitioningDelegate.swift#L62-L74">Show on GitHub</a>
+                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitioningDelegate.swift#L57-L71">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -335,7 +327,7 @@ be called directly</p>
                         <p>An animation controller that animates the modal presentation</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitioningDelegate.swift#L88-L90">Show on GitHub</a>
+                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitioningDelegate.swift#L85-L87">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -391,7 +383,7 @@ be called directly</p>
                         <p>An animation controller that animates the modal dismisall</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitioningDelegate.swift#L99-L101">Show on GitHub</a>
+                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitioningDelegate.swift#L96-L98">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -472,7 +464,7 @@ present the modal</p>
                         <p>A presentation controller that manages the modal presentation</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitioningDelegate.swift#L114-L124">Show on GitHub</a>
+                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitioningDelegate.swift#L111-L122">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

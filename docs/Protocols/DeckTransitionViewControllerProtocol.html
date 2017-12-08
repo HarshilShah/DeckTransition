@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DeckTransitionViewControllerProtocol Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Protocol/DeckTransitionViewControllerProtocol" class="dashAnchor"></a>
+    <a title="DeckTransitionViewControllerProtocol Protocol Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">DeckTransition Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="https://github.com/HarshilShah/DeckTransition"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fharshilshah%2Egithub%2Eio%2Fdocsets%2FDeckTransition%2Exml"><img src="../img/dash.png"/>Install in Dash</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">DeckTransition Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        DeckTransitionViewControllerProtocol Protocol Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Guides.html">Guides</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../uiscrollview-detection.html">UIScrollView Detection</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/DeckSegue.html">DeckSegue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DeckTransitioningDelegate.html">DeckTransitioningDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/UINavigationController.html">UINavigationController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UITabBarController.html">UITabBarController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/DeckSnapshotUpdater.html">DeckSnapshotUpdater</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DeckTransitionViewControllerProtocol.html">DeckTransitionViewControllerProtocol</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>DeckTransitionViewControllerProtocol</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DeckTransitionViewControllerProtocol</span><span class="p">:</span> <span class="kd">class</span></code></pre>
+
+                </div>
+              </div>
+            <p>A set of methods that vend objects used to customize a DeckTransition
+presentation&rsquo;s swipe-to-dismiss behaviour.</p>
+
+<p>The transition has an internal heuristic to determine which <code>UIScrollView</code>
+should be tracked for the swipe-to-dismiss gesture. However that has some
+edge cases, which can we worked around by making your modal view controller
+and view controllers presented by or contained within it conform to this
+protocol.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@DeckTransition@objc(pl)DeckTransitionViewControllerProtocol(py)childViewControllerForDeck"></a>
+                    <a name="//apple_ref/swift/Property/childViewControllerForDeck" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@DeckTransition@objc(pl)DeckTransitionViewControllerProtocol(py)childViewControllerForDeck">childViewControllerForDeck</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The child view controller which contains the scroll view that should
+be tracked for the swipe-to-dismiss gesture.</p>
+
+<p>The default heuristic for searching the <code>UIScrollView</code> to track
+traverses only the first level of subviews of the presented view
+controller. As a result of this, subviews of any child view controller
+are not inspected.</p>
+
+<p>A container view controller presented using DeckTransition can
+implement this variable and return the child view controller which
+contains the scroll view to be tracked.</p>
+
+<p>If this variable is not implemented or is <code>nil</code>, then the container view
+controller&rsquo;s own view is searched.</p>
+
+<p>If this variable is implemented and is not <code>nil</code>, the container view
+controller&rsquo;s own subviews and the value returned in the
+<code><a href="../Protocols/DeckTransitionViewControllerProtocol.html#/c:@M@DeckTransition@objc(pl)DeckTransitionViewControllerProtocol(py)scrollViewForDeck">scrollViewForDeck</a></code> variable are both ignored, and the search continues
+within the child view controller returned here.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">optional</span> <span class="k">var</span> <span class="nv">childViewControllerForDeck</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitionViewControllerProtocol.swift#L40">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@DeckTransition@objc(pl)DeckTransitionViewControllerProtocol(py)scrollViewForDeck"></a>
+                    <a name="//apple_ref/swift/Property/scrollViewForDeck" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@DeckTransition@objc(pl)DeckTransitionViewControllerProtocol(py)scrollViewForDeck">scrollViewForDeck</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The scroll view that should be tracked for Deck&rsquo;s swipe-to-dismiss
+gesture.</p>
+
+<p>The default heuristic for searching the <code>UIScrollView</code> to track only
+traverses only the first level of subviews of the presented view
+controller, returning the lowermost scroll view found.</p>
+
+<p>This is a similar heuristic to that used in <code>UINavigationController</code>
+(which to the best of my knowledge, is even more limited and checks only
+one view, the lowermost subview of the main view), however it can miss
+out on the intended scroll view for more complex view hierarchies.
+For those cases, you can implement this variable and return the
+<code>UIScrollView</code> instance which should be tracked.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    The value returned in this variable is ignored if the
+<code><a href="../Protocols/DeckTransitionViewControllerProtocol.html#/c:@M@DeckTransition@objc(pl)DeckTransitionViewControllerProtocol(py)childViewControllerForDeck">childViewControllerForDeck</a></code> variable is also implemented.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">optional</span> <span class="k">var</span> <span class="nv">scrollViewForDeck</span><span class="p">:</span> <span class="kt">UIScrollView</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitionViewControllerProtocol.swift#L58">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>Copyright © 2017 Harshil Shah. Available under the MIT License.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

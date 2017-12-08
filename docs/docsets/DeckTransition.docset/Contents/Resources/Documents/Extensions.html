@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Protocols  Reference</title>
+    <title>Extensions  Reference</title>
     <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="css/highlight.css" />
     <meta charset='utf-8'>
@@ -10,7 +10,7 @@
     
   </head>
   <body>
-    <a title="Protocols  Reference"></a>
+    <a title="Extensions  Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="index.html">DeckTransition Docs</a> (100% documented)</p>
@@ -22,7 +22,7 @@
       <p id="breadcrumbs">
         <a href="index.html">DeckTransition Reference</a>
         <img id="carat" src="img/carat.png" />
-        Protocols  Reference
+        Extensions  Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -74,8 +74,8 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>Protocols</h1>
-            <p>The following protocols are available globally.</p>
+            <h1>Extensions</h1>
+            <p>The following extensions are available globally.</p>
 
           </section>
           <section class="section task-group-section">
@@ -84,9 +84,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14DeckTransition0A15SnapshotUpdaterP"></a>
-                    <a name="//apple_ref/swift/Protocol/DeckSnapshotUpdater" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14DeckTransition0A15SnapshotUpdaterP">DeckSnapshotUpdater</a>
+                    <a name="/c:objc(cs)UITabBarController"></a>
+                    <a name="//apple_ref/swift/Extension/UITabBarController" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UITabBarController">UITabBarController</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -94,36 +94,26 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A protocol to communicate to the transition that an update of the snapshot
-view is required. This is adopted only by the presentation controller of
-any view controller presented using DeckTransition</p>
-
-                        <a href="Protocols/DeckSnapshotUpdater.html" class="slightly-smaller">See more</a>
+                        
+                        <a href="Extensions/UITabBarController.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DeckSnapshotUpdater</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">UITabBarController</span> <span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">UITabBarDelegate</span><span class="p">,</span> <span class="kt">NSCoding</span></code></pre>
 
                         </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckSnapshotUpdater.swift#L12-L26">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@M@DeckTransition@objc(pl)DeckTransitionViewControllerProtocol"></a>
-                    <a name="//apple_ref/swift/Protocol/DeckTransitionViewControllerProtocol" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@DeckTransition@objc(pl)DeckTransitionViewControllerProtocol">DeckTransitionViewControllerProtocol</a>
+                    <a name="/c:objc(cs)UINavigationController"></a>
+                    <a name="//apple_ref/swift/Extension/UINavigationController" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UINavigationController">UINavigationController</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -131,27 +121,8 @@ any view controller presented using DeckTransition</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A set of methods that vend objects used to customize a DeckTransition
-presentation&rsquo;s swipe-to-dismiss behaviour.</p>
-
-<p>The transition has an internal heuristic to determine which <code>UIScrollView</code>
-should be tracked for the swipe-to-dismiss gesture. However that has some
-edge cases, which can we worked around by making your modal view controller
-and view controllers presented by or contained within it conform to this
-protocol.</p>
-
-                        <a href="Protocols/DeckTransitionViewControllerProtocol.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DeckTransitionViewControllerProtocol</span><span class="p">:</span> <span class="kd">class</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/HarshilShah/DeckTransition/tree/master/Source/DeckTransitionViewControllerProtocol.swift#L19-L60">Show on GitHub</a>
+                        
+                        <a href="Extensions/UINavigationController.html" class="slightly-smaller">See more</a>
                       </div>
                     </section>
                   </div>
