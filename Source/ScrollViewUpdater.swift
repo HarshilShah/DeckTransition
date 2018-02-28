@@ -54,11 +54,11 @@ final class ScrollViewUpdater {
         /// its `contentOffset.y` is 0, but when `contentOffset.y` added to it's
         /// `safeAreaInsets.top` is 0, so that is adjusted for here.
         let offset: CGFloat = {
-            let base = scrollView.contentOffset.y + scrollView.contentInset.top
             if #available(iOS 11, *) {
-                return base + scrollView.safeAreaInsets.top
+                return scrollView.contentOffset.y + scrollView.contentInset.top + scrollView.safeAreaInsets.top
+            } else {
+                return scrollView.contentOffset.y + scrollView.contentInset.top
             }
-            return base
         }()
         
         /// If the `scrollView` is not at the top, then do nothing.
