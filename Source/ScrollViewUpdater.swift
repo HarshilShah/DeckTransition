@@ -55,9 +55,9 @@ final class ScrollViewUpdater {
         /// `safeAreaInsets.top` is 0, so that is adjusted for here.
         let offset: CGFloat = {
             if #available(iOS 11, *) {
-                return scrollView.contentOffset.y + scrollView.safeAreaInsets.top
+                return scrollView.contentOffset.y + scrollView.contentInset.top + scrollView.safeAreaInsets.top
             } else {
-                return scrollView.contentOffset.y
+                return scrollView.contentOffset.y + scrollView.contentInset.top
             }
         }()
         
