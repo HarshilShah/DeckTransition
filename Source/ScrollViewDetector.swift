@@ -55,6 +55,10 @@ final class ScrollViewDetector {
             return scrollView
         }
         
+        if let scrollView = viewController.view as? UIScrollView {
+            return scrollView
+        }
+        
         for subview in viewController.view.subviews {
             if let scrollView = subview as? UIScrollView {
                 return scrollView
