@@ -586,7 +586,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                 animations: {
                     self.presentedView?.transform = .identity
                 })
-        
+            scrollViewUpdater = nil
+
         default: break
         
         }
