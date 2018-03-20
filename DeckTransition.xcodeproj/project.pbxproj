@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21FCB48E206184F200A7B064 /* SwipeToDismissOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FCB48D206184F200A7B064 /* SwipeToDismissOption.swift */; };
 		D93F1CA21EAEDB6E009A7474 /* DeckTransition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93F1C981EAEDB6E009A7474 /* DeckTransition.framework */; };
 		D93F1CA71EAEDB6E009A7474 /* DeckTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93F1CA61EAEDB6E009A7474 /* DeckTransitionTests.swift */; };
 		D93F1CA91EAEDB6E009A7474 /* DeckTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = D93F1C9B1EAEDB6E009A7474 /* DeckTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -45,6 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		21FCB48D206184F200A7B064 /* SwipeToDismissOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeToDismissOption.swift; sourceTree = "<group>"; };
 		D93F1C981EAEDB6E009A7474 /* DeckTransition.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DeckTransition.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93F1C9B1EAEDB6E009A7474 /* DeckTransition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeckTransition.h; sourceTree = "<group>"; };
 		D93F1C9C1EAEDB6E009A7474 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 				E8B271671FD7E20F009883B2 /* ScrollViewUpdater.swift */,
 				E857980F1F34D63200C6CABE /* Constants.swift */,
 				E8473CC71F698D3700852FE3 /* ManualLayout.swift */,
+				21FCB48D206184F200A7B064 /* SwipeToDismissOption.swift */,
 				E828C6F61F6E7C2200BD04F5 /* RoundedView */,
 				E8B20A901FD84D0900648C9A /* Extensions */,
 				E8683D801F344638005C7E9A /* Supporting Files */,
@@ -311,6 +314,7 @@
 				E8B271681FD7E20F009883B2 /* ScrollViewUpdater.swift in Sources */,
 				E8473CC81F698D3700852FE3 /* ManualLayout.swift in Sources */,
 				E87B47241F6E793D004AA6C7 /* CornerView.swift in Sources */,
+				21FCB48E206184F200A7B064 /* SwipeToDismissOption.swift in Sources */,
 				E8683D8A1F34479E005C7E9A /* DeckPresentationController.swift in Sources */,
 				E8B271621FD7E117009883B2 /* DeckTransitionViewControllerProtocol.swift in Sources */,
 				E85798101F34D63200C6CABE /* Constants.swift in Sources */,

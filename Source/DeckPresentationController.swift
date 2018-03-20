@@ -21,10 +21,20 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     /// object and does not hold a reference to it, there is no issue of a
     /// circular dependency here.
     var transitioningDelegate: DeckTransitioningDelegate?
-    
+
+    //MARK: - Private constants
+
+    private let dismissThreshold: CGFloat = 240
+    private let elasticThreshold: CGFloat = 120
+    private let translationFactor: CGFloat = 1/2
+
     // MARK: - Private variables
+
+    private var isSwipeToDismissGestureEnabled: Bool {
+        return swipeToDismissOption != .disabled
+    }
     
-    private var isSwipeToDismissGestureEnabled = true
+    private var swipeToDismissOption: SwipeToDismissOption = .onThreshold
     private var pan: UIPanGestureRecognizer?
     private var scrollViewUpdater: ScrollViewUpdater?
     
@@ -51,7 +61,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     
     convenience init(presentedViewController: UIViewController,
                      presenting presentingViewController: UIViewController?,
-                     isSwipeToDismissGestureEnabled: Bool,
+                     swipeToDismissOption: SwipeToDismissOption = .onThreshold,
                      presentAnimation: (() -> ())? = nil,
                      presentCompletion: ((Bool) ->())? = nil,
                      dismissAnimation: (() -> ())? = nil,
@@ -59,7 +69,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         self.init(presentedViewController: presentedViewController,
                   presenting: presentingViewController)
         
-        self.isSwipeToDismissGestureEnabled = isSwipeToDismissGestureEnabled
+        self.swipeToDismissOption = swipeToDismissOption
         self.presentAnimation = presentAnimation
         self.presentCompletion = presentCompletion
         self.dismissAnimation = dismissAnimation
@@ -262,7 +272,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         if isSwipeToDismissGestureEnabled {
             pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
             pan!.delegate = self
-            pan!.maximumNumberOfTouches = 1
+            pan!.maximumNumberOfTouches = swipeToDismissOption == .onThreshold ? 1 : .max
             pan!.cancelsTouchesInView = false
             presentedViewController.view.addGestureRecognizer(pan!)
         }
@@ -581,6 +591,10 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             }
         
         case .ended:
+            if swipeToDismissOption == .onRelease && gestureRecognizer.translation(in: presentedView).y >= dismissThreshold {
+                presentedViewController.dismiss(animated: true, completion: nil)
+            }
+
             UIView.animate(
                 withDuration: 0.25,
                 animations: {
@@ -607,12 +621,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     /// - parameter translation: The translation of the user's pan gesture in
     ///   the container view in the vertical direction
     private func updatePresentedViewForTranslation(inVerticalDirection translation: CGFloat) {
-        
-        let elasticThreshold: CGFloat = 120
-        let dismissThreshold: CGFloat = 240
-        
-        let translationFactor: CGFloat = 1/2
-        
         /// Nothing happens if the pan gesture is performed from bottom
         /// to top i.e. if the translation is negative
         if translation >= 0 {
@@ -628,7 +636,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             
             presentedView?.transform = CGAffineTransform(translationX: 0, y: translationForModal)
             
-            if translation >= dismissThreshold {
+            if swipeToDismissOption == .onThreshold && translation >= dismissThreshold {
                 presentedViewController.dismiss(animated: true, completion: nil)
             }
         }

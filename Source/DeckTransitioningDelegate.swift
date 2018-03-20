@@ -26,7 +26,11 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     
     // MARK: - Private variables
     
-    private let isSwipeToDismissEnabled: Bool
+    private var isSwipeToDismissEnabled: Bool {
+        return swipeToDismissOption != .disabled
+    }
+
+    private let swipeToDismissOption: SwipeToDismissOption
     private let presentDuration: TimeInterval?
     private let presentAnimation: (() -> ())?
     private let presentCompletion: ((Bool) -> ())?
@@ -55,13 +59,14 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     ///   - dismissCompletion: A block that will be run after the card has been
     ///		dismissed
     @objc public init(isSwipeToDismissEnabled: Bool = true,
+                      swipeToDismissOption: SwipeToDismissOption = .onThreshold,
                       presentDuration: NSNumber? = nil,
                       presentAnimation: (() -> ())? = nil,
                       presentCompletion: ((Bool) -> ())? = nil,
                       dismissDuration: NSNumber? = nil,
                       dismissAnimation: (() -> ())? = nil,
                       dismissCompletion: ((Bool) -> ())? = nil) {
-        self.isSwipeToDismissEnabled = isSwipeToDismissEnabled
+        self.swipeToDismissOption = isSwipeToDismissEnabled == false ? .disabled : swipeToDismissOption
         self.presentDuration = presentDuration?.doubleValue
         self.presentAnimation = presentAnimation
         self.presentCompletion = presentCompletion
@@ -112,7 +117,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
         let presentationController = DeckPresentationController(
             presentedViewController: presented,
             presenting: presenting,
-            isSwipeToDismissGestureEnabled: isSwipeToDismissEnabled,
+            swipeToDismissOption: swipeToDismissOption,
             presentAnimation: presentAnimation,
             presentCompletion: presentCompletion,
             dismissAnimation: dismissAnimation,
