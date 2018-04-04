@@ -50,11 +50,35 @@ Additionally, the `UIScrollView` instances which should be tracked for the swipe
 
 ### Presentation
 
-The transition can be called from code or using a storyboard.
+#### Storyboard
 
-To use via storyboards, just setup a custom segue (`kind` set to `custom`), and set the `class` to `DeckSegue`.
+The transition can be called using a storyboard.
 
-Hereʼs a snippet showing usage via code. Just replace `ModalViewController()` with your view controller's class and youʼre good to go.
+To use via storyboards, create a custom `UIStoryboardSegue` class, then setup a custom segue (`kind` set to `custom`), and set the `class` to your custom class.
+
+Your custom class should looks like this:
+
+```swift
+import UIKit
+import DeckTransition
+
+class DeckSegueTransition: UIStoryboardSegue {
+    var transition: UIViewControllerTransitioningDelegate?
+    
+    override func perform() {
+        transition = DeckTransitioningDelegate(isSwipeToDismissEnabled: <#TRUE OR FALSE#>)
+        self.destination.transitioningDelegate = transition
+        self.destination.modalPresentationStyle = .custom
+        self.source.present(destination, animated: true, completion: nil)
+    }
+}
+```
+
+#### From code
+
+The transition can also be used with just a few lines of code.
+
+Hereʼs a snippet showing usage. Just replace `ModalViewController()` with your view controller's class and youʼre good to go.
 
 ```swift
 let modal = ModalViewController()
