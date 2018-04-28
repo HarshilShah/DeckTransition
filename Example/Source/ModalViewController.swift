@@ -51,6 +51,13 @@ class ModalViewController: UIViewController {
         present(modal, animated: true, completion: nil)
     }
     
+    override var preferredContentSize: CGSize {
+        get {
+            return CGSize.init(width: self.view.frame.size.width, height: 400)
+        }
+        set { super.preferredContentSize = newValue }
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
