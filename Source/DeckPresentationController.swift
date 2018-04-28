@@ -94,11 +94,14 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         }
         
         let yOffset = ManualLayout.presentingViewTopInset + Constants.insetForPresentedView
+        let viewHeight = containerView.bounds.height - yOffset
+        let topOffset = (viewHeight-presentedViewController.preferredContentSize.height) as CGFloat
+        let height = viewHeight - topOffset
         
         return CGRect(x: 0,
-                      y: yOffset,
+                      y: yOffset+topOffset,
                       width: containerView.bounds.width,
-                      height: containerView.bounds.height - yOffset)
+                      height: height)
     }
 	
 	// MARK: - Presentation
