@@ -47,23 +47,27 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     private var dismissAnimation: (() -> ())? = nil
     private var dismissCompletion: ((Bool) -> ())? = nil
 	
+    private var dismissThreshold: CGFloat = 0
+    
     // MARK: - Initializers
     
     convenience init(presentedViewController: UIViewController,
                      presenting presentingViewController: UIViewController?,
                      isSwipeToDismissGestureEnabled: Bool,
+                     dismissThreshold: CGFloat,
                      presentAnimation: (() -> ())? = nil,
                      presentCompletion: ((Bool) ->())? = nil,
                      dismissAnimation: (() -> ())? = nil,
                      dismissCompletion: ((Bool) -> ())? = nil) {
-        self.init(presentedViewController: presentedViewController,
-                  presenting: presentingViewController)
+        
+        self.init(presentedViewController: presentedViewController, presenting: presentingViewController)
         
         self.isSwipeToDismissGestureEnabled = isSwipeToDismissGestureEnabled
         self.presentAnimation = presentAnimation
         self.presentCompletion = presentCompletion
         self.dismissAnimation = dismissAnimation
         self.dismissCompletion = dismissCompletion
+        self.dismissThreshold = dismissThreshold
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateForStatusBar), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
     }
@@ -609,8 +613,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     private func updatePresentedViewForTranslation(inVerticalDirection translation: CGFloat) {
         
         let elasticThreshold: CGFloat = 120
-        let dismissThreshold: CGFloat = 240
-        
         let translationFactor: CGFloat = 1/2
         
         /// Nothing happens if the pan gesture is performed from bottom
