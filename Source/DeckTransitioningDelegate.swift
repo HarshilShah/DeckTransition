@@ -36,6 +36,8 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     
     /// Determines how far the modal view controller needs to be swiped before its dismissed.
     public var dismissThreshold: CGFloat = 240
+    /// Extra vertical padding between the status bar and the content view
+    public var extraVerticalInset: CGFloat = 0
     
     // MARK: - Initializers
     
@@ -59,6 +61,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     ///		dismissed
     @objc public init(isSwipeToDismissEnabled: Bool = true,
                       dismissThreshold: NSNumber? = nil,
+                      extraVerticalInset: NSNumber? = nil,
                       presentDuration: NSNumber? = nil,
                       presentAnimation: (() -> ())? = nil,
                       presentCompletion: ((Bool) -> ())? = nil,
@@ -75,6 +78,9 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
         
         if let threshold = dismissThreshold {
             self.dismissThreshold = CGFloat(threshold.doubleValue)
+        }
+        if let verticalInset = extraVerticalInset {
+            self.extraVerticalInset = CGFloat(verticalInset.doubleValue)
         }
     }
     
@@ -122,6 +128,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
             presenting: presenting,
             isSwipeToDismissGestureEnabled: isSwipeToDismissEnabled,
             dismissThreshold: dismissThreshold,
+            extraVerticalInset: extraVerticalInset,
             presentAnimation: presentAnimation,
             presentCompletion: presentCompletion,
             dismissAnimation: dismissAnimation,

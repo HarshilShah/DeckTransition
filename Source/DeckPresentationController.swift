@@ -48,6 +48,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     private var dismissCompletion: ((Bool) -> ())? = nil
 	
     private var dismissThreshold: CGFloat = 0
+    private var extraVerticalInset: CGFloat = 0
     
     // MARK: - Initializers
     
@@ -55,6 +56,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                      presenting presentingViewController: UIViewController?,
                      isSwipeToDismissGestureEnabled: Bool,
                      dismissThreshold: CGFloat,
+                     extraVerticalInset: CGFloat,
                      presentAnimation: (() -> ())? = nil,
                      presentCompletion: ((Bool) ->())? = nil,
                      dismissAnimation: (() -> ())? = nil,
@@ -68,6 +70,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         self.dismissAnimation = dismissAnimation
         self.dismissCompletion = dismissCompletion
         self.dismissThreshold = dismissThreshold
+        self.extraVerticalInset = extraVerticalInset
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateForStatusBar), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
     }
@@ -97,7 +100,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return .zero
         }
         
-        let yOffset = ManualLayout.presentingViewTopInset + Constants.insetForPresentedView
+        let yOffset = ManualLayout.presentingViewTopInset + Constants.insetForPresentedView + extraVerticalInset
         
         return CGRect(x: 0,
                       y: yOffset,
