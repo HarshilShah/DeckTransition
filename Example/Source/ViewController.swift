@@ -35,7 +35,7 @@ class ViewController: UIViewController {
     
     @objc func viewWasTapped() {
         let modal = ModalViewController()
-        let transitionDelegate = DeckTransitioningDelegate()
+        let transitionDelegate = DeckTransitioningDelegate(dismissThreshold: 120)
         modal.transitioningDelegate = transitionDelegate
         modal.modalPresentationStyle = .custom
         present(modal, animated: true, completion: nil)
