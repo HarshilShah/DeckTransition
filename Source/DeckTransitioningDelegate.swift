@@ -34,6 +34,11 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     private let dismissAnimation: (() -> ())?
     private let dismissCompletion: ((Bool) -> ())?
     
+    /// Determines how far the modal view controller needs to be swiped before its dismissed.
+    public var dismissThreshold: CGFloat = 240
+    /// Extra vertical padding between the status bar and the content view
+    public var extraVerticalInset: CGFloat = 0
+    
     // MARK: - Initializers
     
     /// Returns a transitioning delegate to perform a Deck transition. All
@@ -55,6 +60,8 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     ///   - dismissCompletion: A block that will be run after the card has been
     ///		dismissed
     @objc public init(isSwipeToDismissEnabled: Bool = true,
+                      dismissThreshold: NSNumber? = nil,
+                      extraVerticalInset: NSNumber? = nil,
                       presentDuration: NSNumber? = nil,
                       presentAnimation: (() -> ())? = nil,
                       presentCompletion: ((Bool) -> ())? = nil,
@@ -68,6 +75,13 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
         self.dismissDuration = dismissDuration?.doubleValue
         self.dismissAnimation = dismissAnimation
         self.dismissCompletion = dismissCompletion
+        
+        if let threshold = dismissThreshold {
+            self.dismissThreshold = CGFloat(threshold.doubleValue)
+        }
+        if let verticalInset = extraVerticalInset {
+            self.extraVerticalInset = CGFloat(verticalInset.doubleValue)
+        }
     }
     
     // MARK: - UIViewControllerTransitioningDelegate
@@ -113,6 +127,8 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
             presentedViewController: presented,
             presenting: presenting,
             isSwipeToDismissGestureEnabled: isSwipeToDismissEnabled,
+            dismissThreshold: dismissThreshold,
+            extraVerticalInset: extraVerticalInset,
             presentAnimation: presentAnimation,
             presentCompletion: presentCompletion,
             dismissAnimation: dismissAnimation,
