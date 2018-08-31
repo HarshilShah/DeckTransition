@@ -46,24 +46,30 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     private var presentCompletion: ((Bool) -> ())? = nil
     private var dismissAnimation: (() -> ())? = nil
     private var dismissCompletion: ((Bool) -> ())? = nil
+
+    private var dismissThreshold: CGFloat = 0
+    private var extraVerticalInset: CGFloat = 0
 	
     // MARK: - Initializers
     
     convenience init(presentedViewController: UIViewController,
                      presenting presentingViewController: UIViewController?,
                      isSwipeToDismissGestureEnabled: Bool,
+                     dismissThreshold: CGFloat,
+                     extraVerticalInset: CGFloat,
                      presentAnimation: (() -> ())? = nil,
                      presentCompletion: ((Bool) ->())? = nil,
                      dismissAnimation: (() -> ())? = nil,
                      dismissCompletion: ((Bool) -> ())? = nil) {
-        self.init(presentedViewController: presentedViewController,
-                  presenting: presentingViewController)
+        self.init(presentedViewController: presentedViewController, presenting: presentingViewController)
         
         self.isSwipeToDismissGestureEnabled = isSwipeToDismissGestureEnabled
         self.presentAnimation = presentAnimation
         self.presentCompletion = presentCompletion
         self.dismissAnimation = dismissAnimation
         self.dismissCompletion = dismissCompletion
+        self.dismissThreshold = dismissThreshold
+        self.extraVerticalInset = extraVerticalInset
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateForStatusBar), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
     }
@@ -93,7 +99,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return .zero
         }
         
-        let yOffset = ManualLayout.presentingViewTopInset + Constants.insetForPresentedView
+        let yOffset = ManualLayout.presentingViewTopInset + Constants.insetForPresentedView + extraVerticalInset
         
         return CGRect(x: 0,
                       y: yOffset,
@@ -609,7 +615,6 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     private func updatePresentedViewForTranslation(inVerticalDirection translation: CGFloat) {
         
         let elasticThreshold: CGFloat = 120
-        let dismissThreshold: CGFloat = 240
         
         let translationFactor: CGFloat = 1/2
         
