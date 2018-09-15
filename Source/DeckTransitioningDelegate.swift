@@ -26,12 +26,10 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     
     // MARK: - Private variables
     
-    private let isSwipeToDismissEnabled: Bool
+    private let draggableFrame: CGRect?
     private let presentDuration: TimeInterval?
-    private let presentAnimation: (() -> ())?
-    private let presentCompletion: ((Bool) -> ())?
     private let dismissDuration: TimeInterval?
-    private let dismissAnimation: (() -> ())?
+    private let presentCompletion: ((Bool) -> ())?
     private let dismissCompletion: ((Bool) -> ())?
     
     // MARK: - Initializers
@@ -54,19 +52,15 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     ///		alongside the card dismissal animation
     ///   - dismissCompletion: A block that will be run after the card has been
     ///		dismissed
-    @objc public init(isSwipeToDismissEnabled: Bool = true,
-                      presentDuration: NSNumber? = nil,
-                      presentAnimation: (() -> ())? = nil,
-                      presentCompletion: ((Bool) -> ())? = nil,
-                      dismissDuration: NSNumber? = nil,
-                      dismissAnimation: (() -> ())? = nil,
-                      dismissCompletion: ((Bool) -> ())? = nil) {
-        self.isSwipeToDismissEnabled = isSwipeToDismissEnabled
+    public init(draggableFrame: CGRect? = nil,
+                presentDuration: NSNumber? = nil,
+                presentCompletion: ((Bool) -> ())? = nil,
+                dismissDuration: NSNumber? = nil,
+                dismissCompletion: ((Bool) -> ())? = nil) {
+        self.draggableFrame = draggableFrame
         self.presentDuration = presentDuration?.doubleValue
-        self.presentAnimation = presentAnimation
-        self.presentCompletion = presentCompletion
         self.dismissDuration = dismissDuration?.doubleValue
-        self.dismissAnimation = dismissAnimation
+        self.presentCompletion = presentCompletion
         self.dismissCompletion = dismissCompletion
     }
     
@@ -112,10 +106,8 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
         let presentationController = DeckPresentationController(
             presentedViewController: presented,
             presenting: presenting,
-            isSwipeToDismissGestureEnabled: isSwipeToDismissEnabled,
-            presentAnimation: presentAnimation,
+            draggableFrame: draggableFrame,
             presentCompletion: presentCompletion,
-            dismissAnimation: dismissAnimation,
             dismissCompletion: dismissCompletion)
         presentationController.transitioningDelegate = self
         return presentationController

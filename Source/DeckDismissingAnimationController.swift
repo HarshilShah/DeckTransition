@@ -31,7 +31,7 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
         /// should thus be the `presentingViewController`, it's referred to as
         /// the `presentedViewController` here
         
-        guard let presentedViewController = transitionContext.viewController(forKey: .from) else {
+        guard let dismissingViewController = transitionContext.viewController(forKey: .from) else {
             return
         }
         
@@ -42,16 +42,16 @@ final class DeckDismissingAnimationController: NSObject, UIViewControllerAnimate
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0,
-            options: .curveEaseOut,
+            options: [UIViewAnimationOptions.curveEaseOut],
             animations: {
-                presentedViewController.view.frame = offscreenFrame
+                dismissingViewController.view.frame = offscreenFrame
             }, completion: { finished in
                 transitionContext.completeTransition(finished)
             })
     }
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return duration ?? Constants.defaultAnimationDuration
+        return duration ?? Constants.dismissAnimationDuration
     }
     
 }

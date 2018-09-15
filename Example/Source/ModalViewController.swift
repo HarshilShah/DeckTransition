@@ -56,3 +56,32 @@ class ModalViewController: UIViewController {
     }
 	
 }
+
+extension ModalViewController: DeckPresentationDelegate {
+    
+    /// Is drag allowed?
+    func deckPresentationShouldAllowDragToBegin(_: UIPanGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    /// Called when drag began
+    func deckPresentationDragDidBegin(_: UIPanGestureRecognizer) {
+        print("starting drag")
+    }
+    
+    /// Called when drag ended
+    func deckPresentationDragDidEnd(_: UIPanGestureRecognizer, andViewControllerWillDismiss willDismiss: Bool) {
+        if willDismiss {
+            print("dismissing")
+        } else {
+            print("not dismissing")
+        }
+    }
+    
+    /// Called during drag
+    func deckPresentationDidDrag(_: UIPanGestureRecognizer, toPosition position: CGPoint) {
+        print("dragging")
+    }
+    
+    
+}

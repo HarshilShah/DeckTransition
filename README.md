@@ -1,3 +1,9 @@
+# DeckTransition Fork
+
+This is a modified version of [HarshilShah/DeckTransition](https://github.com/HarshilShah/DeckTransition) that has the following changes:
+- Linear dragging
+- Draggable region defined in the code
+
 # DeckTransition
 
 [![CI Status](http://img.shields.io/travis/HarshilShah/DeckTransition.svg)](https://travis-ci.org/HarshilShah/DeckTransition)

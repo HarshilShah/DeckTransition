@@ -8,9 +8,14 @@
 
 struct Constants {
     
-    /// Default duration for present and dismiss animations when the user hasn't
-    /// specified one
+    /// Default height for the draggable area of a presented view controller
+    static let defaultDraggableFrameHeight: CGFloat = 124
+    
+    /// Default duration for present animation
     static let defaultAnimationDuration: TimeInterval = 0.3
+    
+    /// Default duration for dismiss animation
+    static let dismissAnimationDuration: TimeInterval = 0.3
     
     /// The corner radius applied to the presenting and presented view
     /// controllers's views

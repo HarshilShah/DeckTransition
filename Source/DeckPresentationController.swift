@@ -24,9 +24,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     
     // MARK: - Private variables
     
-    private var isSwipeToDismissGestureEnabled = true
     private var pan: UIPanGestureRecognizer?
-    private var scrollViewUpdater: ScrollViewUpdater?
     
     private let backgroundView = UIView()
     private let roundedViewForPresentingView = RoundedView()
@@ -46,26 +44,36 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     private var presentCompletion: ((Bool) -> ())? = nil
     private var dismissAnimation: (() -> ())? = nil
     private var dismissCompletion: ((Bool) -> ())? = nil
+    
+    private var lastYPosition: CGFloat = 0
+    private var lastYVelocity: CGFloat = 0
+    private var draggableFrame: CGRect = .zero
+    private var presentationDelegate: DeckPresentationDelegate?
 	
     // MARK: - Initializers
     
     convenience init(presentedViewController: UIViewController,
                      presenting presentingViewController: UIViewController?,
-                     isSwipeToDismissGestureEnabled: Bool,
-                     presentAnimation: (() -> ())? = nil,
+                     draggableFrame: CGRect? = nil,
                      presentCompletion: ((Bool) ->())? = nil,
-                     dismissAnimation: (() -> ())? = nil,
                      dismissCompletion: ((Bool) -> ())? = nil) {
         self.init(presentedViewController: presentedViewController,
                   presenting: presentingViewController)
         
-        self.isSwipeToDismissGestureEnabled = isSwipeToDismissGestureEnabled
-        self.presentAnimation = presentAnimation
+        self.draggableFrame = draggableFrame ?? CGRect(x: 0,
+                                                       y: 0,
+                                                       width: presentedView?.frame.width ?? 0,
+                                                       height: Constants.defaultDraggableFrameHeight)
+        self.presentAnimation = nil
+        self.dismissAnimation = nil
         self.presentCompletion = presentCompletion
-        self.dismissAnimation = dismissAnimation
         self.dismissCompletion = dismissCompletion
+        self.presentationDelegate = self.presentedViewController as? DeckPresentationDelegate
         
-        NotificationCenter.default.addObserver(self, selector: #selector(updateForStatusBar), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateForStatusBar),
+                                               name: .UIApplicationDidChangeStatusBarFrame,
+                                               object: nil)
     }
 
     // MARK: - Public methods
@@ -259,13 +267,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             roundedViewForPresentingView.bottomAnchor.constraint(equalTo: snapshotViewContainer.bottomAnchor)
         ])
         
-        if isSwipeToDismissGestureEnabled {
-            pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-            pan!.delegate = self
-            pan!.maximumNumberOfTouches = 1
-            pan!.cancelsTouchesInView = false
-            presentedViewController.view.addGestureRecognizer(pan!)
-        }
+        pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        pan!.delegate = self
+        pan!.maximumNumberOfTouches = 1
+        pan!.cancelsTouchesInView = false
+        presentedViewController.view.addGestureRecognizer(pan!)
 
         presentCompletion?(completed)
     }
@@ -548,46 +554,45 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     
     // MARK: - Gesture handling
     
-    private func isSwipeToDismissAllowed() -> Bool {
-        guard let updater = scrollViewUpdater else {
-            return isSwipeToDismissGestureEnabled
-        }
-        
-        return updater.isDismissEnabled
+    /// Cancel pan gesture recognizer
+    private func cancel(gestureRecognizer: UIGestureRecognizer) {
+        gestureRecognizer.isEnabled = false
+        gestureRecognizer.isEnabled = true
     }
     
     @objc private func handlePan(gestureRecognizer: UIPanGestureRecognizer) {
-        guard gestureRecognizer.isEqual(pan), isSwipeToDismissGestureEnabled else {
-            return
-        }
+        guard gestureRecognizer.isEqual(pan) else { return }
         
         switch gestureRecognizer.state {
         
         case .began:
-            let detector = ScrollViewDetector(withViewController: presentedViewController)
-            if let scrollView = detector.scrollView {
-                scrollViewUpdater = ScrollViewUpdater(
-                    withRootView: presentedViewController.view,
-                    scrollView: scrollView)
+            if shouldAllowDrag(for: gestureRecognizer) {
+                gestureRecognizer.setTranslation(CGPoint(x: 0, y: 0), in: containerView)
+                presentationDelegate?.deckPresentationDragDidBegin?(gestureRecognizer)
+            } else {
+                self.cancel(gestureRecognizer: gestureRecognizer)
             }
-            gestureRecognizer.setTranslation(CGPoint(x: 0, y: 0), in: containerView)
+            
         
         case .changed:
-            if isSwipeToDismissAllowed() {
-                let translation = gestureRecognizer.translation(in: presentedView)
-                updatePresentedViewForTranslation(inVerticalDirection: translation.y)
-            } else {
-                gestureRecognizer.setTranslation(.zero, in: presentedView)
-            }
+            let translation = gestureRecognizer.translation(in: presentedView)
+            updatePresentedViewForTranslation(inVerticalDirection: translation.y)
+            presentationDelegate?.deckPresentationDidDrag?(gestureRecognizer, toPosition: translation)
         
-        case .ended:
-            UIView.animate(
-                withDuration: 0.25,
-                animations: {
+        case .cancelled,
+             .ended:
+            let willDismiss = lastYVelocity > 0
+            
+            if willDismiss {
+                presentedViewController.dismiss(animated: true, completion: nil)
+            } else {
+                UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseOut], animations: {
                     self.presentedView?.transform = .identity
-                })
-            scrollViewUpdater = nil
-
+                }, completion: nil)
+            }
+            presentationDelegate?.deckPresentationDragDidEnd?(gestureRecognizer,
+                                                               andViewControllerWillDismiss: willDismiss)
+            
         default: break
         
         }
@@ -596,52 +601,45 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     /// Method to update the modal view for a particular amount of translation
     /// by panning in the vertical direction.
     ///
-    /// The translation of the modal view is proportional to the panning
-    /// distance until the `elasticThreshold`, after which it increases at a
-    /// slower rate, given by `elasticFactor`, to indicate that the
-    /// `dismissThreshold` is nearing.
-    ///
     /// Once the `dismissThreshold` is reached, the modal view controller is
     /// dismissed.
-    ///
-    /// - parameter translation: The translation of the user's pan gesture in
-    ///   the container view in the vertical direction
     private func updatePresentedViewForTranslation(inVerticalDirection translation: CGFloat) {
+        guard translation > 0 else { return }
         
-        let elasticThreshold: CGFloat = 120
-        let dismissThreshold: CGFloat = 240
+        // Record last velocity
+        lastYVelocity = translation - lastYPosition
         
-        let translationFactor: CGFloat = 1/2
-        
-        /// Nothing happens if the pan gesture is performed from bottom
-        /// to top i.e. if the translation is negative
-        if translation >= 0 {
-            let translationForModal: CGFloat = {
-                if translation >= elasticThreshold {
-                    let frictionLength = translation - elasticThreshold
-                    let frictionTranslation = 30 * atan(frictionLength/120) + frictionLength/10
-                    return frictionTranslation + (elasticThreshold * translationFactor)
-                } else {
-                    return translation * translationFactor
-                }
-            }()
-            
-            presentedView?.transform = CGAffineTransform(translationX: 0, y: translationForModal)
-            
-            if translation >= dismissThreshold {
-                presentedViewController.dismiss(animated: true, completion: nil)
-            }
-        }
+        presentedView?.transform = CGAffineTransform(translationX: 0, y: translation)
+        lastYPosition = translation
     }
     
     // MARK: - UIGestureRecognizerDelegate methods
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard gestureRecognizer.isEqual(pan) else {
-            return false
+        if gestureRecognizer.isEqual(pan) && shouldAllowDrag(for: gestureRecognizer) {
+            cancel(gestureRecognizer: otherGestureRecognizer)
+            return true
         }
         
-        return true
+        return false
+    }
+    
+    ///
+    /// Should allow drag
+    /// - Only checks the first touch
+    ///
+    private func shouldAllowDrag(for gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard let panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+        
+        guard presentationDelegate?.deckPresentationShouldAllowDragToBegin?(panGestureRecognizer) ?? true else { return false }
+        
+        guard gestureRecognizer.numberOfTouches > 0 else { return false }
+        
+        let touchLocation = gestureRecognizer.location(ofTouch: 0, in: presentedView)
+        guard draggableFrame.contains(touchLocation) else { return false }
+        
+        return panGestureRecognizer.translation(in: presentedView).y > 0
+        
     }
     
 }
