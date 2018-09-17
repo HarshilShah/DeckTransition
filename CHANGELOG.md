@@ -1,5 +1,10 @@
 ## Changelog
 
+## 2.1.0 Release notes (17/9/2018)
+----
+
+- Support for Swift 4.2 and Xcode 10
+
 ## 2.0.0 Release notes (8/12/2017)
 ----
 

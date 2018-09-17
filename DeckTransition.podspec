@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name				= 'DeckTransition'
-  spec.version          = '2.0.0'
+  spec.version          = '2.1.0'
   spec.summary          = 'An attempt to recreate the iOS 10 now playing transition'
   spec.description      = <<-DESC
 						  DeckTransition is an attempt to recreate the iOS 10 Apple Music now playing and iMessage App Store transition.
