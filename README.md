@@ -98,6 +98,7 @@ It's worth noting that updating the snapshot is an expensive process and should 
 
 ## Apps Using DeckTransition
 - [Petty](https://zachsim.one/projects/petty) by [Zach Simone](https://twitter.com/zachsimone)
+- [Bitbook](https://bitbookapp.com) by [Sammy Gutierrez](https://sammygutierrez.com)
 - [What's Open for iOS](https://git.gmu.edu/srct/whats-open-ios) by [Mason SRCT](https://srct.gmu.edu/)
 - [Manabi Reader](https://reader.manabi.io) by [Alex Ehlke](https://twitter.com/aehlke)
 
