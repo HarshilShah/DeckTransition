@@ -16,4 +16,6 @@ Pod::Spec.new do |spec|
   spec.framework        = 'UIKit'
   spec.ios.deployment_target = '9.0'
 
+  spec.swift_version = "4.2"
+
 end
