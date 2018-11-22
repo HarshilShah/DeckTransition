@@ -46,6 +46,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     private var presentCompletion: ((Bool) -> ())? = nil
     private var dismissAnimation: (() -> ())? = nil
     private var dismissCompletion: ((Bool) -> ())? = nil
+    
+    /// The current set of haptic feedback options. They will determine when haptic feedback should be performed.
+    private var hapticFeedbackOptions: HapticFeedbackOptions = []
 	
     // MARK: - Initializers
     
@@ -55,7 +58,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                      presentAnimation: (() -> ())? = nil,
                      presentCompletion: ((Bool) ->())? = nil,
                      dismissAnimation: (() -> ())? = nil,
-                     dismissCompletion: ((Bool) -> ())? = nil) {
+                     dismissCompletion: ((Bool) -> ())? = nil,
+                     hapticFeedbackOptions: HapticFeedbackOptions) {
         self.init(presentedViewController: presentedViewController,
                   presenting: presentingViewController)
         
@@ -64,6 +68,8 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         self.presentCompletion = presentCompletion
         self.dismissAnimation = dismissAnimation
         self.dismissCompletion = dismissCompletion
+        
+        self.hapticFeedbackOptions = hapticFeedbackOptions
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateForStatusBar), name: UIApplication.didChangeStatusBarFrameNotification, object: nil)
     }
@@ -106,6 +112,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     override func presentationTransitionWillBegin() {
         guard let containerView = containerView, let window = containerView.window else {
             return
+        }
+        
+        // Prepare the Taptic-Engine as early as possible!
+        if hapticFeedbackOptions.contains(.whenPresenting) {
+            prepareHapticFeedback()
         }
         
         /// A CGRect to be used as a proxy for the frame of the presentingView
@@ -220,6 +231,10 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                 rootSnapshotRoundedView?.removeFromSuperview()
             }
         )
+        
+        if hapticFeedbackOptions.contains(.whenPresenting) {
+            performHapticFeedback()
+        }
     }
     
     /// Method to ensure the layout is as required at the end of the
@@ -241,6 +256,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     override func presentationTransitionDidEnd(_ completed: Bool) {
         guard let containerView = containerView else {
             return
+        }
+        if hapticFeedbackOptions.contains(.whenPresentingIsFinished) {
+            performHapticFeedback()
         }
         
         presentedViewController.view.frame = frameOfPresentedViewInContainerView
@@ -454,6 +472,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return
         }
         
+        // Prepare the Taptic-Engine as early as possible! Even if the preparation was called from the attached gesture recognizer, calling another prepare() is not harmfull.
+        if hapticFeedbackOptions.contains(.whenDismissing) {
+            prepareHapticFeedback()
+        }
+        
         let initialFrame: CGRect = {
             if presentingViewController.isPresentedWithDeck {
                 return presentingViewController.view.frame
@@ -523,6 +546,10 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                 rootSnapshotRoundedView?.removeFromSuperview()
             }
         )
+        
+        if hapticFeedbackOptions.contains(.whenDismissing) {
+            performHapticFeedback()
+        }
     }
     
     /// Method to ensure the layout is as required at the end of the dismissal.
@@ -544,6 +571,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         invalidatePresentedViewKVO()
         
         dismissCompletion?(completed)
+        if hapticFeedbackOptions.contains(.whenDismissingIsFinished) {
+            performHapticFeedback()
+        }
     }
     
     // MARK: - Gesture handling
@@ -629,6 +659,11 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             presentedView?.transform = CGAffineTransform(translationX: 0, y: translationForModal)
             
             if translation >= dismissThreshold {
+                // Prepare the Taptic-Engine as early as possible!
+                if hapticFeedbackOptions.contains(.whenDismissing) {
+                    prepareHapticFeedback()
+                }
+                
                 presentedViewController.dismiss(animated: true, completion: nil)
             }
         }

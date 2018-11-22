@@ -36,6 +36,12 @@ class ViewController: UIViewController {
     @objc func viewWasTapped() {
         let modal = ModalViewController()
         let transitionDelegate = DeckTransitioningDelegate()
+        
+        // If the API is available, configure haptic feedback for presentation and dismissal.
+        if #available(iOS 10.0, *) {
+            transitionDelegate.useHapticFeedback(at: [.whenDismissing, .whenPresenting])
+        }
+        
         modal.transitioningDelegate = transitionDelegate
         modal.modalPresentationStyle = .custom
         present(modal, animated: true, completion: nil)

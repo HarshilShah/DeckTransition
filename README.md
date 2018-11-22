@@ -96,6 +96,21 @@ You can also choose to update snapshot directly from the presenting view control
 
 It's worth noting that updating the snapshot is an expensive process and should only be used if necessary, for example if you are updating your entire app's theme.
 
+### Haptic Feedback
+The device's TapticEngine can be used to perform haptic feedback when the presentation or dismissal transition is done *(like Overcast does with its version 5)*. To configure haptic feedback, call ```DeckTransitioningDelegate.useHapticFeedback(at:)```.
+Currently supported points of feedback are ```.whenPresenting```, ```.whenDismissing``` and ```.whenPresentingIsFinished```.
+```swift
+let modal = ModalViewController()
+let transitionDelegate = DeckTransitioningDelegate()
+if #available(iOS 10.0, *) {
+    transitionDelegate.useHapticFeedback(at: [.whenDismissing, .whenPresenting])
+}
+modal.transitioningDelegate = transitionDelegate
+        modal.modalPresentationStyle = .custom
+        present(modal, animated: true, completion: nil)
+```
+Haptic feedback was implemented by [Andreas Neusüß](https://github.com/Tantalum73).
+
 ## Apps Using DeckTransition
 - [Petty](https://zachsim.one/projects/petty) by [Zach Simone](https://twitter.com/zachsimone)
 - [Bitbook](https://bitbookapp.com) by [Sammy Gutierrez](https://sammygutierrez.com)
