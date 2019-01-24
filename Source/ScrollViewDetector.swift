@@ -59,13 +59,29 @@ final class ScrollViewDetector {
             return scrollView
         }
         
-        for subview in viewController.view.subviews {
-            if let scrollView = subview as? UIScrollView {
-                return scrollView
-            }
+        if let scrollView = self.getScrollView(from: viewController.view) {
+            return scrollView
         }
         
         return nil
     }
-    
+
+    private func getScrollView(from view: UIView) -> UIScrollView? {
+        let webViewClass: AnyClass? = NSClassFromString("WKWebView")
+        for subview in view.subviews {
+            if let scrollView = subview as? UIScrollView {
+                return scrollView
+            }
+
+            if let webViewClass = webViewClass,
+                subview.isKind(of: webViewClass),
+                subview.responds(to: Selector("scrollView")),
+                let scrollView = subview.value(forKey: "scrollView") as? UIScrollView
+            {
+                return scrollView
+            }
+        }
+
+        return nil
+    }
 }
