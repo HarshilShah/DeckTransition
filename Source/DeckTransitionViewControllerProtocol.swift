@@ -57,5 +57,11 @@ import UIKit
     ///   `childViewControllerForDeck` variable is also implemented.
     @objc optional var scrollViewForDeck: UIScrollView { get }
     
+    /// Calls a delegate method to determine whether or not a Deck transition
+    /// should take place.
+    
+    /// - Note: Default for this method always returns `true`
+    @objc optional func shouldTransition(for scrollView: UIScrollView?) -> Bool
+    
 }
 

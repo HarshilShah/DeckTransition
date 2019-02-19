@@ -561,6 +561,10 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             return
         }
         
+        if let deckViewController = presentedViewController as? DeckTransitionViewControllerProtocol {
+            guard deckViewController.shouldTransition!(for: ScrollViewDetector(withViewController: presentedViewController).scrollView) else { return }
+        }
+        
         switch gestureRecognizer.state {
         
         case .began:
