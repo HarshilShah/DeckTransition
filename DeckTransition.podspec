@@ -13,6 +13,7 @@ Pod::Spec.new do |spec|
   spec.source           = { :git => 'https://github.com/HarshilShah/DeckTransition.git', :tag => spec.version.to_s }
   spec.source_files     = 'Source/**/*.{h,swift}'
 
+  spec.swift_versions   = '5.0'
   spec.framework        = 'UIKit'
   spec.ios.deployment_target = '9.0'
 
