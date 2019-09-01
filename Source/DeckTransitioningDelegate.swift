@@ -27,6 +27,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     // MARK: - Private variables
     
     private let isSwipeToDismissEnabled: Bool
+    private let dismissOnlyOnSwipeEnded: Bool
     private let presentDuration: TimeInterval?
     private let presentAnimation: (() -> ())?
     private let presentCompletion: ((Bool) -> ())?
@@ -44,6 +45,9 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     /// - Parameters:
     ///   - isSwipeToDismissEnabled: Whether the modal view controller should
     ///     be dismissed with a swipe gesture from top to bottom
+    ///   - dismissOnlyOnSwipeEnded: Whether the modal view controller should
+    ///     be dismissed when being swipped or only when the swipe gesture ended.
+    ///     N/A when isSwipeToDismissEnabled is false
     ///	  - presentDuration: The duration for the presentation animation
     ///   - presentAnimation: An animation block that will be performed
     ///		alongside the card presentation animation
@@ -55,6 +59,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
     ///   - dismissCompletion: A block that will be run after the card has been
     ///		dismissed
     @objc public init(isSwipeToDismissEnabled: Bool = true,
+                      dismissOnlyOnSwipeEnded: Bool = false,
                       presentDuration: NSNumber? = nil,
                       presentAnimation: (() -> ())? = nil,
                       presentCompletion: ((Bool) -> ())? = nil,
@@ -62,6 +67,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
                       dismissAnimation: (() -> ())? = nil,
                       dismissCompletion: ((Bool) -> ())? = nil) {
         self.isSwipeToDismissEnabled = isSwipeToDismissEnabled
+        self.dismissOnlyOnSwipeEnded = dismissOnlyOnSwipeEnded
         self.presentDuration = presentDuration?.doubleValue
         self.presentAnimation = presentAnimation
         self.presentCompletion = presentCompletion
@@ -113,6 +119,7 @@ public final class DeckTransitioningDelegate: NSObject, UIViewControllerTransiti
             presentedViewController: presented,
             presenting: presenting,
             isSwipeToDismissGestureEnabled: isSwipeToDismissEnabled,
+            dismissOnlyOnSwipeEnded: dismissOnlyOnSwipeEnded,
             presentAnimation: presentAnimation,
             presentCompletion: presentCompletion,
             dismissAnimation: dismissAnimation,

@@ -25,6 +25,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     // MARK: - Private variables
     
     private var isSwipeToDismissGestureEnabled = true
+    private var dismissOnlyOnSwipeEnded: Bool = false
     private var pan: UIPanGestureRecognizer?
     private var scrollViewUpdater: ScrollViewUpdater?
     
@@ -52,6 +53,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     convenience init(presentedViewController: UIViewController,
                      presenting presentingViewController: UIViewController?,
                      isSwipeToDismissGestureEnabled: Bool,
+                     dismissOnlyOnSwipeEnded: Bool,
                      presentAnimation: (() -> ())? = nil,
                      presentCompletion: ((Bool) ->())? = nil,
                      dismissAnimation: (() -> ())? = nil,
@@ -60,6 +62,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                   presenting: presentingViewController)
         
         self.isSwipeToDismissGestureEnabled = isSwipeToDismissGestureEnabled
+        self.dismissOnlyOnSwipeEnded = dismissOnlyOnSwipeEnded
         self.presentAnimation = presentAnimation
         self.presentCompletion = presentCompletion
         self.dismissAnimation = dismissAnimation
@@ -574,18 +577,23 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
         
         case .changed:
             if isSwipeToDismissAllowed() {
-                let translation = gestureRecognizer.translation(in: presentedView)
-                updatePresentedViewForTranslation(inVerticalDirection: translation.y)
+                if updatePresentedViewForTranslation(inVerticalDirection: gestureRecognizer.translation(in: presentedView).y) && !dismissOnlyOnSwipeEnded {
+                    presentedViewController.dismiss(animated: true, completion: nil)
+                }
             } else {
                 gestureRecognizer.setTranslation(.zero, in: presentedView)
             }
         
         case .ended:
-            UIView.animate(
-                withDuration: 0.25,
-                animations: {
-                    self.presentedView?.transform = .identity
+            if dismissOnlyOnSwipeEnded && updatePresentedViewForTranslation(inVerticalDirection: gestureRecognizer.translation(in: presentedView).y) {
+                presentedViewController.dismiss(animated: true, completion: nil)
+            } else {
+                UIView.animate(
+                    withDuration: 0.25,
+                    animations: {
+                        self.presentedView?.transform = .identity
                 })
+            }
             scrollViewUpdater = nil
 
         default: break
@@ -606,7 +614,7 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
     ///
     /// - parameter translation: The translation of the user's pan gesture in
     ///   the container view in the vertical direction
-    private func updatePresentedViewForTranslation(inVerticalDirection translation: CGFloat) {
+    private func updatePresentedViewForTranslation(inVerticalDirection translation: CGFloat) -> Bool {
         
         let elasticThreshold: CGFloat = 120
         let dismissThreshold: CGFloat = 240
@@ -628,9 +636,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
             
             presentedView?.transform = CGAffineTransform(translationX: 0, y: translationForModal)
             
-            if translation >= dismissThreshold {
-                presentedViewController.dismiss(animated: true, completion: nil)
-            }
+            return translation >= dismissThreshold
+        } else {
+            return false
         }
     }
     
