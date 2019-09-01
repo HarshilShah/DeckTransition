@@ -1,5 +1,12 @@
 ## Changelog
 
+## 2.2.0 Release notes (1/9/2019)
+---- 
+
+- Support for Swift 5.0
+
+This will likely be the last version of the library to support iOS 9 and 10. Please see the issue about [DeckTransition 3.0](https://github.com/HarshilShah/DeckTransition/issues/109) for more information.
+
 ## 2.1.0 Release notes (17/9/2018)
 ----
 
