@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D93F1CA21EAEDB6E009A7474 /* DeckTransition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93F1C981EAEDB6E009A7474 /* DeckTransition.framework */; };
-		D93F1CA71EAEDB6E009A7474 /* DeckTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93F1CA61EAEDB6E009A7474 /* DeckTransitionTests.swift */; };
 		D93F1CA91EAEDB6E009A7474 /* DeckTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = D93F1C9B1EAEDB6E009A7474 /* DeckTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E83354EE1F35EC3B00D1FB23 /* RoundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E83354ED1F35EC3B00D1FB23 /* RoundedView.swift */; };
 		E8473CC81F698D3700852FE3 /* ManualLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8473CC71F698D3700852FE3 /* ManualLayout.swift */; };
@@ -34,23 +32,10 @@
 		E8B271681FD7E20F009883B2 /* ScrollViewUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B271671FD7E20F009883B2 /* ScrollViewUpdater.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		D93F1CA31EAEDB6E009A7474 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D93F1C8F1EAEDB6E009A7474 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D93F1C971EAEDB6E009A7474;
-			remoteInfo = DeckTransition;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		D93F1C981EAEDB6E009A7474 /* DeckTransition.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DeckTransition.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93F1C9B1EAEDB6E009A7474 /* DeckTransition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeckTransition.h; sourceTree = "<group>"; };
 		D93F1C9C1EAEDB6E009A7474 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D93F1CA11EAEDB6E009A7474 /* DeckTransitionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeckTransitionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D93F1CA61EAEDB6E009A7474 /* DeckTransitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckTransitionTests.swift; sourceTree = "<group>"; };
-		D93F1CA81EAEDB6E009A7474 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E83354ED1F35EC3B00D1FB23 /* RoundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedView.swift; sourceTree = "<group>"; };
 		E8473CC71F698D3700852FE3 /* ManualLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualLayout.swift; sourceTree = "<group>"; };
 		E857980F1F34D63200C6CABE /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -83,14 +68,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D93F1C9E1EAEDB6E009A7474 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D93F1CA21EAEDB6E009A7474 /* DeckTransition.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -99,7 +76,6 @@
 			children = (
 				E8683D301F3462EF00EB9FCC /* Metadata */,
 				D93F1C9A1EAEDB6E009A7474 /* Source */,
-				D93F1CA51EAEDB6E009A7474 /* Tests */,
 				D93F1C991EAEDB6E009A7474 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,7 +84,6 @@
 			isa = PBXGroup;
 			children = (
 				D93F1C981EAEDB6E009A7474 /* DeckTransition.framework */,
-				D93F1CA11EAEDB6E009A7474 /* DeckTransitionTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -132,15 +107,6 @@
 				E8683D801F344638005C7E9A /* Supporting Files */,
 			);
 			path = Source;
-			sourceTree = "<group>";
-		};
-		D93F1CA51EAEDB6E009A7474 /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				D93F1CA61EAEDB6E009A7474 /* DeckTransitionTests.swift */,
-				D93F1CA81EAEDB6E009A7474 /* Info.plist */,
-			);
-			path = Tests;
 			sourceTree = "<group>";
 		};
 		E828C6F61F6E7C2200BD04F5 /* RoundedView */ = {
@@ -216,24 +182,6 @@
 			productReference = D93F1C981EAEDB6E009A7474 /* DeckTransition.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		D93F1CA01EAEDB6E009A7474 /* DeckTransitionTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D93F1CAF1EAEDB6E009A7474 /* Build configuration list for PBXNativeTarget "DeckTransitionTests" */;
-			buildPhases = (
-				D93F1C9D1EAEDB6E009A7474 /* Sources */,
-				D93F1C9E1EAEDB6E009A7474 /* Frameworks */,
-				D93F1C9F1EAEDB6E009A7474 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D93F1CA41EAEDB6E009A7474 /* PBXTargetDependency */,
-			);
-			name = DeckTransitionTests;
-			productName = DeckTransitionTests;
-			productReference = D93F1CA11EAEDB6E009A7474 /* DeckTransitionTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -250,10 +198,6 @@
 						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
-					D93F1CA01EAEDB6E009A7474 = {
-						CreatedOnToolsVersion = 8.3.2;
-						ProvisioningStyle = Automatic;
-					};
 				};
 			};
 			buildConfigurationList = D93F1C921EAEDB6E009A7474 /* Build configuration list for PBXProject "DeckTransition" */;
@@ -261,6 +205,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = D93F1C8E1EAEDB6E009A7474;
@@ -269,7 +214,6 @@
 			projectRoot = "";
 			targets = (
 				D93F1C971EAEDB6E009A7474 /* DeckTransition */,
-				D93F1CA01EAEDB6E009A7474 /* DeckTransitionTests */,
 			);
 		};
 /* End PBXProject section */
@@ -283,13 +227,6 @@
 				E8683D2E1F3462E800EB9FCC /* CHANGELOG.md in Resources */,
 				E8683D2F1F3462E800EB9FCC /* README.md in Resources */,
 				E8683D2C1F3462E800EB9FCC /* DeckTransition.podspec in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D93F1C9F1EAEDB6E009A7474 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,23 +258,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D93F1C9D1EAEDB6E009A7474 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D93F1CA71EAEDB6E009A7474 /* DeckTransitionTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		D93F1CA41EAEDB6E009A7474 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D93F1C971EAEDB6E009A7474 /* DeckTransition */;
-			targetProxy = D93F1CA31EAEDB6E009A7474 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		D93F1CAA1EAEDB6E009A7474 /* Debug */ = {
@@ -499,32 +420,6 @@
 			};
 			name = Release;
 		};
-		D93F1CB01EAEDB6E009A7474 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = Tests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.harshilshah.DeckTransitionTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Debug;
-		};
-		D93F1CB11EAEDB6E009A7474 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = Tests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.harshilshah.DeckTransitionTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -542,15 +437,6 @@
 			buildConfigurations = (
 				D93F1CAD1EAEDB6E009A7474 /* Debug */,
 				D93F1CAE1EAEDB6E009A7474 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D93F1CAF1EAEDB6E009A7474 /* Build configuration list for PBXNativeTarget "DeckTransitionTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D93F1CB01EAEDB6E009A7474 /* Debug */,
-				D93F1CB11EAEDB6E009A7474 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
