@@ -295,7 +295,9 @@ final class DeckPresentationController: UIPresentationController, UIGestureRecog
                     return
                 }
                 
-                self.presentedViewController.view.frame = self.frameOfPresentedViewInContainerView
+                if !(self.scrollViewUpdater?.isDismissEnabled ?? false) {
+                    self.presentedViewController.view.frame = self.frameOfPresentedViewInContainerView
+                }
             }
         }
     }
